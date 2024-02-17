@@ -58,8 +58,8 @@ class GameScene extends Forge2DGame {
       world: hudWorld,
     );
 
-    // final hud = Hud(playerMovementBloc:playerMovementBloc);
-    // await addAll([gameWorld,gameCamera,hud]);
+     //final hud = Hud(playerMovementBloc:playerMovementBloc);
+     //await addAll([gameWorld,gameCamera,hud]);
      await addAll([gameWorld,gameCamera,hudWorld,hudCamera]);
     //_zoomFollowPlayer(gameCamera, gameWorld.player);
   }
