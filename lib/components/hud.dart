@@ -42,7 +42,7 @@ class Hud extends PositionComponent with HasGameRef<GameScene>
     );
     _joystick.scale = Vector2.all(0.7);
 
-    HudMarginComponent hud = HudMarginComponent(margin: const cupertino.EdgeInsets.only(left: 50, top: 50));
+    HudMarginComponent hud = HudMarginComponent(size: Vector2(100,100), margin: const cupertino.EdgeInsets.only(left: 50, top: 50));
     await hud.add(_joystick);
     await add(hud);
    //  await add(_joystick);
