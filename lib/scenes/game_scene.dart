@@ -68,9 +68,8 @@ class GameScene extends Forge2DGame {
   {
     cam.viewfinder.zoom = 1;
     cam.setBounds(GameWorld.bounds);
-    cam.follow(player , maxSpeed: 450);
+    cam.follow(player, maxSpeed: 450);
   }
-
 
   @override
   void onRemove() {

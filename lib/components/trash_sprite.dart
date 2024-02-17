@@ -1,11 +1,8 @@
 
 import 'dart:async';
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
-
 import '../../scenes/game_scene.dart';
-
 
 
 class TrashSprite extends SpriteAnimationGroupComponent with HasGameRef<GameScene>  {
@@ -15,7 +12,6 @@ class TrashSprite extends SpriteAnimationGroupComponent with HasGameRef<GameScen
 
   @override
   FutureOr<void> onLoad() async {
-
     final spritesheet = SpriteSheet(
         image: gameRef.images.fromCache("recycle_items.png"),
         srcSize: Vector2(26,64)
@@ -30,10 +26,9 @@ class TrashSprite extends SpriteAnimationGroupComponent with HasGameRef<GameScen
     );
 
     add(trashSprite);
-   // debugMode = true;
+    //debugMode = true;
     return super.onLoad( );
   }
-
 
 }
 

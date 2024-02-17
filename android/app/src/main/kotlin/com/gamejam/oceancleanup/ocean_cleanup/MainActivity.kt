@@ -1,4 +1,4 @@
-package com.example.ocean_cleanup
+package com.gamejam.oceancleanup.ocean_cleanup
 
 import io.flutter.embedding.android.FlutterActivity
 

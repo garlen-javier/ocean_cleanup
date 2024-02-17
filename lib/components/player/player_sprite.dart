@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
-
 import '../../scenes/game_scene.dart';
 
 enum PlayerAnimationState {
@@ -37,7 +36,6 @@ class PlayerSprite extends SpriteAnimationGroupComponent with HasGameRef<GameSce
     debugMode = true;
     return super.onLoad( );
   }
-
 
 }
 

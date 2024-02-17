@@ -19,8 +19,9 @@ class Player extends BodyComponent {
   Future<void> onLoad() async {
     sprite = PlayerSprite();
     await add(sprite);
-    //renderBody = false;
     await _initBlocListener();
+
+    //renderBody = false;
     return super.onLoad();
   }
 

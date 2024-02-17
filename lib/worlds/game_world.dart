@@ -18,7 +18,8 @@ import 'package:flame/src/camera/world.dart' as camWorld;
 
 import '../components/trash_sprite.dart';
 
-class GameWorld extends Forge2DWorld with HasCollisionDetection
+///Used Forge2DWorld incase we need to add levels with collision
+class GameWorld extends Forge2DWorld
 {
   static const Size worldSize = Size(16 * 25,16 * 15);
   static final Rectangle bounds = Rectangle.fromLTRB(0, 0 , worldSize.width * 2, worldSize.height * 2);
@@ -28,6 +29,8 @@ class GameWorld extends Forge2DWorld with HasCollisionDetection
 
   late Player player;
   late TiledComponent<FlameGame<camWorld.World>> map;
+
+  var trashes = <TrashSprite>{};
 
   @override
   FutureOr<void> onLoad() async {
@@ -56,7 +59,7 @@ class GameWorld extends Forge2DWorld with HasCollisionDetection
       for(var col in objGroup.objects)
       {
         BrickBody brick = BrickBody(pos:Vector2(col.x + 16,col.y + 16), width:col.width - 16,height: col.height - 16);
-        add(brick );
+        add(brick);
       }
     }
   }
@@ -69,6 +72,7 @@ class GameWorld extends Forge2DWorld with HasCollisionDetection
       {
         TrashSprite trash = TrashSprite(Vector2(col.x + 16,col.y + 16));
         add(trash);
+        trashes.add(trash);
       }
     }
   }
@@ -88,5 +92,25 @@ class GameWorld extends Forge2DWorld with HasCollisionDetection
       ),
     );
   }
+
+  @override
+  void update(double dt) {
+    if(player != null)
+    {
+      for(var trash in trashes)
+      {
+          if(player.containsPoint(trash.position))
+            {
+              print("Collide");
+            }
+      }
+    }
+
+
+
+    super.update(dt);
+  }
+
+
 
 }
