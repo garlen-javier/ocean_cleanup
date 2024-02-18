@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
@@ -12,11 +11,12 @@ import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
 import '../bloc/player_movement/player_movement_bloc.dart';
 import '../bloc/player_movement/player_movement_state.dart';
-import '../components/physics/brick_body.dart';
+import '../components/brick/brick_body.dart';
 import '../components/player/player.dart';
 import 'package:flame/src/camera/world.dart' as camWorld;
+import '../components/trash/trash.dart';
+import '../components/trash/trash_sprite.dart';
 
-import '../components/trash_sprite.dart';
 
 ///Used Forge2DWorld incase we need to add levels with collision
 class GameWorld extends Forge2DWorld
@@ -37,7 +37,7 @@ class GameWorld extends Forge2DWorld
 
     await _initLevel();
 
-    player = Player(Vector2(worldSize.width ,worldSize.height ), 32,32);
+    player = Player(Vector2(worldSize.width ,worldSize.height),scale: Vector2.all(0.5));
     await _addPlayerBloc(player);
     await add(player);
 
@@ -70,9 +70,9 @@ class GameWorld extends Forge2DWorld
     {
       for(var col in objGroup.objects)
       {
-        TrashSprite trash = TrashSprite(Vector2(col.x + 16,col.y + 16));
+        Trash trash = Trash(pos:Vector2(col.x + 16,col.y + 16));
         add(trash);
-        trashes.add(trash);
+        //trashes.add(trash);
       }
     }
   }
@@ -97,19 +97,27 @@ class GameWorld extends Forge2DWorld
   void update(double dt) {
     if(player != null)
     {
-      for(var trash in trashes)
-      {
-          if(player.containsPoint(trash.position))
-            {
-              print("Collide");
-            }
-      }
+     // print("player pos " + player.position.toString());
+     // print("player widht " + player.height.toString());
+     //  for(var trash in trashes)
+     //  {
+     //    //print("trash " + trash.width.toString());
+     //      if(isCollide(trash))
+     //        {
+     //          print("Collide");
+     //          trash.removeFromParent();
+     //        }
+     //
+     //    // if(player.containsLocalPoint(trash.position))
+     //    // {
+     //    //   print("Collide");
+     //    // }
+     //  }
     }
-
-
-
     super.update(dt);
   }
+
+
 
 
 

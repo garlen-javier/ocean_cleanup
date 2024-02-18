@@ -39,6 +39,7 @@ class GameScene extends Forge2DGame {
   }
 
   Future<void> loadWorlds() async {
+    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
     final gameWorld = GameWorld(playerMovementBloc:playerMovementBloc);
     final gameCamera = CameraComponent.withFixedResolution(
         width: GameWorld.worldSize.width,
@@ -50,7 +51,6 @@ class GameScene extends Forge2DGame {
       ..position = Vector2(GameWorld.worldSize.width, GameWorld.worldSize.height);
     //..anchor = Anchor.topLeft;
 
-    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
     final hudWorld = HudWorld(playerMovementBloc:playerMovementBloc);
     final hudCamera = CameraComponent.withFixedResolution(
       width: view.physicalSize.width / view.devicePixelRatio,
@@ -58,9 +58,10 @@ class GameScene extends Forge2DGame {
       world: hudWorld,
     );
 
-     //final hud = Hud(playerMovementBloc:playerMovementBloc);
+
+    //final hud = Hud(playerMovementBloc:playerMovementBloc);
      //await addAll([gameWorld,gameCamera,hud]);
-     await addAll([gameWorld,gameCamera,hudWorld,hudCamera]);
+     await addAll([gameWorld,gameCamera, hudWorld ,hudCamera]);
     //_zoomFollowPlayer(gameCamera, gameWorld.player);
   }
 

@@ -7,26 +7,29 @@ import '../../scenes/game_scene.dart';
 
 class TrashSprite extends SpriteAnimationGroupComponent with HasGameRef<GameScene>  {
 
-  final Vector2 pos;
-  TrashSprite(this.pos) :super();
+  final Vector2 spriteSize = Vector2(26,64);
+  //final Vector2 pos;
+  TrashSprite() :super();
 
   @override
   FutureOr<void> onLoad() async {
     final spritesheet = SpriteSheet(
         image: gameRef.images.fromCache("recycle_items.png"),
-        srcSize: Vector2(26,64)
+        srcSize: spriteSize
     );
 
     final trashSprite = SpriteComponent(
       sprite: spritesheet.getSprite(0, 1),
-      position: pos,
-      anchor: Anchor.center,
-      scale: Vector2.all(0.8),
-      priority: 1
     );
 
+    scale = Vector2.all(0.8);
+    anchor = Anchor.center;
+    //position = pos;
+    priority = 1;
+    size = spriteSize;
+    
     add(trashSprite);
-    //debugMode = true;
+    debugMode = true;
     return super.onLoad( );
   }
 

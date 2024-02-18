@@ -30,7 +30,7 @@ class PlayerSprite extends SpriteAnimationGroupComponent with HasGameRef<GameSce
 
     current = PlayerAnimationState.idle;
     anchor = Anchor.center;
-    scale = Vector2.all(0.5);
+    //scale = Vector2.all(0.5);
 
     priority = 2;
     debugMode = true;
