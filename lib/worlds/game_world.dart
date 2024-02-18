@@ -9,8 +9,8 @@ import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
-import '../bloc/player_movement/player_movement_bloc.dart';
-import '../bloc/player_movement/player_movement_state.dart';
+import 'package:ocean_cleanup/components/player/player_controller.dart';
+import '../bloc/joystick_movement/joystick_movement_barrel.dart';
 import '../components/brick/brick_body.dart';
 import '../components/player/player.dart';
 import 'package:flame/src/camera/world.dart' as camWorld;
@@ -24,8 +24,8 @@ class GameWorld extends Forge2DWorld
   static const Size worldSize = Size(16 * 25,16 * 15);
   static final Rectangle bounds = Rectangle.fromLTRB(0, 0 , worldSize.width * 2, worldSize.height * 2);
 
-  final PlayerMovementBloc playerMovementBloc;
-  GameWorld({required this.playerMovementBloc}):super();
+  final JoystickMovementBloc joystickMovementBloc;
+  GameWorld({required this.joystickMovementBloc}):super();
 
   late Player player;
   late TiledComponent<FlameGame<camWorld.World>> map;
@@ -38,9 +38,8 @@ class GameWorld extends Forge2DWorld
     await _initLevel();
 
     player = Player(Vector2(worldSize.width ,worldSize.height),scale: Vector2.all(0.5));
-    await _addPlayerBloc(player);
     await add(player);
-
+    await _addPlayerController(player);
     return super.onLoad();
   }
 
@@ -77,47 +76,20 @@ class GameWorld extends Forge2DWorld
     }
   }
 
-  ///Should be called first before adding the player to the world.
-  Future<void> _addPlayerBloc(Player player) async {
+  Future<void> _addPlayerController(Player player) async {
     await add(
       FlameMultiBlocProvider(
         providers: [
-          FlameBlocProvider<PlayerMovementBloc, PlayerMovementState>.value(
-            value: playerMovementBloc,
+          FlameBlocProvider<JoystickMovementBloc, JoystickMovementState>.value(
+            value: joystickMovementBloc,
           ),
         ],
         children: [
-          player,
+          PlayerController(player: player),
         ],
       ),
     );
   }
-
-  @override
-  void update(double dt) {
-    if(player != null)
-    {
-     // print("player pos " + player.position.toString());
-     // print("player widht " + player.height.toString());
-     //  for(var trash in trashes)
-     //  {
-     //    //print("trash " + trash.width.toString());
-     //      if(isCollide(trash))
-     //        {
-     //          print("Collide");
-     //          trash.removeFromParent();
-     //        }
-     //
-     //    // if(player.containsLocalPoint(trash.position))
-     //    // {
-     //    //   print("Collide");
-     //    // }
-     //  }
-    }
-    super.update(dt);
-  }
-
-
 
 
 

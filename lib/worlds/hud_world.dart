@@ -5,13 +5,13 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/cupertino.dart' as cupertino;
-import '../bloc/player_movement/player_movement_bloc.dart';
+import '../bloc/joystick_movement/joystick_movement_bloc.dart';
 import '../scenes/game_scene.dart';
 
 class HudWorld extends World with HasGameRef<GameScene>
 {
-  final PlayerMovementBloc playerMovementBloc;
-  HudWorld({required this.playerMovementBloc}):super();
+  final JoystickMovementBloc joystickMovementBloc;
+  HudWorld({required this.joystickMovementBloc}):super();
 
   late final JoystickComponent _joystick;
   late Vector2 _gameSize;
@@ -56,7 +56,7 @@ class HudWorld extends World with HasGameRef<GameScene>
   void update(double dt) {
     super.update(dt);
     Vector2 velDir = Vector2(_joystick.delta.x.sign, _joystick.delta.y.sign);
-    playerMovementBloc.move(velDir); 
+    joystickMovementBloc.move(velDir);
   }
 
   @override

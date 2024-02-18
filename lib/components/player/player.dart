@@ -1,7 +1,5 @@
-import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:ocean_cleanup/components/trash/trash.dart';
-import '../../bloc/player_movement/player_movement_barrel.dart';
 import 'player_sprite.dart';
 
 class Player extends BodyComponent with ContactCallbacks{
@@ -22,29 +20,18 @@ class Player extends BodyComponent with ContactCallbacks{
     sprite = PlayerSprite();
     sprite.scale = scale!;
     await add(sprite);
-    await _initBlocListener();
-
     //renderBody = false;
     return super.onLoad();
-  }
-
-  Future<void> _initBlocListener() async {
-    await add(
-      FlameBlocListener<PlayerMovementBloc, PlayerMovementState>(
-        listenWhen: (previousState, newState) {
-          return previousState.velocityDirection != newState.velocityDirection;
-        },
-        onNewState: (state) {
-          velocity= state.velocityDirection;
-        },
-      ),
-    );
   }
 
   @override
   void update(double dt) {
     super.update(dt);
     body.linearVelocity+= velocity * speed * dt;
+  }
+
+  void updateDirection(Vector2 pVelocity) {
+    velocity = pVelocity;
   }
 
   @override

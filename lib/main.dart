@@ -2,7 +2,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'bloc/player_movement/player_movement_bloc.dart';
+import '../../bloc/joystick_movement/joystick_movement_barrel.dart';
 import 'scenes/game_scene.dart';
 
 void main() {
@@ -19,7 +19,7 @@ class GamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<PlayerMovementBloc>(create: (_) => PlayerMovementBloc()),
+        BlocProvider<JoystickMovementBloc>(create: (_) => JoystickMovementBloc()),
       ],
       child: const GameView(),
     );
@@ -32,7 +32,7 @@ class GameView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GameWidget(
-      game: GameScene(playerMovementBloc: context.read<PlayerMovementBloc>()),
+      game: GameScene(joystickMovementBloc: context.read<JoystickMovementBloc>()),
     );
   }
 }
