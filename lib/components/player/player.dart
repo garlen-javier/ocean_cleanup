@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:ocean_cleanup/components/trash/trash.dart';
+import 'package:ocean_cleanup/utils/utils.dart';
 import 'player_sprite.dart';
 
 class Player extends BodyComponent with ContactCallbacks{
@@ -11,8 +14,8 @@ class Player extends BodyComponent with ContactCallbacks{
     scale = scale ?? Vector2.all(1);
   }
 
-  Vector2 velocity = Vector2.zero();
-  double speed = 300;
+  Vector2 _velocity = Vector2.zero();
+  double _speed = 300;
   late PlayerSprite sprite;
 
   @override
@@ -27,12 +30,17 @@ class Player extends BodyComponent with ContactCallbacks{
   @override
   void update(double dt) {
     super.update(dt);
-    body.linearVelocity+= velocity * speed * dt;
+    body.linearVelocity+= _velocity * _speed * dt;
   }
 
-  void updateDirection(Vector2 pVelocity) {
-    velocity = pVelocity;
+  void updateDirection(Vector2 pVelocity,double pAngle) {
+    _velocity = pVelocity;
+    if(pVelocity != Vector2.zero())
+      angle = pAngle;
   }
+
+  @override
+  double angle = 0;
 
   @override
   Body createBody() {
@@ -42,7 +50,7 @@ class Player extends BodyComponent with ContactCallbacks{
       position: pos,
       gravityScale: Vector2.zero(),
       linearDamping: 3,
-      fixedRotation: true,
+      fixedRotation: false,
     );
 
     final fixtureDef = FixtureDef(

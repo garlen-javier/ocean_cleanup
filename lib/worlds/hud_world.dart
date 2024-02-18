@@ -1,10 +1,12 @@
 
 
 import 'dart:async';
+import 'dart:io';
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/cupertino.dart' as cupertino;
+import 'package:ocean_cleanup/utils/utils.dart';
 import '../bloc/joystick_movement/joystick_movement_bloc.dart';
 import '../scenes/game_scene.dart';
 
@@ -13,13 +15,14 @@ class HudWorld extends World with HasGameRef<GameScene>
   final JoystickMovementBloc joystickMovementBloc;
   HudWorld({required this.joystickMovementBloc}):super();
 
-  late final JoystickComponent _joystick;
+  JoystickComponent? _joystick;
   late Vector2 _gameSize;
 
   @override
   FutureOr<void> onLoad() async{
     _gameSize = gameRef!.size;
-    await _showJoyStick();
+    if (Utils.isMobile)
+      await _showJoyStick();
     await _showFPSDisplay();
     return super.onLoad();
   }
@@ -41,8 +44,8 @@ class HudWorld extends World with HasGameRef<GameScene>
       ),
       position: Vector2(-_gameSize.x * 0.4,_gameSize.y * 0.35),
     );
-    _joystick.scale = Vector2.all(0.7);
-    await component.add(_joystick);
+    _joystick!.scale = Vector2.all(0.7);
+    await component.add(_joystick!);
     await add(component);
   }
 
@@ -55,8 +58,8 @@ class HudWorld extends World with HasGameRef<GameScene>
   @override
   void update(double dt) {
     super.update(dt);
-    Vector2 velDir = Vector2(_joystick.delta.x.sign, _joystick.delta.y.sign);
-    joystickMovementBloc.move(velDir);
+    if(_joystick != null)
+       joystickMovementBloc.move(_joystick!.relativeDelta,_joystick!.delta.screenAngle());
   }
 
   @override

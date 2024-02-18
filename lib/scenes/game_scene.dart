@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame_forge2d/forge2d_game.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import '../components/player/player.dart';
 import '../worlds/game_world.dart';
 import '../worlds/hud_world.dart';
 
-class GameScene extends Forge2DGame {
+class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
 
   final JoystickMovementBloc joystickMovementBloc;
 
