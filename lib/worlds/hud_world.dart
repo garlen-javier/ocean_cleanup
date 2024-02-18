@@ -62,7 +62,7 @@ class HudWorld extends World with HasGameRef<GameScene>
   @override
   void onGameResize(Vector2 size) {
     _gameSize = size;
-    super.onGameResize(size);
+    super.onGameResize(size); 
   }
 
 
