@@ -68,5 +68,4 @@ class HudWorld extends World with HasGameRef<GameScene>
     super.onGameResize(size);
   }
 
-
 }

@@ -35,11 +35,17 @@ class GameWorld extends Forge2DWorld
   @override
   FutureOr<void> onLoad() async {
 
+
     await _initLevel();
+
+    // var sp = await Sprite.load("background.png");
+    // SpriteComponent bg = SpriteComponent(sprite: sp);
+    // await add(bg);
 
     player = Player(Vector2(worldSize.width ,worldSize.height),scale: Vector2.all(0.5));
     await add(player);
     await _addPlayerController(player);
+
     return super.onLoad();
   }
 
@@ -57,7 +63,7 @@ class GameWorld extends Forge2DWorld
     {
       for(var col in objGroup.objects)
       {
-        BrickBody brick = BrickBody(pos:Vector2(col.x + 16,col.y + 16), width:col.width - 16,height: col.height - 16);
+        BrickBody brick = BrickBody(pos:Vector2(col.x + 16,col.y + 16), width:col.width - 32,height: col.height - 32);
         add(brick);
       }
     }

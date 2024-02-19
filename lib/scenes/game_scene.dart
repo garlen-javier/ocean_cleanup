@@ -31,24 +31,26 @@ class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
   }
 
   Future<void> loadResources() async {
-    await images.load("sprite2.png");
-    await images.load("recycle_items.png");
-    await images.load("onscreen_control_knob.png");
-    await images.load("onscreen_control_base.png");
+    await images.loadAll([
+      'sprite2.png',
+      'recycle_items.png',
+      'onscreen_control_knob.png',
+      'onscreen_control_base.png',
+    ]);
   }
 
   Future<void> loadWorlds() async {
     FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
     final gameWorld = GameWorld(joystickMovementBloc:joystickMovementBloc);
     final gameCamera = CameraComponent.withFixedResolution(
-        width: GameWorld.worldSize.width,
-        height: GameWorld.worldSize.height,
+         width: GameWorld.worldSize.width,
+         height: GameWorld.worldSize.height,
         world: gameWorld);
 
     gameCamera.viewfinder
       ..zoom = 0.5
       ..position = Vector2(GameWorld.worldSize.width, GameWorld.worldSize.height);
-    //..anchor = Anchor.topLeft;
+     // ..anchor = Anchor.topLeft;
 
     final hudWorld = HudWorld(joystickMovementBloc:joystickMovementBloc);
     final hudCamera = CameraComponent.withFixedResolution(
@@ -56,6 +58,7 @@ class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
       height: view.physicalSize.height / view.devicePixelRatio,
       world: hudWorld,
     );
+
 
      await addAll([gameWorld,gameCamera, hudWorld ,hudCamera]);
     //_zoomFollowPlayer(gameCamera, gameWorld.player);
@@ -71,10 +74,10 @@ class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
   @override
   void onRemove() {
     super.onRemove();
-    removeAll(children);
-    Flame.images.clearCache();
-    Flame.assets.clearCache();
-    // TiledAtlas.clearCache();
+    //removeAll(children);
+    //Flame.images.clearCache();
+    //Flame.assets.clearCache();
+    //TiledAtlas.clearCache();
   }
 
 }
