@@ -55,6 +55,11 @@ class PlayerController extends Component with KeyboardHandler
       handled = false;
     }
 
+    if (event.logicalKey == LogicalKeyboardKey.space) {
+      player.playCatchAnimation();
+      player.tryRemoveTrash();
+    }
+
     if (handled) {
       double angle = _keyboardVelo.screenAngle();
       _handleKeyboardMovement(_keyboardVelo, angle);

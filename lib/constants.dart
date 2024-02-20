@@ -2,6 +2,8 @@
 
 const int playerPriority = 2;
 
+const String pathPlayer = "player.png";
+
 const String pathBagTrash = "trashes/bag_trash.png";
 const String pathCutleries = "trashes/cutleries.png";
 const String pathPlasticCup = "trashes/plastic_cup.png";

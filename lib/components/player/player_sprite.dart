@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
+import '../../constants.dart';
 import '../../scenes/game_scene.dart';
 
 enum PlayerAnimationState {
   idle,
   running,
+  catching,
 }
 
 class PlayerSprite extends SpriteAnimationGroupComponent with HasGameRef<GameScene>  {
@@ -16,23 +18,28 @@ class PlayerSprite extends SpriteAnimationGroupComponent with HasGameRef<GameSce
   FutureOr<void> onLoad() async {
 
     final spritesheet = SpriteSheet(
-        image: gameRef.images.fromCache("sprite2.png"),
-        srcSize: Vector2(58,80)
+        image: gameRef.images.fromCache(pathPlayer),
+        srcSize: Vector2(112,102.3333333333333)
     );
 
-    final idle = spritesheet.createAnimation(row:8,stepTime: 0.2,);
-    final running = spritesheet.createAnimation(row:1,stepTime: 0.2,);
+    final idle = spritesheet.createAnimation(row:0,stepTime: 0.5,);
+    final running = spritesheet.createAnimation(row:1,stepTime: 0.5,);
+    final catching = spritesheet.createAnimation(row:2,stepTime: 0.5,loop:false);
 
     animations = {
-      PlayerAnimationState.running: running,
       PlayerAnimationState.idle: idle,
+      PlayerAnimationState.running: running,
+      PlayerAnimationState.catching: catching,
     };
 
     current = PlayerAnimationState.idle;
     anchor = Anchor.center;
-    //scale = Vector2.all(0.5);
 
-    debugMode = true;
+    animationTickers?[PlayerAnimationState.catching]?.onComplete = () {
+      current = PlayerAnimationState.idle;
+    };
+
+    //debugMode = true;
     return super.onLoad( );
   }
 

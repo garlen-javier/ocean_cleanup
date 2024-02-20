@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/bloc/player_stats/player_stats_barrel.dart';
 import 'package:ocean_cleanup/components/trash/trash.dart';
 import 'package:ocean_cleanup/constants.dart';
-import '../../worlds/game_world.dart';
+import 'package:ocean_cleanup/utils/math_utils.dart';
 import 'player_sprite.dart';
 
 class Player extends BodyComponent with ContactCallbacks{
@@ -20,9 +17,10 @@ class Player extends BodyComponent with ContactCallbacks{
     scale = scale ?? Vector2.all(1);
   }
 
+  late PlayerSprite sprite;
   Vector2 _velocity = Vector2.zero();
   double _speed = 300;
-  late PlayerSprite sprite;
+  List<Trash> trashes = [];
 
   @override
   Future<void> onLoad() async {
@@ -31,10 +29,9 @@ class Player extends BodyComponent with ContactCallbacks{
     await add(sprite);
 
     priority = playerPriority;
-    //renderBody = false;
+    renderBody = false;
     return super.onLoad();
   }
-
 
   @override
   void update(double dt) {
@@ -44,8 +41,38 @@ class Player extends BodyComponent with ContactCallbacks{
 
   void updateDirection(Vector2 pVelocity,double pAngle) {
     _velocity = pVelocity;
-    if(pVelocity != Vector2.zero())
-      angle = pAngle;
+    _flipSpriteByDirection(pVelocity);
+    _updateAnimationByDirection(pVelocity);
+    if(pVelocity != Vector2.zero()) {
+      double degree = MathUtils.radToDeg(pAngle) - 90;
+      angle = MathUtils.degToRad(degree);
+    }
+  }
+
+  void playCatchAnimation()
+  {
+    sprite.current = PlayerAnimationState.catching;
+  }
+
+  void _updateAnimationByDirection(Vector2 dir)
+  {
+    if(dir == Vector2.zero()) {
+      sprite.current = PlayerAnimationState.idle;
+    }
+    else{
+      if(sprite.current != PlayerAnimationState.running)
+        sprite.current = PlayerAnimationState.running;
+    }
+  }
+
+  void _flipSpriteByDirection(Vector2 dir)
+  {
+    if(dir.x < 0 && !sprite.isFlippedVertically) {
+      sprite.flipVertically();
+    }
+    else if (dir.x > 0 && sprite.isFlippedVertically) {
+      sprite.flipVertically();
+    }
   }
 
   @override
@@ -76,11 +103,33 @@ class Player extends BodyComponent with ContactCallbacks{
   void beginContact(Object other, Contact contact) {
     if (other is Trash) {
       Trash trash = other;
-      trash.removeFromParent();
-      statsBloc.addScore(1);
+      trashes.add(trash);
     }
     super.beginContact(other, contact);
   }
+
+  @override
+  void endContact(Object other, Contact contact) {
+    if (other is Trash) {
+      Trash trash = other;
+      if(trashes.contains(trash))
+        trashes.remove(trash);
+    }
+    super.endContact(other, contact);
+  }
+
+  void tryRemoveTrash()
+  {
+    if(trashes.isNotEmpty)
+    {
+      Trash trash = trashes.last;
+      trash.removeFromParent();
+      trashes.removeLast();
+      statsBloc.addScore(1);
+    }
+  }
+
+
 
 
 }

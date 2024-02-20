@@ -34,10 +34,7 @@ class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
 
   Future<void> loadResources() async {
     await images.loadAll([
-      'sprite2.png',
-      'recycle_items.png',
-      'onscreen_control_knob.png',
-      'onscreen_control_base.png',
+      pathPlayer,
       pathBagTrash,
       pathCutleries,
       pathPlasticCup,
@@ -45,6 +42,8 @@ class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
       pathStyrofoam,
       pathWaterBottle,
       pathWaterGallon,
+      'onscreen_control_knob.png',
+      'onscreen_control_base.png',
     ]);
   }
 
