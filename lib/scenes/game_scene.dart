@@ -7,6 +7,7 @@ import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame_forge2d/forge2d_game.dart';
 import 'package:flutter/material.dart';
+import '../bloc/bloc_parameters.dart';
 import '../bloc/joystick_movement/joystick_movement_bloc.dart';
 import '../components/player/player.dart';
 import '../worlds/game_world.dart';
@@ -14,10 +15,10 @@ import '../worlds/hud_world.dart';
 
 class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
 
-  final JoystickMovementBloc joystickMovementBloc;
+  final BlocParameters blocParameters;
 
   GameScene({
-    required this.joystickMovementBloc,
+    required this.blocParameters,
   });
 
   @override
@@ -41,7 +42,7 @@ class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
 
   Future<void> loadWorlds() async {
     FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
-    final gameWorld = GameWorld(joystickMovementBloc:joystickMovementBloc);
+    final gameWorld = GameWorld(blocParameters: blocParameters);
     final gameCamera = CameraComponent.withFixedResolution(
          width: GameWorld.worldSize.width,
          height: GameWorld.worldSize.height,
@@ -52,7 +53,7 @@ class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
       ..position = Vector2(GameWorld.worldSize.width, GameWorld.worldSize.height);
      // ..anchor = Anchor.topLeft;
 
-    final hudWorld = HudWorld(joystickMovementBloc:joystickMovementBloc);
+    final hudWorld = HudWorld(blocParameters: blocParameters);
     final hudCamera = CameraComponent.withFixedResolution(
       width: view.physicalSize.width / view.devicePixelRatio,
       height: view.physicalSize.height / view.devicePixelRatio,

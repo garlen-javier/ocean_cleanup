@@ -10,6 +10,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/player/player_controller.dart';
+import '../bloc/bloc_parameters.dart';
 import '../bloc/joystick_movement/joystick_movement_barrel.dart';
 import '../components/brick/brick_body.dart';
 import '../components/player/player.dart';
@@ -24,8 +25,9 @@ class GameWorld extends Forge2DWorld
   static const Size worldSize = Size(16 * 25,16 * 15);
   static final Rectangle bounds = Rectangle.fromLTRB(0, 0 , worldSize.width * 2, worldSize.height * 2);
 
-  final JoystickMovementBloc joystickMovementBloc;
-  GameWorld({required this.joystickMovementBloc}):super();
+  final BlocParameters blocParameters;
+
+  GameWorld({required this.blocParameters}):super();
 
   late Player player;
   late TiledComponent<FlameGame<camWorld.World>> map;
@@ -33,17 +35,12 @@ class GameWorld extends Forge2DWorld
   @override
   FutureOr<void> onLoad() async {
 
-
     await _initLevel();
+    await _initPlayer();
 
     // var sp = await Sprite.load("background.png");
     // SpriteComponent bg = SpriteComponent(sprite: sp);
     // await add(bg);
-
-    player = Player(Vector2(worldSize.width ,worldSize.height),scale: Vector2.all(0.5));
-    await add(player);
-    await _addPlayerController(player);
-
     return super.onLoad();
   }
 
@@ -53,6 +50,14 @@ class GameWorld extends Forge2DWorld
 
     await _loadCollisions();
     await _loadTrash();
+  }
+
+  Future<void> _initPlayer() async {
+    player = Player(Vector2(worldSize.width ,worldSize.height),
+        scale: Vector2.all(0.5),
+        statsBloc: blocParameters.playerStatsBloc);
+    await add(player);
+    await _addPlayerController(player);
   }
 
   Future<void> _loadCollisions() async {
@@ -84,7 +89,7 @@ class GameWorld extends Forge2DWorld
       FlameMultiBlocProvider(
         providers: [
           FlameBlocProvider<JoystickMovementBloc, JoystickMovementState>.value(
-            value: joystickMovementBloc,
+            value: blocParameters.joystickMovementBloc,
           ),
         ],
         children: [

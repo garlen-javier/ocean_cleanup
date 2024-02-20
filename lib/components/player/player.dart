@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
+import 'package:ocean_cleanup/bloc/player_stats/player_stats_barrel.dart';
 import 'package:ocean_cleanup/components/trash/trash.dart';
 import 'package:ocean_cleanup/constants.dart';
 import '../../worlds/game_world.dart';
@@ -12,8 +14,9 @@ class Player extends BodyComponent with ContactCallbacks{
 
   Vector2 pos;
   Vector2? scale;
+  PlayerStatsBloc statsBloc;
 
-  Player(this.pos,{this.scale}):super(){
+  Player(this.pos,{this.scale,required this.statsBloc}):super(){
     scale = scale ?? Vector2.all(1);
   }
 
@@ -31,6 +34,7 @@ class Player extends BodyComponent with ContactCallbacks{
     //renderBody = false;
     return super.onLoad();
   }
+
 
   @override
   void update(double dt) {
@@ -72,7 +76,8 @@ class Player extends BodyComponent with ContactCallbacks{
   void beginContact(Object other, Contact contact) {
     if (other is Trash) {
       Trash trash = other;
-      //trash.removeFromParent();
+      trash.removeFromParent();
+      statsBloc.addScore(1);
     }
     super.beginContact(other, contact);
   }
