@@ -5,11 +5,11 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/input.dart';
 import 'package:flame_bloc/flame_bloc.dart';
-import 'package:ocean_cleanup/components/hud/game_timer.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import '../bloc/bloc_parameters.dart';
 import '../bloc/player_stats/player_stats_barrel.dart';
-import '../components/hud/player_stats.dart';
+import '../components/hud/hud_stats.dart';
+import '../components/hud/hud_timer.dart';
 import '../scenes/game_scene.dart';
 
 class HudWorld extends World with HasGameRef<GameScene>
@@ -27,13 +27,13 @@ class HudWorld extends World with HasGameRef<GameScene>
       await _showJoyStick();
 
     await _showTimer();
-    await _showPlayerStats();
+    await _showGameStats();
     await _showFPSDisplay();
     return super.onLoad();
   }
 
   Future<void> _showTimer() async {
-    await add(GameTimer(timeLimit: 20,pos:Vector2(-20,-_gameSize.y * 0.48)));
+    await add(HudTimer(timeLimit: 20,pos:Vector2(-20,-_gameSize.y * 0.48)));
   }
 
   Future<void> _showJoyStick() async {
@@ -64,8 +64,8 @@ class HudWorld extends World with HasGameRef<GameScene>
     ));
   }
 
-  Future<void> _showPlayerStats() async {
-    PlayerStats stats = PlayerStats();
+  Future<void> _showGameStats() async {
+    HudStats stats = HudStats();
     await add(stats);
     await add(
       FlameMultiBlocProvider(

@@ -4,11 +4,11 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart' as material;
 
-class GameTimer extends PositionComponent
+class HudTimer extends PositionComponent
 {
   Vector2? pos;
   double timeLimit;
-  GameTimer({required this.timeLimit,this.pos}){
+  HudTimer({required this.timeLimit,this.pos}){
     pos = pos ?? Vector2.zero();
   }
 

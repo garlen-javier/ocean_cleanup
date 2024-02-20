@@ -6,7 +6,7 @@ import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart' as material;
 import '../../bloc/player_stats/player_stats_barrel.dart';
 
-class PlayerStats extends PositionComponent
+class HudStats extends PositionComponent
 {
   final TextPaint _scorePaint = TextPaint(
     style: const material.TextStyle(color: material.Colors.black, fontSize: 20),
