@@ -26,7 +26,7 @@ class Trash extends BodyComponent  {
     await add(sprite);
 
     _initRandomMove();
-   // renderBody = false;
+    renderBody = false;
     return super.onLoad();
   }
 

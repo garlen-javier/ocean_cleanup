@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import '../bloc/bloc_parameters.dart';
 import '../bloc/joystick_movement/joystick_movement_bloc.dart';
 import '../components/player/player.dart';
+import '../constants.dart';
 import '../worlds/game_world.dart';
 import '../worlds/hud_world.dart';
 
@@ -37,6 +38,13 @@ class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
       'recycle_items.png',
       'onscreen_control_knob.png',
       'onscreen_control_base.png',
+      pathBagTrash,
+      pathCutleries,
+      pathPlasticCup,
+      pathStraw,
+      pathStyrofoam,
+      pathWaterBottle,
+      pathWaterGallon,
     ]);
   }
 
