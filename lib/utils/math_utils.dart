@@ -8,13 +8,17 @@ class MathUtils{
     return atan2(dir.y, dir.x);
   }
 
+  static Vector2 angleRadToDir(double rad) {
+    return Vector2(cos(rad), sin(rad));
+  }
+
   static double radToDeg (double rad) {
-    return rad * 360/tau();
+    return rad * 360/tau;
   }
 
   static double degToRad (double degree) {
-    return degree * tau()/360;
+    return degree * tau/360;
   }
 
-  static double tau() => pi * 2;
+  static double tau = pi * 2;
 }

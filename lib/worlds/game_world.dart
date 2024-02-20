@@ -30,8 +30,6 @@ class GameWorld extends Forge2DWorld
   late Player player;
   late TiledComponent<FlameGame<camWorld.World>> map;
 
-  var trashes = <TrashSprite>{};
-
   @override
   FutureOr<void> onLoad() async {
 
@@ -63,7 +61,7 @@ class GameWorld extends Forge2DWorld
     {
       for(var col in objGroup.objects)
       {
-        BrickBody brick = BrickBody(pos:Vector2(col.x + 16,col.y + 16), width:col.width - 32,height: col.height - 32);
+        BrickBody brick = BrickBody(pos:Vector2(col.x + 16,col.y + 16), width:col.width - 16,height: col.height - 16);
         add(brick);
       }
     }
@@ -77,7 +75,6 @@ class GameWorld extends Forge2DWorld
       {
         Trash trash = Trash(pos:Vector2(col.x + 16,col.y + 16));
         add(trash);
-        //trashes.add(trash);
       }
     }
   }

@@ -32,7 +32,6 @@ class PlayerSprite extends SpriteAnimationGroupComponent with HasGameRef<GameSce
     anchor = Anchor.center;
     //scale = Vector2.all(0.5);
 
-    priority = 2;
     debugMode = true;
     return super.onLoad( );
   }

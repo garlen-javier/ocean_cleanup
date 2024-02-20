@@ -1,8 +1,11 @@
 import 'dart:ui';
 
+import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/trash/trash.dart';
-import 'package:ocean_cleanup/utils/utils.dart';
+import 'package:ocean_cleanup/constants.dart';
+import '../../worlds/game_world.dart';
 import 'player_sprite.dart';
 
 class Player extends BodyComponent with ContactCallbacks{
@@ -23,6 +26,8 @@ class Player extends BodyComponent with ContactCallbacks{
     sprite = PlayerSprite();
     sprite.scale = scale!;
     await add(sprite);
+
+    priority = playerPriority;
     //renderBody = false;
     return super.onLoad();
   }
@@ -67,11 +72,10 @@ class Player extends BodyComponent with ContactCallbacks{
   void beginContact(Object other, Contact contact) {
     if (other is Trash) {
       Trash trash = other;
-      trash.removeFromParent();
+      //trash.removeFromParent();
     }
     super.beginContact(other, contact);
   }
-
 
 
 }
