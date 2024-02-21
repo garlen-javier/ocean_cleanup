@@ -68,7 +68,9 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/images/enemies/
     - assets/images/trashes/
+    - assets/images/animals/
     - assets/tiles/
     - assets/audio/
 

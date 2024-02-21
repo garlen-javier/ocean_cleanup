@@ -10,22 +10,20 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/player/player_controller.dart';
-import '../bloc/bloc_parameters.dart';
+import '../bloc/game_bloc_parameters.dart';
 import '../bloc/joystick_movement/joystick_movement_barrel.dart';
 import '../components/brick/brick_body.dart';
 import '../components/player/player.dart';
 import 'package:flame/src/camera/world.dart' as camWorld;
 import '../components/trash/trash.dart';
-import '../components/trash/trash_sprite.dart';
 
 
-///Used Forge2DWorld incase we need to add levels with collision
 class GameWorld extends Forge2DWorld
 {
   static const Size worldSize = Size(16 * 25,16 * 15);
   static final Rectangle bounds = Rectangle.fromLTRB(0, 0 , worldSize.width * 2, worldSize.height * 2);
 
-  final BlocParameters blocParameters;
+  final GameBlocParameters blocParameters;
 
   GameWorld({required this.blocParameters}):super();
 
@@ -54,7 +52,6 @@ class GameWorld extends Forge2DWorld
 
   Future<void> _initPlayer() async {
     player = Player(Vector2(worldSize.width ,worldSize.height),
-        scale: Vector2.all(0.5),
         statsBloc: blocParameters.playerStatsBloc);
     await add(player);
     await _addPlayerController(player);
@@ -98,6 +95,8 @@ class GameWorld extends Forge2DWorld
       ),
     );
   }
+
+
 
 
 

@@ -4,7 +4,6 @@ import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:ocean_cleanup/worlds/game_world.dart';
 import 'dart:async' as dartAsync;
-
 import '../../utils/math_utils.dart';
 import 'trash_sprite.dart';
 

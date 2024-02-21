@@ -6,7 +6,7 @@ import 'package:flame/extensions.dart';
 import 'package:flame/input.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
-import '../bloc/bloc_parameters.dart';
+import '../bloc/game_bloc_parameters.dart';
 import '../bloc/player_stats/player_stats_barrel.dart';
 import '../components/hud/hud_stats.dart';
 import '../components/hud/hud_timer.dart';
@@ -14,7 +14,7 @@ import '../scenes/game_scene.dart';
 
 class HudWorld extends World with HasGameRef<GameScene>
 {
-  final BlocParameters blocParameters;
+  final GameBlocParameters blocParameters;
   HudWorld({required this.blocParameters}):super();
 
   JoystickComponent? _joystick;

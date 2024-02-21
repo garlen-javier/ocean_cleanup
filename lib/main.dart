@@ -3,7 +3,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/joystick_movement/joystick_movement_barrel.dart';
-import 'bloc/bloc_parameters.dart';
+import 'bloc/game_bloc_parameters.dart';
 import 'bloc/player_stats/player_stats_barrel.dart';
 import 'scenes/game_scene.dart';
 
@@ -36,7 +36,7 @@ class GameView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GameWidget(
       game: GameScene(
-        blocParameters: BlocParameters(
+        blocParameters: GameBlocParameters(
             joystickMovementBloc: context.read<JoystickMovementBloc>(),
             playerStatsBloc:  context.read<PlayerStatsBloc>(),
         )

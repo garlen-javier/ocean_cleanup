@@ -4,11 +4,9 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/flame.dart';
 import 'package:flame_forge2d/forge2d_game.dart';
 import 'package:flutter/material.dart';
-import '../bloc/bloc_parameters.dart';
-import '../bloc/joystick_movement/joystick_movement_bloc.dart';
+import '../bloc/game_bloc_parameters.dart';
 import '../components/player/player.dart';
 import '../constants.dart';
 import '../worlds/game_world.dart';
@@ -16,7 +14,7 @@ import '../worlds/hud_world.dart';
 
 class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
 
-  final BlocParameters blocParameters;
+  final GameBlocParameters blocParameters;
 
   GameScene({
     required this.blocParameters,
@@ -35,6 +33,7 @@ class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
   Future<void> loadResources() async {
     await images.loadAll([
       pathPlayer,
+      pathShark,
       pathBagTrash,
       pathCutleries,
       pathPlasticCup,
@@ -42,6 +41,7 @@ class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
       pathStyrofoam,
       pathWaterBottle,
       pathWaterGallon,
+      pathDolphin,
       'onscreen_control_knob.png',
       'onscreen_control_base.png',
     ]);
