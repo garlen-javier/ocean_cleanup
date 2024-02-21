@@ -11,6 +11,7 @@ import '../bloc/player_stats/player_stats_barrel.dart';
 import '../components/hud/hud_stats.dart';
 import '../components/hud/hud_timer.dart';
 import '../scenes/game_scene.dart';
+import 'package:flutter/material.dart' as material;
 
 class HudWorld extends World with HasGameRef<GameScene>
 {
@@ -60,6 +61,9 @@ class HudWorld extends World with HasGameRef<GameScene>
 
   Future<void> _showFPSDisplay() async {
     await add(FpsTextComponent(
+      textRenderer: TextPaint(
+        style: const material.TextStyle(color: material.Colors.black, fontSize: 20),
+      ),
        position: Vector2(_gameSize.x * 0.35,_gameSize.y * 0.4),
     ));
   }

@@ -1,25 +1,11 @@
-import 'package:flame_forge2d/flame_forge2d.dart';
+import 'brick_base_body.dart';
 
-class BrickBody extends BodyComponent {
-  final Vector2 pos;
-  final double width;
-  final double height;
-
-  BrickBody ({required this.pos,required this.width,required this.height});
+class BrickBody extends BrickBaseBody {
+  BrickBody({required super.pos, required super.width, required super.height});
 
   @override
-  Body createBody() {
-    final bodyDef = BodyDef(
-      type: BodyType.static,
-      userData: this,
-      position: pos,
-
-    );
-    final shape = PolygonShape()..setAsBoxXY(width, height);
-    final body = world.createBody(bodyDef)
-      ..userData = this;
-    body.createFixtureFromShape(shape);
-    //renderBody = false;
-    return body;
+  Future<void> onLoad() {
+    renderBody = false;
+    return super.onLoad();
   }
 }

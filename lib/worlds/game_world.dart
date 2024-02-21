@@ -10,9 +10,11 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/player/player_controller.dart';
+import 'package:ocean_cleanup/components/shark/shark.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../bloc/joystick_movement/joystick_movement_barrel.dart';
 import '../components/brick/brick_body.dart';
+import '../components/brick/catcher_body.dart';
 import '../components/player/player.dart';
 import 'package:flame/src/camera/world.dart' as camWorld;
 import '../components/trash/trash.dart';
@@ -29,16 +31,14 @@ class GameWorld extends Forge2DWorld
 
   late Player player;
   late TiledComponent<FlameGame<camWorld.World>> map;
+  List<Vector2> _sharkPoints = [];
+  int sharkCount = 2;
 
   @override
   FutureOr<void> onLoad() async {
 
     await _initLevel();
     await _initPlayer();
-
-    // var sp = await Sprite.load("background.png");
-    // SpriteComponent bg = SpriteComponent(sprite: sp);
-    // await add(bg);
     return super.onLoad();
   }
 
@@ -47,7 +47,10 @@ class GameWorld extends Forge2DWorld
     await add(map);
 
     await _loadCollisions();
-    await _loadTrash();
+    await _loadCatchers();
+    await _loadTrashPoints();
+    await _loadSharkPoints();
+    // await _loadTrash();
   }
 
   Future<void> _initPlayer() async {
@@ -69,17 +72,61 @@ class GameWorld extends Forge2DWorld
     }
   }
 
-  Future<void> _loadTrash() async {
-    ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>("trash");
+  Future<void> _loadCatchers() async {
+    ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>("catcher");
     if(objGroup != null)
     {
       for(var col in objGroup.objects)
       {
-        Trash trash = Trash(pos:Vector2(col.x + 16,col.y + 16));
-        add(trash);
+        CatcherBody brick = CatcherBody(pos:Vector2(col.x + 16,col.y + 16), width:col.width - 16,height: col.height - 16);
+        add(brick);
       }
     }
   }
+
+  Future<void> _loadTrashPoints() async {
+    loadSpawner(String layerName,int direction)
+    async {
+      ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>(layerName);
+      if(objGroup != null)
+      {
+        for(var col in objGroup.objects)
+        {
+          SpawnComponent spawner = SpawnComponent.periodRange(
+            factory: (i)  {
+              return Trash(pos:Vector2(col.x,col.y),directionX: direction);
+            },
+            minPeriod: 0.5,
+            maxPeriod: 15,
+            selfPositioning: true,
+          );
+          await add(spawner);
+        }
+      }
+    }
+
+    loadSpawner("trash_points_left",1);
+    loadSpawner("trash_points_right",-1);
+  }
+
+  Future<void> _loadSharkPoints() async {
+    ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>("shark_points");
+    if(objGroup != null)
+    {
+      for(var col in objGroup.objects)
+      {
+        _sharkPoints.add(Vector2(col.x, col.y));
+      }
+    }
+
+    _sharkPoints.shuffle();
+    for(int i = 0; i < 3; ++i){
+      Vector2 pos = _sharkPoints[i];
+      Shark shark = Shark(pos: pos,sharkPoints: _sharkPoints, directionX: -pos.x.sign);
+      await add(shark);
+    }
+  }
+
 
   Future<void> _addPlayerController(Player player) async {
     await add(

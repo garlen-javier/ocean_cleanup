@@ -5,6 +5,8 @@ import 'package:ocean_cleanup/bloc/player_stats/player_stats_barrel.dart';
 import 'package:ocean_cleanup/components/trash/trash.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/utils/math_utils.dart';
+import '../../worlds/game_world.dart';
+import '../trash/trash_body.dart';
 import 'player_sprite.dart';
 
 class Player extends BodyComponent with ContactCallbacks{
@@ -20,7 +22,7 @@ class Player extends BodyComponent with ContactCallbacks{
   late PlayerSprite sprite;
   Vector2 _velocity = Vector2.zero();
   double _speed = 300;
-  List<Trash> trashes = [];
+  List<TrashBody> trashes = [];
 
   @override
   Future<void> onLoad() async {
@@ -101,8 +103,8 @@ class Player extends BodyComponent with ContactCallbacks{
 
   @override
   void beginContact(Object other, Contact contact) {
-    if (other is Trash) {
-      Trash trash = other;
+    if (other is TrashBody) {
+      TrashBody trash = other;
       trashes.add(trash);
     }
     super.beginContact(other, contact);
@@ -110,8 +112,8 @@ class Player extends BodyComponent with ContactCallbacks{
 
   @override
   void endContact(Object other, Contact contact) {
-    if (other is Trash) {
-      Trash trash = other;
+    if (other is TrashBody) {
+      TrashBody trash = other;
       if(trashes.contains(trash))
         trashes.remove(trash);
     }
@@ -122,8 +124,9 @@ class Player extends BodyComponent with ContactCallbacks{
   {
     if(trashes.isNotEmpty)
     {
-      Trash trash = trashes.last;
-      trash.removeFromParent();
+      TrashBody trash = trashes.last;
+      //trash.removeFromParent();
+      trash.removeWithParent();
       trashes.removeLast();
       statsBloc.addScore(1);
     }
