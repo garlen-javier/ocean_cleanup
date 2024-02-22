@@ -5,7 +5,7 @@ class BrickBody extends BrickBaseBody {
 
   @override
   Future<void> onLoad() {
-    renderBody = false;
+    debugMode = false;
     return super.onLoad();
   }
 }

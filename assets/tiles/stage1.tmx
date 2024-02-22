@@ -31,7 +31,7 @@
   <object id="73" name="trash_point" gid="147" x="-64" y="320" width="30" height="37"/>
   <object id="74" name="trash_point" gid="147" x="-64" y="384" width="30" height="37"/>
  </objectgroup>
- <objectgroup id="13" name="shark_points" visible="0">
+ <objectgroup id="13" name="shark_points">
   <object id="60" name="shark_point" gid="146" x="-128" y="128" width="95" height="73"/>
   <object id="61" name="shark_point" gid="146" x="-128" y="224" width="95" height="73"/>
   <object id="62" name="shark_point" gid="146" x="-128" y="320" width="95" height="73"/>

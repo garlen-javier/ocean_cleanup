@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame_forge2d/forge2d_game.dart';
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../components/player/player.dart';
@@ -12,7 +12,7 @@ import '../constants.dart';
 import '../worlds/game_world.dart';
 import '../worlds/hud_world.dart';
 
-class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
+class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   final GameBlocParameters blocParameters;
 
@@ -66,7 +66,6 @@ class GameScene extends Forge2DGame with HasKeyboardHandlerComponents{
       height: view.physicalSize.height / view.devicePixelRatio,
       world: hudWorld,
     );
-
 
      await addAll([gameWorld,gameCamera, hudWorld ,hudCamera]);
     //_zoomFollowPlayer(gameCamera, gameWorld.player);

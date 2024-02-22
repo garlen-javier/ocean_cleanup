@@ -3,24 +3,23 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flame/components.dart';
+import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame_bloc/flame_bloc.dart';
-import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/player/player_controller.dart';
 import 'package:ocean_cleanup/components/shark/shark.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../bloc/joystick_movement/joystick_movement_barrel.dart';
-import '../components/brick/brick_body.dart';
 import '../components/brick/catcher_body.dart';
 import '../components/player/player.dart';
 import 'package:flame/src/camera/world.dart' as camWorld;
 import '../components/trash/trash.dart';
 
 
-class GameWorld extends Forge2DWorld
+class GameWorld extends World with HasCollisionDetection
 {
   static const Size worldSize = Size(16 * 25,16 * 15);
   static final Rectangle bounds = Rectangle.fromLTRB(0, 0 , worldSize.width * 2, worldSize.height * 2);
@@ -46,11 +45,9 @@ class GameWorld extends Forge2DWorld
     map = await TiledComponent.load('stage1.tmx', Vector2.all(32));
     await add(map);
 
-    await _loadCollisions();
     await _loadCatchers();
     await _loadTrashPoints();
     await _loadSharkPoints();
-    // await _loadTrash();
   }
 
   Future<void> _initPlayer() async {
@@ -60,17 +57,6 @@ class GameWorld extends Forge2DWorld
     await _addPlayerController(player);
   }
 
-  Future<void> _loadCollisions() async {
-    ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>("collisions");
-    if(objGroup != null)
-    {
-      for(var col in objGroup.objects)
-      {
-        BrickBody brick = BrickBody(pos:Vector2(col.x + 16,col.y + 16), width:col.width - 16,height: col.height - 16);
-        add(brick);
-      }
-    }
-  }
 
   Future<void> _loadCatchers() async {
     ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>("catcher");
@@ -94,9 +80,9 @@ class GameWorld extends Forge2DWorld
         {
           SpawnComponent spawner = SpawnComponent.periodRange(
             factory: (i)  {
-              return Trash(pos:Vector2(col.x,col.y),directionX: direction);
+              return Trash(pos:Vector2(col.x ,col.y),directionX: direction);
             },
-            minPeriod: 0.5,
+            minPeriod: 1,
             maxPeriod: 15,
             selfPositioning: true,
           );

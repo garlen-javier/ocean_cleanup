@@ -1,44 +1,70 @@
 import 'dart:async';
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/sprite.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:ocean_cleanup/bloc/player_stats/player_stats_barrel.dart';
-import 'package:ocean_cleanup/components/trash/trash.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/utils/math_utils.dart';
+import '../../scenes/game_scene.dart';
 import '../../worlds/game_world.dart';
-import '../trash/trash_body.dart';
-import 'player_sprite.dart';
+import '../trash/trash.dart';
 
-class Player extends BodyComponent with ContactCallbacks{
+enum PlayerAnimationState {
+  idle,
+  running,
+  catching,
+}
+
+class Player extends SpriteAnimationGroupComponent with CollisionCallbacks,HasGameRef<GameScene>{
 
   Vector2 pos;
-  Vector2? scale;
+  Vector2? scaleFactor;
   PlayerStatsBloc statsBloc;
 
-  Player(this.pos,{this.scale,required this.statsBloc}):super(){
-    scale = scale ?? Vector2.all(1);
+  Player(this.pos,{this.scaleFactor,required this.statsBloc}):super(){
+    scale = scaleFactor ?? Vector2.all(1);
   }
 
-  late PlayerSprite sprite;
   Vector2 _velocity = Vector2.zero();
-  double _speed = 300;
-  List<TrashBody> trashes = [];
+  double _speed = 150;
+  List<Trash> trashes = [];
 
   @override
   Future<void> onLoad() async {
-    sprite = PlayerSprite();
-    sprite.scale = scale!;
-    await add(sprite);
+    final spritesheet = SpriteSheet(
+        image: gameRef.images.fromCache(pathPlayer),
+        srcSize: Vector2(112,102.3333333333333)
+    );
 
+    final idle = spritesheet.createAnimation(row:0,stepTime: 0.5,);
+    final running = spritesheet.createAnimation(row:1,stepTime: 0.5,);
+    final catching = spritesheet.createAnimation(row:2,stepTime: 0.5,loop:false);
+
+    animations = {
+      PlayerAnimationState.idle: idle,
+      PlayerAnimationState.running: running,
+      PlayerAnimationState.catching: catching,
+    };
+
+    current = PlayerAnimationState.idle;
+    anchor = Anchor.center;
+    position = pos;
+
+    animationTickers?[PlayerAnimationState.catching]?.onComplete = () {
+      current = PlayerAnimationState.idle;
+    };
+
+    add(RectangleHitbox(size:size,isSolid: true));
     priority = playerPriority;
-    renderBody = false;
     return super.onLoad();
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    body.linearVelocity+= _velocity * _speed * dt;
+    position+=_velocity * _speed * dt;
+    position.clamp(Vector2(width * 0.5 ,height* 0.5), Vector2(GameWorld.bounds.width - (width* 0.5) ,  GameWorld.bounds.height - (height* 0.5)));
   }
 
   void updateDirection(Vector2 pVelocity,double pAngle) {
@@ -53,80 +79,55 @@ class Player extends BodyComponent with ContactCallbacks{
 
   void playCatchAnimation()
   {
-    sprite.current = PlayerAnimationState.catching;
+   current = PlayerAnimationState.catching;
   }
 
   void _updateAnimationByDirection(Vector2 dir)
   {
     if(dir == Vector2.zero()) {
-      sprite.current = PlayerAnimationState.idle;
+      current = PlayerAnimationState.idle;
     }
     else{
-      if(sprite.current != PlayerAnimationState.running)
-        sprite.current = PlayerAnimationState.running;
+      if(current != PlayerAnimationState.running)
+        current = PlayerAnimationState.running;
     }
   }
 
   void _flipSpriteByDirection(Vector2 dir)
   {
-    if(dir.x < 0 && !sprite.isFlippedVertically) {
-      sprite.flipVertically();
+    if(dir.x < 0 && !isFlippedVertically) {
+      flipVertically();
     }
-    else if (dir.x > 0 && sprite.isFlippedVertically) {
-      sprite.flipVertically();
+    else if (dir.x > 0 && isFlippedVertically) {
+      flipVertically();
     }
   }
 
   @override
-  double angle = 0;
-
-  @override
-  Body createBody() {
-    final bodyDef = BodyDef(
-      type: BodyType.dynamic,
-      userData: this,
-      position: pos,
-      gravityScale: Vector2.zero(),
-      linearDamping: 3,
-      fixedRotation: false,
-    );
-
-    final fixtureDef = FixtureDef(
-      PolygonShape()..setAsBoxXY((sprite.width * 0.5) * scale!.x,(sprite.height * 0.5) * scale!.y),
-      isSensor: false,
-    );
-
-    final body = world.createBody(bodyDef);
-    body.createFixture(fixtureDef);
-    return body;
-  }
-
-  @override
-  void beginContact(Object other, Contact contact) {
-    if (other is TrashBody) {
-      TrashBody trash = other;
+  void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
+    if (other is Trash) {
+      Trash trash = other;
       trashes.add(trash);
     }
-    super.beginContact(other, contact);
+    super.onCollisionStart(intersectionPoints, other);
   }
 
   @override
-  void endContact(Object other, Contact contact) {
-    if (other is TrashBody) {
-      TrashBody trash = other;
+  void onCollisionEnd(PositionComponent other) {
+    super.onCollisionEnd(other);
+    if (other is Trash) {
+      Trash trash = other;
       if(trashes.contains(trash))
         trashes.remove(trash);
     }
-    super.endContact(other, contact);
   }
 
   void tryRemoveTrash()
   {
     if(trashes.isNotEmpty)
     {
-      TrashBody trash = trashes.last;
-      //trash.removeFromParent();
-      trash.removeWithParent();
+      Trash trash = trashes.last;
+      trash.removeFromParent();
       trashes.removeLast();
       statsBloc.addScore(1);
     }
