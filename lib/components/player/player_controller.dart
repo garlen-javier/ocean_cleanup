@@ -37,6 +37,8 @@ class PlayerController extends Component with KeyboardHandler
   @override
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     final isKeyDown = event is RawKeyDownEvent;
+    final isKeyUp = event is RawKeyUpEvent;
+
     final bool handled;
     if (event.logicalKey == LogicalKeyboardKey.keyA) {
       _keyboardVelo.x = isKeyDown ? -1 : 0;
@@ -55,6 +57,7 @@ class PlayerController extends Component with KeyboardHandler
       handled = false;
     }
 
+    ///TODO: check to trigger key once
     if (event.logicalKey == LogicalKeyboardKey.space) {
       player.playCatchAnimation();
       player.tryRemoveTrash();

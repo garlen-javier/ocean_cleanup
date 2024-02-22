@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/bloc/player_stats/player_stats_barrel.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/utils/math_utils.dart';
@@ -55,10 +57,13 @@ class Player extends SpriteAnimationGroupComponent with CollisionCallbacks,HasGa
       current = PlayerAnimationState.idle;
     };
 
+
     add(RectangleHitbox(size:size,isSolid: true));
     priority = playerPriority;
     return super.onLoad();
   }
+
+
 
   @override
   void update(double dt) {

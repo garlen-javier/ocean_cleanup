@@ -6,6 +6,9 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:ocean_cleanup/levels/levels.dart';
+import 'package:ocean_cleanup/worlds/level_factory.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../components/player/player.dart';
 import '../constants.dart';
@@ -19,6 +22,11 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   GameScene({
     required this.blocParameters,
   });
+
+  late CameraComponent _gameCamera;
+  late final LevelFactory _levelFactory = LevelFactory();
+  late final Levels _levels = Levels();
+  World? currentLevel;
 
   @override
   Color backgroundColor() => Colors.blueAccent;
@@ -49,13 +57,13 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   Future<void> loadWorlds() async {
     FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
-    final gameWorld = GameWorld(blocParameters: blocParameters);
-    final gameCamera = CameraComponent.withFixedResolution(
+
+    _gameCamera = CameraComponent.withFixedResolution(
          width: GameWorld.worldSize.width,
          height: GameWorld.worldSize.height,
-        world: gameWorld);
+       );
 
-    gameCamera.viewfinder
+    _gameCamera.viewfinder
       ..zoom = 0.5
       ..position = Vector2(GameWorld.worldSize.width, GameWorld.worldSize.height);
      // ..anchor = Anchor.topLeft;
@@ -67,8 +75,20 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
       world: hudWorld,
     );
 
-     await addAll([gameWorld,gameCamera, hudWorld ,hudCamera]);
+     await addAll([_gameCamera, hudWorld ,hudCamera]);
+     await loadLevel(0);
     //_zoomFollowPlayer(gameCamera, gameWorld.player);
+  }
+
+  Future<void> loadLevel(int levelIndex) async
+  {
+    if(currentLevel != null)
+      remove(currentLevel!);
+
+    World level = _levelFactory.createLevel(blocParameters,_levels.params[levelIndex]);
+    currentLevel = level;
+    _gameCamera.world = currentLevel;
+    add(currentLevel!);
   }
 
   void _zoomFollowPlayer(CameraComponent cam,Player player)
@@ -85,6 +105,17 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     //Flame.images.clearCache();
     //Flame.assets.clearCache();
     //TiledAtlas.clearCache();
+  }
+
+  ///TODO: to remove
+  @override
+  KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+
+    if (event.logicalKey == LogicalKeyboardKey.keyP) {
+      debugPrint("pressed p: testing");
+      loadLevel(1);
+    }
+    return super.onKeyEvent(event, keysPressed);
   }
 
 }

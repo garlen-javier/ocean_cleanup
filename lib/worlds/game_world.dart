@@ -35,7 +35,6 @@ class GameWorld extends World with HasCollisionDetection
 
   @override
   FutureOr<void> onLoad() async {
-
     await _initLevel();
     await _initPlayer();
     return super.onLoad();
@@ -56,7 +55,6 @@ class GameWorld extends World with HasCollisionDetection
     await add(player);
     await _addPlayerController(player);
   }
-
 
   Future<void> _loadCatchers() async {
     ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>("catcher");
@@ -106,13 +104,12 @@ class GameWorld extends World with HasCollisionDetection
     }
 
     _sharkPoints.shuffle();
-    for(int i = 0; i < 3; ++i){
+    for(int i = 0; i < sharkCount; ++i){
       Vector2 pos = _sharkPoints[i];
       Shark shark = Shark(pos: pos,sharkPoints: _sharkPoints, directionX: -pos.x.sign);
       await add(shark);
     }
   }
-
 
   Future<void> _addPlayerController(Player player) async {
     await add(

@@ -1,8 +1,11 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/rendering.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/brick/catcher_body.dart';
 import 'package:ocean_cleanup/worlds/game_world.dart';
 import 'dart:async' as dartAsync;
@@ -28,7 +31,9 @@ class Trash extends SpriteComponent with CollisionCallbacks,HasGameRef<GameScene
     position = Vector2(pos.x + width * 0.5,pos.y - height * 0.5);
 
     add(RectangleHitbox(size:size));
+
     //debugMode = true;
+
     return super.onLoad();
   }
 
@@ -50,5 +55,6 @@ class Trash extends SpriteComponent with CollisionCallbacks,HasGameRef<GameScene
     }
     super.onCollisionStart(intersectionPoints, other);
   }
+
 
 }
