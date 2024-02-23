@@ -71,6 +71,7 @@ class HudWorld extends World with HasGameRef<GameScene>
   Future<void> _showGameStats() async {
     HudStats stats = HudStats();
     await add(stats);
+    //TODO: remove
     await add(
       FlameMultiBlocProvider(
         providers: [

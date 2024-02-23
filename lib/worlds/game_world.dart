@@ -11,12 +11,14 @@ import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/player/player_controller.dart';
 import 'package:ocean_cleanup/components/shark/shark.dart';
+import 'package:ocean_cleanup/levels/level_parameters.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../bloc/joystick_movement/joystick_movement_barrel.dart';
 import '../components/brick/catcher_body.dart';
 import '../components/player/player.dart';
 import 'package:flame/src/camera/world.dart' as camWorld;
 import '../components/trash/trash.dart';
+import '../game_manager.dart';
 
 
 class GameWorld extends World with HasCollisionDetection
@@ -25,8 +27,9 @@ class GameWorld extends World with HasCollisionDetection
   static final Rectangle bounds = Rectangle.fromLTRB(0, 0 , worldSize.width * 2, worldSize.height * 2);
 
   final GameBlocParameters blocParameters;
+  final GameManager gameManager;
 
-  GameWorld({required this.blocParameters}):super();
+  GameWorld({required this.gameManager,required this.blocParameters}):super();
 
   late Player player;
   late TiledComponent<FlameGame<camWorld.World>> map;
@@ -78,7 +81,8 @@ class GameWorld extends World with HasCollisionDetection
         {
           SpawnComponent spawner = SpawnComponent.periodRange(
             factory: (i)  {
-              return Trash(pos:Vector2(col.x ,col.y),directionX: direction);
+              TrashType type = gameManager.randomizeTrashType();
+              return Trash(pos:Vector2(col.x ,col.y),type: type, directionX: direction);
             },
             minPeriod: 1,
             maxPeriod: 15,

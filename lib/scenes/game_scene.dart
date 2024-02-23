@@ -7,10 +7,8 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ocean_cleanup/levels/levels.dart';
-import 'package:ocean_cleanup/worlds/level_factory.dart';
+import 'package:ocean_cleanup/game_manager.dart';
 import '../bloc/game_bloc_parameters.dart';
-import '../components/player/player.dart';
 import '../constants.dart';
 import '../worlds/game_world.dart';
 import '../worlds/hud_world.dart';
@@ -23,22 +21,22 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     required this.blocParameters,
   });
 
-  late CameraComponent _gameCamera;
-  late final LevelFactory _levelFactory = LevelFactory();
-  late final Levels _levels = Levels();
-  World? currentLevel;
+  late GameManager _gameManager;
+  late CameraComponent gameCamera;
+  late HudWorld hudWorld;
 
   @override
   Color backgroundColor() => Colors.blueAccent;
 
   @override
   FutureOr<void> onLoad() async{
-    await loadResources();
-    await loadWorlds();
+    await _loadResources();
+    await _loadWorlds();
+    await _loadGameManager();
     return super.onLoad();
   }
 
-  Future<void> loadResources() async {
+  Future<void> _loadResources() async {
     await images.loadAll([
       pathPlayer,
       pathShark,
@@ -55,47 +53,33 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     ]);
   }
 
-  Future<void> loadWorlds() async {
+  Future<void> _loadWorlds() async {
     FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
 
-    _gameCamera = CameraComponent.withFixedResolution(
+    gameCamera = CameraComponent.withFixedResolution(
          width: GameWorld.worldSize.width,
          height: GameWorld.worldSize.height,
        );
 
-    _gameCamera.viewfinder
+    gameCamera.viewfinder
       ..zoom = 0.5
       ..position = Vector2(GameWorld.worldSize.width, GameWorld.worldSize.height);
      // ..anchor = Anchor.topLeft;
 
-    final hudWorld = HudWorld(blocParameters: blocParameters);
+    hudWorld = HudWorld(blocParameters: blocParameters);
     final hudCamera = CameraComponent.withFixedResolution(
       width: view.physicalSize.width / view.devicePixelRatio,
       height: view.physicalSize.height / view.devicePixelRatio,
       world: hudWorld,
     );
 
-     await addAll([_gameCamera, hudWorld ,hudCamera]);
-     await loadLevel(0);
-    //_zoomFollowPlayer(gameCamera, gameWorld.player);
+     await addAll([gameCamera, hudWorld ,hudCamera]);
   }
 
-  Future<void> loadLevel(int levelIndex) async
-  {
-    if(currentLevel != null)
-      remove(currentLevel!);
-
-    World level = _levelFactory.createLevel(blocParameters,_levels.params[levelIndex]);
-    currentLevel = level;
-    _gameCamera.world = currentLevel;
-    add(currentLevel!);
-  }
-
-  void _zoomFollowPlayer(CameraComponent cam,Player player)
-  {
-    cam.viewfinder.zoom = 1;
-    cam.setBounds(GameWorld.bounds);
-    cam.follow(player, maxSpeed: 450);
+  Future<void> _loadGameManager() async {
+    _gameManager = GameManager(gameScene: this,blocParameters:blocParameters);
+    await add(_gameManager);
+    await _gameManager.loadLevel(0);
   }
 
   @override
@@ -113,7 +97,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
     if (event.logicalKey == LogicalKeyboardKey.keyP) {
       debugPrint("pressed p: testing");
-      loadLevel(1);
+      _gameManager.loadLevel(1);
     }
     return super.onKeyEvent(event, keysPressed);
   }

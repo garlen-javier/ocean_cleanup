@@ -1,5 +1,7 @@
 
 
+import 'levels/level_parameters.dart';
+
 const int playerPriority = 2;
 
 const String pathPlayer = "player.png";
@@ -15,3 +17,13 @@ const String pathWaterBottle = "trashes/water_bottle.png";
 const String pathWaterGallon = "trashes/water_gallon.png";
 
 const String pathDolphin = "animals/dolphin_sprite.png";
+
+const Map<TrashType,String> trashPathMap = {
+  TrashType.bagTrash : pathBagTrash,
+  TrashType.cutleries : pathCutleries,
+  TrashType.plasticCup : pathPlasticCup,
+  TrashType.straw : pathStraw,
+  TrashType.styroFoam : pathStyrofoam,
+  TrashType.waterBottle : pathWaterBottle,
+  TrashType.waterGallon : pathWaterGallon,
+};
