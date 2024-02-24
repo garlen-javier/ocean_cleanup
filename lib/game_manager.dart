@@ -1,12 +1,10 @@
 
 import 'dart:async';
 import 'dart:math';
-
-import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
-
+import 'package:ocean_cleanup/worlds/hud_world.dart';
 import 'bloc/game_bloc_parameters.dart';
 import 'bloc/player_stats/player_stats_barrel.dart';
 import 'components/player/player.dart';
@@ -23,15 +21,18 @@ class GameManager extends Component
 
   final LevelFactory _levelFactory = LevelFactory();
   final Levels _levels = Levels();
-  late final List<TrappedAnimal> _animalType = [];
+  final List<TrappedAnimal> _animalType = [];
+  final Set<TrashType> _trashTypes = {};
 
   Random rand = Random();
-  World? _currentLevel;
+  GameWorld? _currentLevel;
+  HudWorld? _hud;
   int _currentLevelIndex = 0;
-  double _animalTrashChance = 0.6;
+  final double _animalTrashChance = 0.6;
 
   LevelParameters levelParameters(int levelIndex) => _levels.params[levelIndex];
   int get currentLevelIndex => _currentLevelIndex;
+  Set<TrashType> get currentTrashTypes => _trashTypes;
 
   @override
   FutureOr<void> onLoad() async {
@@ -57,8 +58,9 @@ class GameManager extends Component
   Future<void> loadLevel(int levelIndex) async
   {
     _currentLevelIndex = levelIndex;
-    _cachedAnimalsByLevel(levelIndex);
+    _cachedLevelParameters(levelIndex);
     await _changeWorldByLevel(levelIndex);
+    await _loadHud();
     //_zoomFollowPlayer(gameScene.gameCamera, level.player);
   }
 
@@ -73,19 +75,30 @@ class GameManager extends Component
     if(_currentLevel != null)
       gameScene.remove(_currentLevel!);
 
-    GameWorld level = _levelFactory.createLevel(this,levelIndex,blocParameters);
-    _currentLevel = level;
+    _currentLevel = _levelFactory.createLevel(this,levelIndex,blocParameters);
     gameScene.gameCamera.world = _currentLevel;
     await gameScene.add(_currentLevel!);
   }
 
-  void _cachedAnimalsByLevel(int levelIndex)
+  Future<void> _loadHud() async {
+    if(_hud != null)
+      gameScene.remove(_hud!);
+
+    _hud = HudWorld(gameManager: this, blocParameters: blocParameters);
+    gameScene.hudCamera.world = _hud;
+    await gameScene.add(_hud!);
+  }
+
+  void _cachedLevelParameters(int levelIndex)
   {
     LevelParameters params = levelParameters(levelIndex);
     _animalType.clear();
+    _trashTypes.clear();
+    _trashTypes.add(TrashType.any);
     if(params.trappedAnimals != null) {
       params.trappedAnimals!.forEach((animal, animalMission) {
         _animalType.add(animal);
+        _trashTypes.add(animalMission.trashType);
       });
     }
   }

@@ -18,6 +18,9 @@ const String pathWaterGallon = "trashes/water_gallon.png";
 
 const String pathDolphin = "animals/dolphin_sprite.png";
 
+const String pathFishNet = "fish_net.png";
+const String pathHealth = "health.png";
+
 const Map<TrashType,String> trashPathMap = {
   TrashType.bagTrash : pathBagTrash,
   TrashType.cutleries : pathCutleries,

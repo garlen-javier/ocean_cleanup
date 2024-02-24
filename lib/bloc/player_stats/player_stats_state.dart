@@ -1,25 +1,33 @@
 
 import 'package:equatable/equatable.dart';
-import 'package:flame/components.dart';
+import '../../levels/level_parameters.dart';
 
 
 class PlayerStatsState extends Equatable {
-  final int score;
+  final TrashType trashType;
+  final int trashCount;
   final int health;
+
    const PlayerStatsState({
-     this.score = 0, this.health = 0,
+     this.trashType = TrashType.any,
+     this.trashCount = 0,
+     this.health = 0,
   });
 
-  const PlayerStatsState.empty() : this(score: 0, health: 0);
+  const PlayerStatsState.empty() : this(trashType: TrashType.any,trashCount:0, health: 0);
 
   PlayerStatsState copyWith({
-    int? score,
+    TrashType? trashType,
+    int? trashCount,
     int? health,
   }) {
-    return PlayerStatsState(score: score ?? this.score, health: health ?? this.health);
+    return PlayerStatsState(
+        trashType: trashType ?? this.trashType,
+        trashCount: trashCount ?? this.trashCount,
+        health: health ?? this.health);
   }
 
   @override
-  List<Object?> get props => [score,health];
+  List<Object?> get props => [trashType,trashCount,health];
 }
 

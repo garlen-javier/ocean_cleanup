@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   late GameManager _gameManager;
   late CameraComponent gameCamera;
+  late CameraComponent hudCamera;
   late HudWorld hudWorld;
 
   @override
@@ -31,7 +33,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   @override
   FutureOr<void> onLoad() async{
     await _loadResources();
-    await _loadWorlds();
+    await _loadCameras();
     await _loadGameManager();
     return super.onLoad();
   }
@@ -48,47 +50,47 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
       pathWaterBottle,
       pathWaterGallon,
       pathDolphin,
+      pathFishNet,
+      pathHealth,
       'onscreen_control_knob.png',
       'onscreen_control_base.png',
     ]);
   }
 
-  Future<void> _loadWorlds() async {
+  Future<void> _loadCameras() async {
     FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
 
     gameCamera = CameraComponent.withFixedResolution(
-         width: GameWorld.worldSize.width,
-         height: GameWorld.worldSize.height,
-       );
+      width: GameWorld.worldSize.width,
+      height: GameWorld.worldSize.height,
+    );
 
     gameCamera.viewfinder
       ..zoom = 0.5
       ..position = Vector2(GameWorld.worldSize.width, GameWorld.worldSize.height);
-     // ..anchor = Anchor.topLeft;
+    // ..anchor = Anchor.topLeft;
 
-    hudWorld = HudWorld(blocParameters: blocParameters);
-    final hudCamera = CameraComponent.withFixedResolution(
+    hudCamera = CameraComponent.withFixedResolution(
       width: view.physicalSize.width / view.devicePixelRatio,
       height: view.physicalSize.height / view.devicePixelRatio,
-      world: hudWorld,
     );
 
-     await addAll([gameCamera, hudWorld ,hudCamera]);
+    await addAll([gameCamera, hudCamera]);
   }
 
   Future<void> _loadGameManager() async {
-    _gameManager = GameManager(gameScene: this,blocParameters:blocParameters);
+    _gameManager = GameManager(gameScene:this,blocParameters:blocParameters);
     await add(_gameManager);
-    await _gameManager.loadLevel(0);
+    await _gameManager.loadLevel(1);
   }
 
   @override
-  void onRemove() {
-    super.onRemove();
-    //removeAll(children);
-    //Flame.images.clearCache();
-    //Flame.assets.clearCache();
+  void onDispose() {
+    // removeAll(children);
+    // Flame.images.clearCache();
+    // Flame.assets.clearCache();
     //TiledAtlas.clearCache();
+    super.onDispose();
   }
 
   ///TODO: to remove

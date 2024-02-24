@@ -26,8 +26,8 @@ class GameWorld extends World with HasCollisionDetection
   static const Size worldSize = Size(16 * 25,16 * 15);
   static final Rectangle bounds = Rectangle.fromLTRB(0, 0 , worldSize.width * 2, worldSize.height * 2);
 
-  final GameBlocParameters blocParameters;
   final GameManager gameManager;
+  final GameBlocParameters blocParameters;
 
   GameWorld({required this.gameManager,required this.blocParameters}):super();
 

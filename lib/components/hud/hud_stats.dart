@@ -1,51 +1,43 @@
 
 import 'dart:async';
-import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame_bloc/flame_bloc.dart';
-import 'package:flutter/material.dart' as material;
+import 'package:ocean_cleanup/components/hud/hud_trash_count.dart';
 import '../../bloc/player_stats/player_stats_barrel.dart';
+import '../../levels/level_parameters.dart';
+import '../../scenes/game_scene.dart';
 
-class HudStats extends PositionComponent
+class HudStats extends PositionComponent with HasGameRef<GameScene>
 {
-  final TextPaint _scorePaint = TextPaint(
-    style: const material.TextStyle(color: material.Colors.black, fontSize: 20),
-  );
+  Set<TrashType> trashTypes = {};
+  HudStats({required this.trashTypes});
 
-  final TextPaint _healthPaint = TextPaint(
-    style: const material.TextStyle(color: material.Colors.black, fontSize: 20),
-  );
+  late Vector2 _gameSize;
 
   @override
   FutureOr<void> onLoad() async{
-    _initBlocListener();
+    _gameSize = gameRef!.size;
+
+    await loadTrashCounter(60);
     return super.onLoad();
   }
 
-  Future<void> _initBlocListener() async {
-    await add(
-      FlameBlocListener<PlayerStatsBloc, PlayerStatsState>(
-        listenWhen: (previousState, newState) {
-          bool isScoreChange = previousState.score != newState.score;
-          bool isHealthChange = previousState.health != newState.health;
-          return isScoreChange || isHealthChange;
-        },
-        onNewState: (state) {
-         // print(state.score);
-        },
-      ),
-    );
+  Future<void> loadTrashCounter(int marginX) async {
+    int count = trashTypes.length;
+
+    Vector2 counterPos = Vector2(-_gameSize.x * 0.12 * (count-1)/count,-_gameSize.y * 0.35);
+    for(int i = 0; i < count ; ++i)
+    {
+      var trashCounter = HudTrashCount(trashType: trashTypes.elementAt(i), position: counterPos);
+      await add(trashCounter);
+      counterPos = Vector2(trashCounter.x + marginX,trashCounter.y);
+    }
   }
 
   @override
-  void render(Canvas canvas) {
-    _scorePaint.render(
-      canvas,
-      "test",
-      Vector2.zero(),
-    );
-    super.render(canvas);
+  void onGameResize(Vector2 size) {
+    _gameSize = size;
+    super.onGameResize(size);
   }
-
 
 }

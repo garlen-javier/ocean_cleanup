@@ -10,13 +10,15 @@ import '../bloc/game_bloc_parameters.dart';
 import '../bloc/player_stats/player_stats_barrel.dart';
 import '../components/hud/hud_stats.dart';
 import '../components/hud/hud_timer.dart';
+import '../game_manager.dart';
 import '../scenes/game_scene.dart';
 import 'package:flutter/material.dart' as material;
 
 class HudWorld extends World with HasGameRef<GameScene>
 {
+  final GameManager gameManager;
   final GameBlocParameters blocParameters;
-  HudWorld({required this.blocParameters}):super();
+  HudWorld({required this.gameManager, required this.blocParameters}):super();
 
   JoystickComponent? _joystick;
   late Vector2 _gameSize;
@@ -69,9 +71,8 @@ class HudWorld extends World with HasGameRef<GameScene>
   }
 
   Future<void> _showGameStats() async {
-    HudStats stats = HudStats();
+    HudStats stats = HudStats(trashTypes: gameManager.currentTrashTypes);
     await add(stats);
-    //TODO: remove
     await add(
       FlameMultiBlocProvider(
         providers: [
@@ -93,11 +94,11 @@ class HudWorld extends World with HasGameRef<GameScene>
       blocParameters.joystickMovementBloc.move(_joystick!.relativeDelta,_joystick!.delta.screenAngle());
   }
 
-
   @override
   void onGameResize(Vector2 size) {
     _gameSize = size;
     super.onGameResize(size);
   }
+
 
 }

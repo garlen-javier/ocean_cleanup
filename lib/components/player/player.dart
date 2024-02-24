@@ -30,7 +30,7 @@ class Player extends SpriteAnimationGroupComponent with CollisionCallbacks,HasGa
 
   Vector2 _velocity = Vector2.zero();
   double _speed = 150;
-  List<Trash> trashes = [];
+  List<Trash> trashCache = [];
 
   @override
   Future<void> onLoad() async {
@@ -57,13 +57,10 @@ class Player extends SpriteAnimationGroupComponent with CollisionCallbacks,HasGa
       current = PlayerAnimationState.idle;
     };
 
-
     add(RectangleHitbox(size:size,isSolid: true));
     priority = playerPriority;
     return super.onLoad();
   }
-
-
 
   @override
   void update(double dt) {
@@ -112,7 +109,7 @@ class Player extends SpriteAnimationGroupComponent with CollisionCallbacks,HasGa
   void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Trash) {
       Trash trash = other;
-      trashes.add(trash);
+      trashCache.add(trash);
     }
     super.onCollisionStart(intersectionPoints, other);
   }
@@ -122,23 +119,22 @@ class Player extends SpriteAnimationGroupComponent with CollisionCallbacks,HasGa
     super.onCollisionEnd(other);
     if (other is Trash) {
       Trash trash = other;
-      if(trashes.contains(trash))
-        trashes.remove(trash);
+      if(trashCache.contains(trash))
+        trashCache.remove(trash);
     }
   }
 
   void tryRemoveTrash()
   {
-    if(trashes.isNotEmpty)
+    if(trashCache.isNotEmpty)
     {
-      Trash trash = trashes.last;
+      Trash trash = trashCache.last;
+      statsBloc.addTrash(trash.type);
       trash.removeFromParent();
-      trashes.removeLast();
-      statsBloc.addScore(1);
+      trashCache.removeLast();
+      //statsBloc.addTrash(trash.type);
     }
   }
-
-
 
 
 }
