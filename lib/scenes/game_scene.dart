@@ -4,13 +4,16 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ocean_cleanup/game_manager.dart';
+import '../bloc/game/game_barrel.dart';
 import '../bloc/game_bloc_parameters.dart';
+import '../bloc/player_stats/player_stats_barrel.dart';
 import '../constants.dart';
+import '../mixins/update_mixin.dart';
 import '../worlds/game_world.dart';
 import '../worlds/hud_world.dart';
 
@@ -32,10 +35,15 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   @override
   FutureOr<void> onLoad() async{
+    await _loadGameManager();
+    await _loadGame();
+    blocParameters.gameBloc.add(GameStart(_gameManager.tryLoadLevel,0));
+    return super.onLoad();
+  }
+
+  Future<void> _loadGame() async {
     await _loadResources();
     await _loadCameras();
-    await _loadGameManager();
-    return super.onLoad();
   }
 
   Future<void> _loadResources() async {
@@ -80,12 +88,38 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   Future<void> _loadGameManager() async {
     _gameManager = GameManager(gameScene:this,blocParameters:blocParameters);
-    await add(_gameManager);
-    await _gameManager.loadLevel(1);
+    await add(
+      FlameMultiBlocProvider(
+        providers: [
+          FlameBlocProvider<GameBloc, GameState>.value(
+            value: blocParameters.gameBloc,
+          ),
+        ],
+        children: [
+          _gameManager,
+        ],
+      ),
+    );
+  }
+
+  @override
+  void update(double dt) {
+    if(hasChildren) {
+      children.forEach((child) {
+        if(child is HasUpdateMixin){
+          if(_gameManager.gamePhase == GamePhase.playing)
+            (child as dynamic)?.runUpdate(dt);
+        }
+      });
+    }
+    super.update(dt);
   }
 
   @override
   void onDispose() {
+     blocParameters.gameBloc.close();
+     blocParameters.playerStatsBloc.close();
+     blocParameters.joystickMovementBloc.close();
     // removeAll(children);
     // Flame.images.clearCache();
     // Flame.assets.clearCache();
@@ -98,8 +132,13 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
 
     if (event.logicalKey == LogicalKeyboardKey.keyP) {
-      debugPrint("pressed p: testing");
-      _gameManager.loadLevel(1);
+      debugPrint("pressed P: testing");
+      blocParameters.gameBloc.add(const GamePause());
+      //blocParameters.gameBloc.add(GameWin(_gameManager.currentLevelIndex));
+    }
+    else if(event.logicalKey == LogicalKeyboardKey.keyO){
+      debugPrint("pressed O: testing");
+      blocParameters.gameBloc.add(const GameResume());
     }
     return super.onKeyEvent(event, keysPressed);
   }

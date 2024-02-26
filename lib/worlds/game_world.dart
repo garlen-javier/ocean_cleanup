@@ -19,9 +19,10 @@ import '../components/player/player.dart';
 import 'package:flame/src/camera/world.dart' as camWorld;
 import '../components/trash/trash.dart';
 import '../game_manager.dart';
+import '../mixins/update_mixin.dart';
 
 
-class GameWorld extends World with HasCollisionDetection
+class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
 {
   static const Size worldSize = Size(16 * 25,16 * 15);
   static final Rectangle bounds = Rectangle.fromLTRB(0, 0 , worldSize.width * 2, worldSize.height * 2);
@@ -31,7 +32,7 @@ class GameWorld extends World with HasCollisionDetection
 
   GameWorld({required this.gameManager,required this.blocParameters}):super();
 
-  late Player player;
+  Player? player;
   late TiledComponent<FlameGame<camWorld.World>> map;
   List<Vector2> _sharkPoints = [];
   int sharkCount = 2;
@@ -55,8 +56,8 @@ class GameWorld extends World with HasCollisionDetection
   Future<void> _initPlayer() async {
     player = Player(Vector2(worldSize.width ,worldSize.height),
         statsBloc: blocParameters.playerStatsBloc);
-    await add(player);
-    await _addPlayerController(player);
+    await add(player!);
+    await _addPlayerController(player!);
   }
 
   Future<void> _loadCatchers() async {
@@ -79,6 +80,7 @@ class GameWorld extends World with HasCollisionDetection
       {
         for(var col in objGroup.objects)
         {
+          //TODO: need to pause/resume
           SpawnComponent spawner = SpawnComponent.periodRange(
             factory: (i)  {
               TrashType type = gameManager.randomizeTrashType();
@@ -112,6 +114,7 @@ class GameWorld extends World with HasCollisionDetection
       Vector2 pos = _sharkPoints[i];
       Shark shark = Shark(pos: pos,sharkPoints: _sharkPoints, directionX: -pos.x.sign);
       await add(shark);
+
     }
   }
 
@@ -131,7 +134,20 @@ class GameWorld extends World with HasCollisionDetection
   }
 
 
+  @override
+  void runUpdate(double dt) {
+    if(hasChildren) {
+      children.forEach((child) {
+        if(child is UpdateMixin){
+          (child as dynamic)?.runUpdate(dt);
+        }
+      });
+    }
+  }
 
+
+
+  
 
 
 }

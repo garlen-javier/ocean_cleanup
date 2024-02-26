@@ -23,7 +23,6 @@ class Levels
         goal: 25,
         timeLimit: Utils.minuteToSeconds(2));
 
-    
     List<TrashObjective> objectives = [mainMission];
     return LevelParameters(trashObjectives: objectives,sharkCount: 2);
   }

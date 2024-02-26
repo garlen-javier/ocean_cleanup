@@ -11,10 +11,11 @@ import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/worlds/game_world.dart';
 import 'dart:async' as dartAsync;
 import '../../constants.dart';
+import '../../mixins/update_mixin.dart';
 import '../../scenes/game_scene.dart';
 
 
-class Trash extends SpriteComponent with CollisionCallbacks,HasGameRef<GameScene> {
+class Trash extends SpriteComponent with UpdateMixin,CollisionCallbacks,HasGameRef<GameScene> {
   final Vector2 pos;
   final TrashType type;
   final int directionX;
@@ -35,19 +36,17 @@ class Trash extends SpriteComponent with CollisionCallbacks,HasGameRef<GameScene
     add(RectangleHitbox(size:size));
 
     //debugMode = true;
-
     return super.onLoad();
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
-     double x = _velocity * directionX;
-     double y = _amplitude * sin(_velocity * _frequency);
+  void runUpdate(double dt) {
+    double x = _velocity * directionX;
+    double y = _amplitude * sin(_velocity * _frequency);
 
-     position+=Vector2(x,y);
-     _velocity += _speed * dt;
-     position.y.clamp(height* 0.5, GameWorld.bounds.height - (height* 0.5));
+    position+=Vector2(x,y);
+    _velocity += _speed * dt;
+    position.y.clamp(height* 0.5, GameWorld.bounds.height - (height* 0.5));
   }
 
   @override

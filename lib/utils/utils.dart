@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 
 class Utils{
 
-  static int minuteToSeconds(double min) => (min * 60).toInt();
+  static double minuteToSeconds(double min) => min * 60;
 
   static bool get isMobile {
     if (kIsWeb) {

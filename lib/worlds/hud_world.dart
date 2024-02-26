@@ -5,16 +5,19 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/input.dart';
 import 'package:flame_bloc/flame_bloc.dart';
+import 'package:ocean_cleanup/bloc/game/game_barrel.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../bloc/player_stats/player_stats_barrel.dart';
 import '../components/hud/hud_stats.dart';
 import '../components/hud/hud_timer.dart';
 import '../game_manager.dart';
+import '../levels/level_parameters.dart';
+import '../mixins/update_mixin.dart';
 import '../scenes/game_scene.dart';
 import 'package:flutter/material.dart' as material;
 
-class HudWorld extends World with HasGameRef<GameScene>
+class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 {
   final GameManager gameManager;
   final GameBlocParameters blocParameters;
@@ -36,7 +39,15 @@ class HudWorld extends World with HasGameRef<GameScene>
   }
 
   Future<void> _showTimer() async {
-    await add(HudTimer(timeLimit: 20,pos:Vector2(-20,-_gameSize.y * 0.48)));
+    //TODO: testing
+    LevelParameters params = gameManager.levelParameters(gameManager.currentLevelIndex);
+    await add(HudTimer(
+        timeLimit: params.trashObjectives.elementAt(0).timeLimit,
+        pos:Vector2(-20,-_gameSize.y * 0.48),
+        timerFinished: () => {
+          blocParameters.gameBloc.add(GameOver(gameManager.currentLevelIndex))
+        }
+    ));
   }
 
   Future<void> _showJoyStick() async {
@@ -88,8 +99,7 @@ class HudWorld extends World with HasGameRef<GameScene>
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
+  void runUpdate(double dt) {
     if(_joystick != null)
       blocParameters.joystickMovementBloc.move(_joystick!.relativeDelta,_joystick!.delta.screenAngle());
   }
@@ -99,6 +109,7 @@ class HudWorld extends World with HasGameRef<GameScene>
     _gameSize = size;
     super.onGameResize(size);
   }
+
 
 
 }

@@ -24,7 +24,7 @@ class TrashObjective
 {
   TrashType trashType;
   int goal;
-  int timeLimit;
+  double timeLimit;
 
   TrashObjective({
     required this.trashType,

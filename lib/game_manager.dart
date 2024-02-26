@@ -3,10 +3,11 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame_bloc/flame_bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/worlds/hud_world.dart';
+import 'bloc/game/game_barrel.dart';
 import 'bloc/game_bloc_parameters.dart';
-import 'bloc/player_stats/player_stats_barrel.dart';
 import 'components/player/player.dart';
 import 'levels/levels.dart';
 import 'scenes/game_scene.dart';
@@ -33,30 +34,43 @@ class GameManager extends Component
   LevelParameters levelParameters(int levelIndex) => _levels.params[levelIndex];
   int get currentLevelIndex => _currentLevelIndex;
   Set<TrashType> get currentTrashTypes => _trashTypes;
+  GamePhase _gamePhase = GamePhase.none;
+  GamePhase get gamePhase => _gamePhase;
 
   @override
   FutureOr<void> onLoad() async {
-    _initBlocListener();
+    await _initBlocListener();
     return super.onLoad();
   }
 
   Future<void> _initBlocListener() async {
     await add(
-      FlameMultiBlocProvider(
-        providers: [
-          FlameBlocProvider<PlayerStatsBloc, PlayerStatsState>.value(
-            value: blocParameters.playerStatsBloc,
-          ),
-        ],
-        children: [
-          this,
-        ],
+      FlameBlocListener<GameBloc, GameState>(
+        listenWhen: (previousState, newState) {
+          return previousState != newState;
+        },
+        onNewState: (state) async {
+          _gamePhase = state.phase;
+          debugPrint(state.toString());
+          switch(state.phase)
+          {
+            case GamePhase.win:
+              debugPrint("Win!");
+              break;
+            case GamePhase.gameOver:
+              debugPrint("GameOver!");
+              break;
+            default:
+              break;
+          }
+        },
       ),
     );
   }
 
-  Future<void> loadLevel(int levelIndex) async
+  Future<void> tryLoadLevel(int levelIndex) async
   {
+    debugPrint("Load Level Index: " + levelIndex.toString());
     _currentLevelIndex = levelIndex;
     _cachedLevelParameters(levelIndex);
     await _changeWorldByLevel(levelIndex);
@@ -72,8 +86,9 @@ class GameManager extends Component
   }
 
   Future<void> _changeWorldByLevel(int levelIndex) async {
-    if(_currentLevel != null)
+    if(_currentLevel != null) {
       gameScene.remove(_currentLevel!);
+    }
 
     _currentLevel = _levelFactory.createLevel(this,levelIndex,blocParameters);
     gameScene.gameCamera.world = _currentLevel;
@@ -81,8 +96,9 @@ class GameManager extends Component
   }
 
   Future<void> _loadHud() async {
-    if(_hud != null)
+    if(_hud != null) {
       gameScene.remove(_hud!);
+    }
 
     _hud = HudWorld(gameManager: this, blocParameters: blocParameters);
     gameScene.hudCamera.world = _hud;

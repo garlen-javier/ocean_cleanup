@@ -7,6 +7,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/bloc/player_stats/player_stats_barrel.dart';
 import 'package:ocean_cleanup/constants.dart';
+import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import 'package:ocean_cleanup/utils/math_utils.dart';
 import '../../scenes/game_scene.dart';
 import '../../worlds/game_world.dart';
@@ -18,7 +19,7 @@ enum PlayerAnimationState {
   catching,
 }
 
-class Player extends SpriteAnimationGroupComponent with CollisionCallbacks,HasGameRef<GameScene>{
+class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCallbacks,HasGameRef<GameScene>{
 
   Vector2 pos;
   Vector2? scaleFactor;
@@ -62,9 +63,16 @@ class Player extends SpriteAnimationGroupComponent with CollisionCallbacks,HasGa
     return super.onLoad();
   }
 
+  // @override
+  // void update(double dt) {
+  //   super.update(dt);
+  //   position+=_velocity * _speed * dt;
+  //   position.clamp(Vector2(width * 0.5 ,height* 0.5), Vector2(GameWorld.bounds.width - (width* 0.5) ,  GameWorld.bounds.height - (height* 0.5)));
+  // }
+
+
   @override
-  void update(double dt) {
-    super.update(dt);
+  void runUpdate(double dt) {
     position+=_velocity * _speed * dt;
     position.clamp(Vector2(width * 0.5 ,height* 0.5), Vector2(GameWorld.bounds.width - (width* 0.5) ,  GameWorld.bounds.height - (height* 0.5)));
   }

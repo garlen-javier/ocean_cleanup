@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart' as material;
+import '../../bloc/game/game_bloc.dart';
+import '../../bloc/game/game_state.dart';
 import '../../bloc/player_stats/player_stats_barrel.dart';
 import '../../constants.dart';
 import '../../levels/level_parameters.dart';
@@ -14,7 +16,7 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
   final TrashType trashType;
   HudTrashCount({required this.trashType,super.position});
 
-  int anyTrashCount = 0;
+  int _anyTrashCount = 0;
 
   final TextPaint _countPaint = TextPaint(
     style: const material.TextStyle(
@@ -69,8 +71,8 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
   {
     if(trashType == TrashType.any)
     {
-      anyTrashCount++;
-      _txtCount.text = anyTrashCount.toString();
+      _anyTrashCount++;
+      _txtCount.text = _anyTrashCount.toString();
     }
     else if(trashType == state.trashType){
       _txtCount.text = state.trashCount.toString();

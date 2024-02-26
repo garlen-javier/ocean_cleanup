@@ -4,6 +4,8 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import 'package:ocean_cleanup/worlds/game_world.dart';
 import 'dart:async' as dartAsync;
 import '../../constants.dart';
@@ -15,7 +17,7 @@ enum SharkAnimationState {
   running,
 }
 
-class Shark extends SpriteAnimationGroupComponent with CollisionCallbacks, HasGameRef<GameScene>   {
+class Shark extends SpriteAnimationGroupComponent with UpdateMixin, CollisionCallbacks, HasGameRef<GameScene>   {
 
   final Vector2 pos;
   final double directionX;
@@ -53,9 +55,7 @@ class Shark extends SpriteAnimationGroupComponent with CollisionCallbacks, HasGa
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
-
+  void runUpdate(double dt) {
     position += _velocityDir * _speed * dt;
     position.y.clamp(height * 0.5, GameWorld.bounds.height - (height * 0.5));
   }
