@@ -34,16 +34,16 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
   Future<void> _loadDisplay() async {
     String trashPath = (trashType == TrashType.any) ? pathFishNet : trashPathMap[trashType]!;
     var sprite = Sprite(gameRef.images.fromCache(trashPath));
-    SpriteComponent trashSymbol = SpriteComponent(
+    SpriteComponent trashIcon = SpriteComponent(
         sprite: sprite,
         anchor: Anchor.center
     );
 
-    await add(trashSymbol);
+    await add(trashIcon);
 
     _txtCount = TextComponent(
       text: '0',
-      position: Vector2(trashSymbol.position.x + 35,trashSymbol.y),
+      position: Vector2(trashIcon.position.x + 35,trashIcon.y),
       textRenderer: _countPaint ,
       anchor: Anchor.center,
     );
@@ -76,4 +76,5 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
       _txtCount.text = state.trashCount.toString();
     }
   }
+
 }

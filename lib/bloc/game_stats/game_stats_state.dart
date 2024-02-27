@@ -19,7 +19,7 @@ class GameStatsState extends Equatable {
      this.rescueFailed = false,
   });
 
-  const GameStatsState.empty() : this(trashType: TrashType.any,trashCount:0, health: defaultHealth,timerFinish:false, rescueFailed: false);
+  const GameStatsState.empty() : this(trashType:TrashType.any,trashCount:0, health: defaultHealth,timerFinish:false, rescueFailed: false);
 
   GameStatsState copyWith({
     TrashType? trashType,

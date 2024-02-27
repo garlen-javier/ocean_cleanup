@@ -8,14 +8,13 @@ import 'package:flame/game.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ocean_cleanup/game_manager.dart';
+import 'package:ocean_cleanup/core/game_manager.dart';
 import '../bloc/game/game_barrel.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../bloc/game_stats/game_stats_barrel.dart';
 import '../constants.dart';
 import '../mixins/update_mixin.dart';
 import '../worlds/game_world.dart';
-import '../worlds/hud_world.dart';
 
 class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
@@ -30,13 +29,14 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   late CameraComponent hudCamera;
 
   @override
-  Color backgroundColor() => Colors.blueAccent;
+  Color backgroundColor() => const Color(0xFFf1feff);
 
   @override
   FutureOr<void> onLoad() async{
     await _loadGameManager();
     await _loadGame();
-    blocParameters.gameBloc.add(GameStart(_gameManager.loadLevel,3));
+    //TODO: testing
+    await _gameManager.loadLevel(0);
     return super.onLoad();
   }
 
@@ -88,19 +88,19 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   Future<void> _loadGameManager() async {
     _gameManager = GameManager(gameScene:this,blocParameters:blocParameters);
     await add(
-      FlameMultiBlocProvider(
-        providers: [
-          FlameBlocProvider<GameBloc, GameState>.value(
-            value: blocParameters.gameBloc,
-          ),
-          FlameBlocProvider<GameStatsBloc, GameStatsState>.value(
-            value: blocParameters.gameStatsBloc,
-          ),
-        ],
-        children: [
-          _gameManager,
-        ],
-      ),
+        FlameMultiBlocProvider(
+          providers: [
+            FlameBlocProvider<GameBloc, GameState>.value(
+              value: blocParameters.gameBloc,
+            ),
+            FlameBlocProvider<GameStatsBloc, GameStatsState>.value(
+              value: blocParameters.gameStatsBloc,
+            ),
+          ],
+          children: [
+            _gameManager,
+          ],
+        )
     );
   }
 
@@ -109,12 +109,20 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     if(hasChildren) {
       children.forEach((child) {
         if(child is HasUpdateMixin){
-          if(_gameManager.gamePhase == GamePhase.playing)
+          if(_gameManager.gamePhase == GamePhase.playing) {
             (child as dynamic)?.runUpdate(dt);
+          }
         }
       });
     }
     super.update(dt);
+  }
+
+  @override
+  void onRemove() {
+    blocParameters.gameBloc.add(const Default());
+    blocParameters.gameStatsBloc.defaultState();
+    super.onRemove();
   }
 
   @override

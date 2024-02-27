@@ -1,6 +1,6 @@
 
 
-import 'package:ocean_cleanup/game_manager.dart';
+import 'package:ocean_cleanup/core/game_manager.dart';
 
 import '../bloc/game_bloc_parameters.dart';
 import '../levels/level_parameters.dart';

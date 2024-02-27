@@ -1,6 +1,8 @@
 
-import 'levels/level_parameters.dart';
-import 'utils/utils.dart';
+
+
+import '../levels/level_parameters.dart';
+import '../utils/utils.dart';
 
 class GameResult
 {

@@ -4,17 +4,18 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:ocean_cleanup/game_result.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/worlds/hud_world.dart';
-import 'bloc/game/game_barrel.dart';
-import 'bloc/game_bloc_parameters.dart';
-import 'bloc/game_stats/game_stats_barrel.dart';
-import 'components/player/player.dart';
-import 'levels/levels.dart';
-import 'scenes/game_scene.dart';
-import 'worlds/game_world.dart';
-import 'worlds/level_factory.dart';
+import '../bloc/game/game_barrel.dart';
+import '../bloc/game_bloc_parameters.dart';
+import '../bloc/game_stats/game_stats_barrel.dart';
+import '../components/player/player.dart';
+import '../constants.dart';
+import '../levels/levels.dart';
+import '../scenes/game_scene.dart';
+import '../worlds/game_world.dart';
+import '../worlds/level_factory.dart';
+import 'game_result.dart';
 
 class GameManager extends Component
 {
@@ -39,6 +40,8 @@ class GameManager extends Component
   Set<TrashType> get currentTrashTypes => _trashTypes; ///To display current trash in UI
   GamePhase _gamePhase = GamePhase.none;
   GamePhase get gamePhase => _gamePhase;
+  int _health = defaultHealth; //TODO: load start health from preference
+  int get health => _health;
 
   @override
   FutureOr<void> onLoad() async {
@@ -79,23 +82,8 @@ class GameManager extends Component
           return true;
         },
         onNewState: (state) {
-          LevelParameters params = levelParameters(currentLevelIndex);
-          if(params.levelType == LevelType.normal)
-          {
-            int goal = params.trashObjectives.first.goal;
-            int trashCount = blocParameters.gameStatsBloc.totalTrashCount();
-            if(goal == trashCount)
-            {
-              GameResult result = _encodeGameResult(state.health, params.levelType);
-              blocParameters.gameBloc.add(GameWin(result));
-            }
-            else if(state.timerFinish || state.health == 0)
-            {
-              GameResult result = _encodeGameResult(state.health, params.levelType);
-              blocParameters.gameBloc.add(GameOver(result));
-            }
-          }
-
+          _health = state.health;
+          _updateResultWithState(state);
           if(!state.rescueFailed)
           {
             _checkAnimalToFree();
@@ -115,6 +103,7 @@ class GameManager extends Component
     _cachedLevelParameters(levelIndex);
     await _changeWorldByLevel(levelIndex);
     await _loadHud();
+    blocParameters.gameBloc.add(GameStart(levelIndex));
     //_zoomFollowPlayer(gameScene.gameCamera, level.player);
   }
 
@@ -194,6 +183,26 @@ class GameManager extends Component
     }
   }
 
+  void _updateResultWithState(GameStatsState state)
+  {
+    LevelParameters params = levelParameters(currentLevelIndex);
+    if(params.levelType == LevelType.normal)
+    {
+      int goal = params.trashObjectives.first.goal;
+      int trashCount = blocParameters.gameStatsBloc.totalTrashCount();
+      if(goal == trashCount)
+      {
+        GameResult result = _encodeGameResult(state.health, params.levelType);
+        blocParameters.gameBloc.add(GameWin(result));
+      }
+      else if(state.timerFinish || state.health == 0)
+      {
+        GameResult result = _encodeGameResult(state.health, params.levelType);
+        blocParameters.gameBloc.add(GameOver(result));
+      }
+    }
+  }
+
   GameResult _encodeGameResult(int health,LevelType levelType) {
     return GameResult(
       levelIndex: currentLevelIndex,
@@ -205,4 +214,10 @@ class GameManager extends Component
   }
 
 
+  @override
+  void onRemove() {
+    debugPrint("remove All");
+    removeAll(children);
+    super.onRemove();
+  }
 }

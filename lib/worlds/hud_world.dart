@@ -10,7 +10,7 @@ import '../bloc/game_bloc_parameters.dart';
 import '../bloc/game_stats/game_stats_barrel.dart';
 import '../components/hud/hud_stats.dart';
 import '../components/hud/hud_timer.dart';
-import '../game_manager.dart';
+import '../core/game_manager.dart';
 import '../levels/level_parameters.dart';
 import '../mixins/update_mixin.dart';
 import '../scenes/game_scene.dart';
@@ -46,7 +46,7 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
     //double timeLimit = 10;
     //double? animalTimeLimit = 5;
     await add(HudTimer(
-        timeLimit: timeLimit,
+        timeLimit: 20,
         pos:Vector2(-20,-_gameSize.y * 0.48),
         remainingTime: (time) {
           remainingTime = time;
@@ -96,7 +96,9 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
   }
 
   Future<void> _showGameStats() async {
-    HudStats stats = HudStats(trashTypes: gameManager.currentTrashTypes);
+    HudStats stats = HudStats(health: gameManager.health,
+        trashTypes: gameManager.currentTrashTypes);
+
     await add(stats);
     await add(
       FlameMultiBlocProvider(

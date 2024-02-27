@@ -8,9 +8,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   GameBloc() : super(const GameState.empty()) {
 
     on<GameStart>(
-          (event, emit) async {
-            await event.tryLoadLevel.call(event.levelIndex);
-            emit(state.copyWith(phase: GamePhase.playing));
+          (event, emit)  {
+            emit(state.copyWith(levelIndex: event.levelIndex, phase: GamePhase.playing));
       },
     );
 
@@ -40,7 +39,10 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       ),
     );
 
-
+    on<Default>(
+          (event, emit) => emit(const GameState.empty(),
+      ),
+    );
   }
 
 

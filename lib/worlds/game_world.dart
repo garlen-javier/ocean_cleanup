@@ -18,7 +18,7 @@ import '../components/brick/catcher_body.dart';
 import '../components/player/player.dart';
 import 'package:flame/src/camera/world.dart' as camWorld;
 import '../components/trash/trash.dart';
-import '../game_manager.dart';
+import '../core/game_manager.dart';
 import '../mixins/update_mixin.dart';
 
 

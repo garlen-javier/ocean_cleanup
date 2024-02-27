@@ -1,7 +1,8 @@
 
-
 import 'package:equatable/equatable.dart';
-import 'package:ocean_cleanup/game_result.dart';
+
+import '../../core/game_result.dart';
+
 
 enum GamePhase{
   none,

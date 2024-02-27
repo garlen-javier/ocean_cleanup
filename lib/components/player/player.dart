@@ -3,12 +3,14 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import 'package:ocean_cleanup/utils/math_utils.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
 import '../../scenes/game_scene.dart';
 import '../../worlds/game_world.dart';
+import '../shark/shark.dart';
 import '../trash/trash.dart';
 
 enum PlayerAnimationState {
@@ -117,6 +119,9 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
       Trash trash = other;
       trashCache.add(trash);
     }
+    if (other is Shark) {
+      _reduceHealth();
+    }
     super.onCollisionStart(intersectionPoints, other);
   }
 
@@ -128,6 +133,11 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
       if(trashCache.contains(trash))
         trashCache.remove(trash);
     }
+  }
+
+  void _reduceHealth()
+  {
+    statsBloc.reduceHealth(1);
   }
 
   void tryRemoveTrash()

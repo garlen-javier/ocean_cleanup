@@ -9,8 +9,8 @@ class Utils{
   static double minuteToSeconds(double min) => min * 60;
 
   static String formatTime(double time) {
-    final minutes = ((time+1) / 60).floor();
-    final seconds = ((time+1) % 60).floor();
+    final minutes = (time / 60).floor();
+    final seconds = (time % 60).floor();
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 

@@ -1,6 +1,8 @@
 
 import 'package:equatable/equatable.dart';
-import 'package:ocean_cleanup/game_result.dart';
+
+import '../../core/game_result.dart';
+
 
 abstract class GameEvent extends Equatable {
   const GameEvent();
@@ -8,9 +10,8 @@ abstract class GameEvent extends Equatable {
 
 class GameStart extends GameEvent {
 
-  final Future Function(int) tryLoadLevel;
   final int levelIndex;
-  const GameStart(this.tryLoadLevel,this.levelIndex);
+  const GameStart(this.levelIndex);
 
   @override
   List<Object?> get props => [];
@@ -59,3 +60,10 @@ class GameQuit extends GameEvent {
   List<Object?> get props => [];
 }
 
+///Call inside onRemove
+class Default extends GameEvent {
+  const Default();
+
+  @override
+  List<Object?> get props => [];
+}

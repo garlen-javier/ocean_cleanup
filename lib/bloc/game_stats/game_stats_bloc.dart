@@ -69,9 +69,11 @@ class GameStatsBloc extends Cubit<GameStatsState> {
     emit(state.copyWith(health: health));
   }
 
-  void minusHealth(int damage){
-    health-=damage;
-    emit(state.copyWith(health: health));
+  void reduceHealth(int damage){
+    if(health > 0) {
+      health -= damage;
+      emit(state.copyWith(health: health));
+    }
   }
 
   void resetHealth()
@@ -92,5 +94,13 @@ class GameStatsBloc extends Cubit<GameStatsState> {
     emit(state.copyWith(rescueFailed: true));
   }
   //#endregion
+
+  void defaultState()
+  {
+    health = defaultHealth;
+    _trashCountMap.clear();
+    _trashCountMap.putIfAbsent(TrashType.any, () => 0);
+    emit(const GameStatsState.empty());
+  }
 }
 
