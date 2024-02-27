@@ -39,8 +39,8 @@ class Levels
         goal: 5,
         timeLimit: Utils.minuteToSeconds(1));
 
-    Map<TrappedAnimal,TrashObjective> trappedAnimals = {
-      TrappedAnimal.crab: animalMission,
+    Map<AnimalType,TrashObjective> trappedAnimals = {
+      AnimalType.crab: animalMission,
     };
 
     List<TrashObjective> objectives = [mainMission];
@@ -59,8 +59,8 @@ class Levels
         goal: 7,
         timeLimit: Utils.minuteToSeconds(1));
 
-    Map<TrappedAnimal,TrashObjective> trappedAnimals = {
-      TrappedAnimal.seaTurtle: animalMission,
+    Map<AnimalType,TrashObjective> trappedAnimals = {
+      AnimalType.seaTurtle: animalMission,
     };
 
     List<TrashObjective> objectives = [mainMission];
@@ -84,9 +84,9 @@ class Levels
         goal: 8,
         timeLimit: Utils.minuteToSeconds(1));
 
-    Map<TrappedAnimal,TrashObjective> trappedAnimals = {
-      TrappedAnimal.seal: animalMission1,
-      TrappedAnimal.dolphin: animalMission2,
+    Map<AnimalType,TrashObjective> trappedAnimals = {
+      AnimalType.seal: animalMission1,
+      AnimalType.dolphin: animalMission2,
     };
 
     List<TrashObjective> objectives = [mainMission];
@@ -121,7 +121,7 @@ class Levels
         timeLimit:  30);
 
     List<TrashObjective> objectives = [stage1,stage2,stage3,stage4,stage5];
-    return LevelParameters(trashObjectives: objectives,sharkCount: 5);
+    return LevelParameters(levelType: LevelType.boss, trashObjectives: objectives,sharkCount: 5);
   }
 
 }

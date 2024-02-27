@@ -2,6 +2,7 @@
 
 import 'levels/level_parameters.dart';
 
+const int defaultHealth = 3;
 const int playerPriority = 2;
 
 const String pathPlayer = "player.png";

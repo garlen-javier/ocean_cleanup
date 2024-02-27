@@ -55,7 +55,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
 
   Future<void> _initPlayer() async {
     player = Player(Vector2(worldSize.width ,worldSize.height),
-        statsBloc: blocParameters.playerStatsBloc);
+        statsBloc: blocParameters.gameStatsBloc);
     await add(player!);
     await _addPlayerController(player!);
   }

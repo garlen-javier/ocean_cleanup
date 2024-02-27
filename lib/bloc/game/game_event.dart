@@ -1,5 +1,6 @@
 
 import 'package:equatable/equatable.dart';
+import 'package:ocean_cleanup/game_result.dart';
 
 abstract class GameEvent extends Equatable {
   const GameEvent();
@@ -30,23 +31,22 @@ class GameResume extends GameEvent {
 }
 
 abstract class GameFinish extends GameEvent {
-  //TODO: need result
-  final int levelIndex;
-  const GameFinish(this.levelIndex);
+  final GameResult result;
+  const GameFinish(this.result);
 
   @override
   List<Object?> get props => [];
 }
 
 class GameOver extends GameFinish {
-  const GameOver(super.levelIndex);
+  const GameOver(super.result);
 
   @override
   List<Object?> get props => [];
 }
 
 class GameWin extends GameFinish {
-  const GameWin(super.levelIndex);
+  const GameWin(super.result);
 
   @override
   List<Object?> get props => [];

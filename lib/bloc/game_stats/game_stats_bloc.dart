@@ -2,19 +2,17 @@
 
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../constants.dart';
 import '../../levels/level_parameters.dart';
-import 'player_stats_state.dart';
+import 'game_stats_state.dart';
 
-
-class PlayerStatsBloc extends Cubit<PlayerStatsState> {
-  PlayerStatsBloc() : super(const PlayerStatsState.empty()){
+class GameStatsBloc extends Cubit<GameStatsState> {
+  GameStatsBloc() : super(const GameStatsState.empty()){
     _trashCountMap.putIfAbsent(TrashType.any, () => 0);
   }
 
   final Map<TrashType,int> _trashCountMap = {};
-
-  static const int _defaultHealth = 3;
-  int health = _defaultHealth;
+  int health = defaultHealth;
 
   //#region Trash Count
 
@@ -62,7 +60,7 @@ class PlayerStatsBloc extends Cubit<PlayerStatsState> {
      return total;
    }
 
-  int? trashCountByType(TrashType type) => _trashCountMap[type];
+  int trashCountByType(TrashType type) => _trashCountMap[type] ?? 0;
    //#endregion
 
   //#region Health
@@ -78,8 +76,20 @@ class PlayerStatsBloc extends Cubit<PlayerStatsState> {
 
   void resetHealth()
   {
-    health = _defaultHealth;
-    emit(state.copyWith(health:_defaultHealth));
+    health = defaultHealth;
+    emit(state.copyWith(health:defaultHealth));
+  }
+  //#endregion
+
+  //#region Condition
+  void timerFinish()
+  {
+    emit(state.copyWith(timerFinish: true));
+  }
+
+  void rescueFailed()
+  {
+    emit(state.copyWith(rescueFailed: true));
   }
   //#endregion
 }

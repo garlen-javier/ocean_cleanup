@@ -4,9 +4,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart' as material;
-import '../../bloc/game/game_bloc.dart';
-import '../../bloc/game/game_state.dart';
-import '../../bloc/player_stats/player_stats_barrel.dart';
+import '../../bloc/game_stats/game_stats_barrel.dart';
 import '../../constants.dart';
 import '../../levels/level_parameters.dart';
 import '../../scenes/game_scene.dart';
@@ -56,7 +54,7 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
 
   Future<void> _initBlocListener() async {
     await add(
-      FlameBlocListener<PlayerStatsBloc, PlayerStatsState>(
+      FlameBlocListener<GameStatsBloc, GameStatsState>(
         listenWhen: (previousState, newState) {
           return true;
         },
@@ -67,7 +65,7 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
     );
   }
 
-  void _updateCountWithState(PlayerStatsState state)
+  void _updateCountWithState(GameStatsState state)
   {
     if(trashType == TrashType.any)
     {

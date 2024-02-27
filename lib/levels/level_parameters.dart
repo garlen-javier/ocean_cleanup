@@ -11,13 +11,19 @@ enum TrashType
   waterGallon,
 }
 
-enum TrappedAnimal
+enum AnimalType
 {
   crab,
   seaTurtle,
   seal,
   dolphin,
   whale
+}
+
+enum LevelType
+{
+  normal,
+  boss,
 }
 
 class TrashObjective
@@ -36,9 +42,11 @@ class TrashObjective
 class LevelParameters
 {
   List<TrashObjective> trashObjectives;
-  Map<TrappedAnimal,TrashObjective>? trappedAnimals;
+  Map<AnimalType,TrashObjective>? trappedAnimals;
+  LevelType levelType;
   int sharkCount;
   int octopusCount;
 
-  LevelParameters({required this.trashObjectives,this.trappedAnimals,this.sharkCount = 0,this.octopusCount = 0});
+
+  LevelParameters({required this.trashObjectives,this.trappedAnimals,this.levelType = LevelType.normal,this.sharkCount = 0,this.octopusCount = 0});
 }

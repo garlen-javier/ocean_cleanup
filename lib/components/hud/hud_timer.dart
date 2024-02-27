@@ -4,13 +4,16 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import '../../mixins/update_mixin.dart';
+import '../../utils/utils.dart';
 
-class HudTimer extends PositionComponent
+class HudTimer extends PositionComponent with UpdateMixin
 {
   Vector2? pos;
   double timeLimit;
+  Function(double)? remainingTime;
   VoidCallback? timerFinished;
-  HudTimer({required this.timeLimit,this.pos,this.timerFinished}){
+  HudTimer({required this.timeLimit,this.pos,this.remainingTime,this.timerFinished}){
     pos = pos ?? Vector2.zero();
   }
 
@@ -19,6 +22,7 @@ class HudTimer extends PositionComponent
   );
 
   late Timer _countdown;
+  double _remainingTime = 0;
 
   @override
   FutureOr<void> onLoad() async{
@@ -28,39 +32,32 @@ class HudTimer extends PositionComponent
   }
 
   @override
-  void update(double dt) {
+  void runUpdate(double dt) {
     _countdown.update(dt);
-    if(_countdown.finished)
+    if(_countdown.isRunning()) {
+      _remainingTime = timeLimit - _countdown.current;
+      remainingTime?.call(_remainingTime);
+    }
+    else if(_countdown.finished)
     {
       timerFinished?.call();
       _countdown.stop();
     }
-    super.update(dt);
   }
 
   @override
   void render(Canvas canvas) {
     _textPaint.render(
       canvas,
-      _getRunningTime,
+      _runningTime,
       Vector2.zero(),
     );
     super.render(canvas);
   }
 
-  String get _getRunningTime
+  String get _runningTime
   {
-    String formattedTime = "";
-    if(_countdown.isRunning())
-      formattedTime = _formatTime((timeLimit+1) - _countdown.current);
-    else
-      formattedTime = "00:00";
-    return formattedTime;
+    return (_countdown.isRunning()) ? Utils.formatTime(_remainingTime) : "00:00";
   }
 
-  String _formatTime(double time) {
-    final minutes = (time / 60).floor();
-    final seconds = (time % 60).floor();
-    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-  }
 }

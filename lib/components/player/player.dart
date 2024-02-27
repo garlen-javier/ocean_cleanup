@@ -1,14 +1,12 @@
 import 'dart:async';
-import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:flutter/material.dart';
-import 'package:ocean_cleanup/bloc/player_stats/player_stats_barrel.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import 'package:ocean_cleanup/utils/math_utils.dart';
+import '../../bloc/game_stats/game_stats_barrel.dart';
 import '../../scenes/game_scene.dart';
 import '../../worlds/game_world.dart';
 import '../trash/trash.dart';
@@ -23,7 +21,7 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
 
   Vector2 pos;
   Vector2? scaleFactor;
-  PlayerStatsBloc statsBloc;
+  GameStatsBloc statsBloc;
 
   Player(this.pos,{this.scaleFactor,required this.statsBloc}):super(){
     scale = scaleFactor ?? Vector2.all(1);
@@ -140,7 +138,6 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
       statsBloc.addTrash(trash.type);
       trash.removeFromParent();
       trashCache.removeLast();
-      //statsBloc.addTrash(trash.type);
     }
   }
 

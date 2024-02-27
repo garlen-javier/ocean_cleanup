@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/joystick_movement/joystick_movement_barrel.dart';
 import 'bloc/game/game_bloc.dart';
 import 'bloc/game_bloc_parameters.dart';
-import 'bloc/player_stats/player_stats_barrel.dart';
+import 'bloc/game_stats/game_stats_bloc.dart';
 import 'scenes/game_scene.dart';
 
 void main() {
@@ -24,7 +24,7 @@ class GamePage extends StatelessWidget {
       providers: [
         BlocProvider<GameBloc>(create: (_) => GameBloc()),
         BlocProvider<JoystickMovementBloc>(create: (_) => JoystickMovementBloc()),
-        BlocProvider<PlayerStatsBloc>(create: (_) => PlayerStatsBloc()),
+        BlocProvider<GameStatsBloc>(create: (_) => GameStatsBloc()),
       ],
       child: const GameView(),
     );
@@ -41,7 +41,7 @@ class GameView extends StatelessWidget {
         blocParameters: GameBlocParameters(
             gameBloc: context.read<GameBloc>(),
             joystickMovementBloc: context.read<JoystickMovementBloc>(),
-            playerStatsBloc:  context.read<PlayerStatsBloc>(),
+            gameStatsBloc:  context.read<GameStatsBloc>(),
         )
       ),
     );

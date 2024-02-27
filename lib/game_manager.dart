@@ -4,10 +4,12 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:ocean_cleanup/game_result.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/worlds/hud_world.dart';
 import 'bloc/game/game_barrel.dart';
 import 'bloc/game_bloc_parameters.dart';
+import 'bloc/game_stats/game_stats_barrel.dart';
 import 'components/player/player.dart';
 import 'levels/levels.dart';
 import 'scenes/game_scene.dart';
@@ -22,7 +24,8 @@ class GameManager extends Component
 
   final LevelFactory _levelFactory = LevelFactory();
   final Levels _levels = Levels();
-  final List<TrappedAnimal> _animalType = [];
+  final List<AnimalType> _trappedAnimals = [];
+  final List<AnimalType> _freedAnimals = [];
   final Set<TrashType> _trashTypes = {};
 
   Random rand = Random();
@@ -33,7 +36,7 @@ class GameManager extends Component
 
   LevelParameters levelParameters(int levelIndex) => _levels.params[levelIndex];
   int get currentLevelIndex => _currentLevelIndex;
-  Set<TrashType> get currentTrashTypes => _trashTypes;
+  Set<TrashType> get currentTrashTypes => _trashTypes; ///To display current trash in UI
   GamePhase _gamePhase = GamePhase.none;
   GamePhase get gamePhase => _gamePhase;
 
@@ -44,21 +47,23 @@ class GameManager extends Component
   }
 
   Future<void> _initBlocListener() async {
+
+    //GameState
     await add(
       FlameBlocListener<GameBloc, GameState>(
         listenWhen: (previousState, newState) {
           return previousState != newState;
         },
-        onNewState: (state) async {
+        onNewState: (state)  {
           _gamePhase = state.phase;
           debugPrint(state.toString());
           switch(state.phase)
           {
             case GamePhase.win:
-              debugPrint("Win!");
+              debugPrint("Win! " + state!.result.toString() );
               break;
             case GamePhase.gameOver:
-              debugPrint("GameOver!");
+              debugPrint("GameOver!" + state!.result.toString() );
               break;
             default:
               break;
@@ -66,9 +71,44 @@ class GameManager extends Component
         },
       ),
     );
+
+    //Game Stats
+    await add(
+      FlameBlocListener<GameStatsBloc, GameStatsState>(
+        listenWhen: (previousState, newState) {
+          return true;
+        },
+        onNewState: (state) {
+          LevelParameters params = levelParameters(currentLevelIndex);
+          if(params.levelType == LevelType.normal)
+          {
+            int goal = params.trashObjectives.first.goal;
+            int trashCount = blocParameters.gameStatsBloc.totalTrashCount();
+            if(goal == trashCount)
+            {
+              GameResult result = _encodeGameResult(state.health, params.levelType);
+              blocParameters.gameBloc.add(GameWin(result));
+            }
+            else if(state.timerFinish || state.health == 0)
+            {
+              GameResult result = _encodeGameResult(state.health, params.levelType);
+              blocParameters.gameBloc.add(GameOver(result));
+            }
+          }
+
+          if(!state.rescueFailed)
+          {
+            _checkAnimalToFree();
+          }
+          else if(state.rescueFailed){
+            //TODO: failed rescue/can update ui?
+          }
+        },
+      ),
+    );
   }
 
-  Future<void> tryLoadLevel(int levelIndex) async
+  Future<void> loadLevel(int levelIndex) async
   {
     debugPrint("Load Level Index: " + levelIndex.toString());
     _currentLevelIndex = levelIndex;
@@ -108,12 +148,13 @@ class GameManager extends Component
   void _cachedLevelParameters(int levelIndex)
   {
     LevelParameters params = levelParameters(levelIndex);
-    _animalType.clear();
+    _trappedAnimals.clear();
+    _freedAnimals.clear();
     _trashTypes.clear();
     _trashTypes.add(TrashType.any);
     if(params.trappedAnimals != null) {
       params.trappedAnimals!.forEach((animal, animalMission) {
-        _animalType.add(animal);
+        _trappedAnimals.add(animal);
         _trashTypes.add(animalMission.trashType);
       });
     }
@@ -121,19 +162,46 @@ class GameManager extends Component
 
   TrashType randomizeTrashType()
   {
-    if(_animalType.isNotEmpty)
+    if(_trappedAnimals.isNotEmpty)
     {
       double rng = rand.nextDouble();
       if(rng < _animalTrashChance)
       {
-        int i = rand.nextInt(_animalType.length);
-        TrappedAnimal chosenType = _animalType[i];
+        int i = rand.nextInt(_trappedAnimals.length);
+        AnimalType chosenType = _trappedAnimals[i];
         LevelParameters params = levelParameters(currentLevelIndex);
         return params.trappedAnimals![chosenType]!.trashType;
       }
     }
     int rng = rand.nextInt(TrashType.values.length - 1) + 1;
     return TrashType.values[rng];
+  }
+
+  void _checkAnimalToFree()
+  {
+    LevelParameters params = levelParameters(currentLevelIndex);
+    if(params.trappedAnimals != null) {
+      params.trappedAnimals!.forEach((animal, animalMission) {
+        int trashCount = blocParameters.gameStatsBloc.trashCountByType(animalMission.trashType);
+        int goalCount = animalMission.goal;
+        if(trashCount == goalCount && _trappedAnimals.contains(animal))
+        {
+          //free animal
+          _freedAnimals.add(animal);
+          _trappedAnimals.remove(animal); //remove type for randomize trash
+        }
+      });
+    }
+  }
+
+  GameResult _encodeGameResult(int health,LevelType levelType) {
+    return GameResult(
+      levelIndex: currentLevelIndex,
+      health: health,
+      remainingTime: _hud!.remainingTime,
+      levelType: levelType,
+      freedAnimal: (_freedAnimals.isNotEmpty) ? _freedAnimals : null,
+    );
   }
 
 

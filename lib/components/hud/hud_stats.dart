@@ -1,9 +1,7 @@
 
 import 'dart:async';
 import 'package:flame/components.dart';
-import 'package:flame_bloc/flame_bloc.dart';
 import 'package:ocean_cleanup/components/hud/hud_trash_count.dart';
-import '../../bloc/player_stats/player_stats_barrel.dart';
 import '../../levels/level_parameters.dart';
 import '../../scenes/game_scene.dart';
 

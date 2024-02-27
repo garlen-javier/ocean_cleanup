@@ -5,10 +5,9 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/input.dart';
 import 'package:flame_bloc/flame_bloc.dart';
-import 'package:ocean_cleanup/bloc/game/game_barrel.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import '../bloc/game_bloc_parameters.dart';
-import '../bloc/player_stats/player_stats_barrel.dart';
+import '../bloc/game_stats/game_stats_barrel.dart';
 import '../components/hud/hud_stats.dart';
 import '../components/hud/hud_timer.dart';
 import '../game_manager.dart';
@@ -25,6 +24,7 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 
   JoystickComponent? _joystick;
   late Vector2 _gameSize;
+  double remainingTime = 0;
 
   @override
   FutureOr<void> onLoad() async{
@@ -41,11 +41,25 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
   Future<void> _showTimer() async {
     //TODO: testing
     LevelParameters params = gameManager.levelParameters(gameManager.currentLevelIndex);
+    double timeLimit = params.trashObjectives.elementAt(0).timeLimit;
+    double? animalTimeLimit = params.trappedAnimals?.values.first.timeLimit;
+    //double timeLimit = 10;
+    //double? animalTimeLimit = 5;
     await add(HudTimer(
-        timeLimit: params.trashObjectives.elementAt(0).timeLimit,
+        timeLimit: timeLimit,
         pos:Vector2(-20,-_gameSize.y * 0.48),
-        timerFinished: () => {
-          blocParameters.gameBloc.add(GameOver(gameManager.currentLevelIndex))
+        remainingTime: (time) {
+          remainingTime = time;
+          if(animalTimeLimit != null)
+          {
+            if(time <= animalTimeLimit)
+            {
+              blocParameters.gameStatsBloc.rescueFailed();
+            }
+          }
+        },
+        timerFinished: () {
+          blocParameters.gameStatsBloc.timerFinish();
         }
     ));
   }
@@ -87,8 +101,8 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
     await add(
       FlameMultiBlocProvider(
         providers: [
-          FlameBlocProvider<PlayerStatsBloc, PlayerStatsState>.value(
-            value: blocParameters.playerStatsBloc,
+          FlameBlocProvider<GameStatsBloc, GameStatsState>.value(
+            value: blocParameters.gameStatsBloc,
           ),
         ],
         children: [
@@ -100,6 +114,15 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 
   @override
   void runUpdate(double dt) {
+
+    if(hasChildren) {
+      children.forEach((child) {
+        if(child is UpdateMixin){
+          (child as dynamic)?.runUpdate(dt);
+        }
+      });
+    }
+
     if(_joystick != null)
       blocParameters.joystickMovementBloc.move(_joystick!.relativeDelta,_joystick!.delta.screenAngle());
   }

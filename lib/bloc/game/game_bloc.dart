@@ -29,9 +29,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     );
 
     on<GameFinish>(
-          (event, emit) { //TODO: emit result
+          (event, emit) {
             GamePhase gamePhase = (event is GameWin) ? GamePhase.win : GamePhase.gameOver;
-            emit(state.copyWith(levelIndex: event.levelIndex,phase: gamePhase));
+            emit(state.copyWith(result: event.result,phase: gamePhase));
       },
     );
 

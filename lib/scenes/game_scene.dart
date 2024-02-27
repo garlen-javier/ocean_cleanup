@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:ocean_cleanup/game_manager.dart';
 import '../bloc/game/game_barrel.dart';
 import '../bloc/game_bloc_parameters.dart';
-import '../bloc/player_stats/player_stats_barrel.dart';
+import '../bloc/game_stats/game_stats_barrel.dart';
 import '../constants.dart';
 import '../mixins/update_mixin.dart';
 import '../worlds/game_world.dart';
@@ -28,7 +28,6 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   late GameManager _gameManager;
   late CameraComponent gameCamera;
   late CameraComponent hudCamera;
-  late HudWorld hudWorld;
 
   @override
   Color backgroundColor() => Colors.blueAccent;
@@ -37,7 +36,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   FutureOr<void> onLoad() async{
     await _loadGameManager();
     await _loadGame();
-    blocParameters.gameBloc.add(GameStart(_gameManager.tryLoadLevel,0));
+    blocParameters.gameBloc.add(GameStart(_gameManager.loadLevel,3));
     return super.onLoad();
   }
 
@@ -94,6 +93,9 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
           FlameBlocProvider<GameBloc, GameState>.value(
             value: blocParameters.gameBloc,
           ),
+          FlameBlocProvider<GameStatsBloc, GameStatsState>.value(
+            value: blocParameters.gameStatsBloc,
+          ),
         ],
         children: [
           _gameManager,
@@ -118,7 +120,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   @override
   void onDispose() {
      blocParameters.gameBloc.close();
-     blocParameters.playerStatsBloc.close();
+     blocParameters.gameStatsBloc.close();
      blocParameters.joystickMovementBloc.close();
     // removeAll(children);
     // Flame.images.clearCache();
