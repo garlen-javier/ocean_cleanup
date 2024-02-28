@@ -36,7 +36,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     await _loadGameManager();
     await _loadGame();
     //TODO: testing
-    await _gameManager.loadLevel(0);
+    await _gameManager.loadLevel(3);
     return super.onLoad();
   }
 
@@ -59,6 +59,8 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
       pathDolphin,
       pathFishNet,
       pathHealth,
+      pathRescueComplete,
+      pathAnimalFrame,
       'onscreen_control_knob.png',
       'onscreen_control_base.png',
     ]);

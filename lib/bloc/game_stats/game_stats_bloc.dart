@@ -83,6 +83,11 @@ class GameStatsBloc extends Cubit<GameStatsState> {
   }
   //#endregion
 
+  void freeAnimal(AnimalType animal)
+  {
+    emit(state.copyWith(freedAnimal: animal));
+  }
+
   //#region Condition
   void timerFinish()
   {

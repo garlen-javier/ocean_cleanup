@@ -175,9 +175,10 @@ class GameManager extends Component
         int goalCount = animalMission.goal;
         if(trashCount == goalCount && _trappedAnimals.contains(animal))
         {
-          //free animal
+          debugPrint("Free Animal:" + animal.toString());
           _freedAnimals.add(animal);
           _trappedAnimals.remove(animal); //remove type for randomize trash
+          blocParameters.gameStatsBloc.freeAnimal(animal);
         }
       });
     }

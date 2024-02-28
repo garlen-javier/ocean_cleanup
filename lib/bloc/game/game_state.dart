@@ -32,6 +32,7 @@ class GameState extends Equatable {
       : this(
     phase: GamePhase.none,
     levelIndex: 0,
+    result: null,
     error: "",
   );
 

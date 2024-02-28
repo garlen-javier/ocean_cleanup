@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
-import '../../constants.dart';
-import '../../scenes/game_scene.dart';
+import '../../../constants.dart';
+import '../../../levels/level_parameters.dart';
+import '../../../scenes/game_scene.dart';
 
 enum AnimalAnimationState {
   idle,
@@ -10,14 +12,16 @@ enum AnimalAnimationState {
 
 class AnimalSprite extends SpriteAnimationGroupComponent with HasGameRef<GameScene>  {
 
-  AnimalSprite() :super();
+  final AnimalType type;
+  AnimalSprite({required this.type,super.position});
 
   @override
   FutureOr<void> onLoad() async {
 
+   var image = gameRef.images.fromCache(animalPathMap[type]!);
     final spritesheet = SpriteSheet(
-        image: gameRef.images.fromCache(pathDolphin),
-        srcSize: Vector2(70,34)
+        image: image,
+        srcSize: Vector2(image.size.x/3,image.size.y)
     );
 
     final idle = spritesheet.createAnimation(row:0,stepTime: 0.5,);
@@ -26,9 +30,9 @@ class AnimalSprite extends SpriteAnimationGroupComponent with HasGameRef<GameSce
       AnimalAnimationState.idle: idle,
     };
 
-    current =AnimalAnimationState.idle;
+    current = AnimalAnimationState.idle;
     anchor = Anchor.center;
-
+    flipHorizontally();
     //debugMode = true;
     return super.onLoad( );
   }

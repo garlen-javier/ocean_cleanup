@@ -24,6 +24,7 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 
   JoystickComponent? _joystick;
   late Vector2 _gameSize;
+  late HudStats? _hudStats;
   double remainingTime = 0;
 
   @override
@@ -46,7 +47,7 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
     //double timeLimit = 10;
     //double? animalTimeLimit = 5;
     await add(HudTimer(
-        timeLimit: 20,
+        timeLimit: timeLimit,
         pos:Vector2(-20,-_gameSize.y * 0.48),
         remainingTime: (time) {
           remainingTime = time;
@@ -96,10 +97,12 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
   }
 
   Future<void> _showGameStats() async {
-    HudStats stats = HudStats(health: gameManager.health,
+    _hudStats = HudStats(
+        health: gameManager.health,
+        trappedAnimals: gameManager.levelParameters(gameManager.currentLevelIndex).trappedAnimals,
         trashTypes: gameManager.currentTrashTypes);
 
-    await add(stats);
+    //await add(stats);
     await add(
       FlameMultiBlocProvider(
         providers: [
@@ -108,7 +111,7 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
           ),
         ],
         children: [
-          stats,
+          _hudStats!,
         ],
       ),
     );
@@ -116,7 +119,6 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 
   @override
   void runUpdate(double dt) {
-
     if(hasChildren) {
       children.forEach((child) {
         if(child is UpdateMixin){
@@ -124,6 +126,9 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
         }
       });
     }
+
+    if(_hudStats != null)
+        _hudStats!.runUpdate(dt);
 
     if(_joystick != null)
       blocParameters.joystickMovementBloc.move(_joystick!.relativeDelta,_joystick!.delta.screenAngle());
@@ -133,6 +138,12 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
   void onGameResize(Vector2 size) {
     _gameSize = size;
     super.onGameResize(size);
+  }
+
+  @override
+  void onRemove() {
+    _hudStats = null;
+    super.onRemove();
   }
 
 

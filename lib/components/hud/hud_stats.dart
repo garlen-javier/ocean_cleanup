@@ -5,15 +5,18 @@ import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ocean_cleanup/components/hud/hud_trash_count.dart';
 import 'package:ocean_cleanup/constants.dart';
+import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
 import '../../levels/level_parameters.dart';
 import '../../scenes/game_scene.dart';
+import 'animal_timer/hud_animal_timer.dart';
 
-class HudStats extends PositionComponent with HasGameRef<GameScene>
+class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
 {
   int health;
-  Set<TrashType> trashTypes = {};
-  HudStats({required this.health, required this.trashTypes});
+  final Map<AnimalType, TrashObjective>? trappedAnimals;
+  final Set<TrashType> trashTypes;
+  HudStats({required this.health, required this.trappedAnimals, required this.trashTypes});
 
   late Vector2 _gameSize;
   final List<SpriteComponent> _healthIcons = [];
@@ -24,6 +27,7 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>
 
     await _loadHealth(80);
     await _loadTrashCounter(60);
+    await _loadTrappedAnimals(110);
     await _initBlocListener();
     return super.onLoad();
   }
@@ -80,7 +84,6 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>
     }
   }
 
-
   Future<void> _loadTrashCounter(int marginX) async {
     int count = trashTypes.length;
 
@@ -93,10 +96,39 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>
     }
   }
 
+  Future<void> _loadTrappedAnimals(int marginX) async {
+    if(trappedAnimals == null)
+      return;
+
+    int count = trappedAnimals!.length;
+    Vector2 counterPos = Vector2(_gameSize.x * 0.5 * (count-1)/count,-_gameSize.y * 0.35);
+
+    for(var entry in trappedAnimals!.entries)
+    {
+      AnimalType animal = entry.key;
+      TrashObjective mission = entry.value;
+
+      var timer = HudAnimalTimer(position: counterPos, animalType: animal, maxDuration: mission.timeLimit);
+      await add(timer);
+      counterPos = Vector2(timer.x + marginX,timer.y);
+    }
+  }
+
   @override
   void onGameResize(Vector2 size) {
     _gameSize = size;
     super.onGameResize(size);
+  }
+
+  @override
+  void runUpdate(double dt) {
+    if(hasChildren) {
+      children.forEach((child) {
+        if(child is UpdateMixin){
+          (child as dynamic)?.runUpdate(dt);
+        }
+      });
+    }
   }
 
 }

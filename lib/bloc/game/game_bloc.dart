@@ -1,5 +1,3 @@
-import 'package:flame/game.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'game_barrel.dart';
 

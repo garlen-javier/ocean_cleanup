@@ -17,7 +17,6 @@ enum AnimalType
   seaTurtle,
   seal,
   dolphin,
-  whale
 }
 
 enum LevelType

@@ -18,6 +18,8 @@ const String pathWaterBottle = "trashes/water_bottle.png";
 const String pathWaterGallon = "trashes/water_gallon.png";
 
 const String pathDolphin = "animals/dolphin_sprite.png";
+const String pathRescueComplete = "rescue_complete.png";
+const String pathAnimalFrame = "animal_frame.png";
 
 const String pathFishNet = "fish_net.png";
 const String pathHealth = "health.png";
@@ -30,4 +32,12 @@ const Map<TrashType,String> trashPathMap = {
   TrashType.styroFoam : pathStyrofoam,
   TrashType.waterBottle : pathWaterBottle,
   TrashType.waterGallon : pathWaterGallon,
+};
+
+
+const Map<AnimalType,String> animalPathMap = {
+  AnimalType.crab : pathDolphin,
+  AnimalType.seaTurtle : pathDolphin,
+  AnimalType.seal : pathDolphin,
+  AnimalType.dolphin : pathDolphin,
 };
