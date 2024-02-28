@@ -29,6 +29,7 @@ class GamePage extends StatelessWidget {
         BlocProvider<PlayerStatsBloc>(create: (_) => PlayerStatsBloc()),
       ],
       child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: IntroGameScreen(),
       ),
     );

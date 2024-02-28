@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
 class StartButton extends StatelessWidget {
@@ -12,7 +11,7 @@ class StartButton extends StatelessWidget {
       width: SizeConfig.screenWidth / 2.5,
       height: 50,
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: const Color(0xFF0097B2),
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(

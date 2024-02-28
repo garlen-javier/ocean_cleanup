@@ -1,11 +1,13 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:ocean_cleanup/bloc/bloc_parameters.dart';
 import 'package:ocean_cleanup/bloc/joystick_movement/joystick_movement_bloc.dart';
 import 'package:ocean_cleanup/bloc/player_stats/player_stats_bloc.dart';
 import 'package:ocean_cleanup/components/into%20game/start_button.dart';
 import 'package:ocean_cleanup/scenes/game_scene.dart';
+import 'package:ocean_cleanup/utils/config_size.dart';
 
 class IntroGameScreen extends StatefulWidget {
   const IntroGameScreen({super.key});
@@ -33,23 +35,31 @@ class _IntroGameScreenState extends State<IntroGameScreen> {
               children: [
                 Image.asset(
                   "assets/images/logo.png",
-                  width: MediaQuery.of(context).size.width / 2,
+                  width: MediaQuery.of(context).size.width / 3,
                 ),
-                StartButton(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => GameWidget(
-                        game: GameScene(
-                          blocParameters: BlocParameters(
-                            joystickMovementBloc:
-                                context.read<JoystickMovementBloc>(),
-                            playerStatsBloc: context.read<PlayerStatsBloc>(),
+                Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    Lottie.asset('assets/animations/bubbles.json',
+                        width: 150.0, height: SizeConfig.screenHeight / 6),
+                    StartButton(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GameWidget(
+                            game: GameScene(
+                              blocParameters: BlocParameters(
+                                joystickMovementBloc:
+                                    context.read<JoystickMovementBloc>(),
+                                playerStatsBloc:
+                                    context.read<PlayerStatsBloc>(),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
