@@ -2,6 +2,8 @@
 
 import 'levels/level_parameters.dart';
 
+const bool isTestMode = false;
+
 const int defaultHealth = 3;
 const int playerPriority = 2;
 

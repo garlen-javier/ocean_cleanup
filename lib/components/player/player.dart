@@ -21,16 +21,12 @@ enum PlayerAnimationState {
 
 class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCallbacks,HasGameRef<GameScene>{
 
-  Vector2 pos;
-  Vector2? scaleFactor;
-  GameStatsBloc statsBloc;
+  final GameStatsBloc statsBloc;
+  double speed;
 
-  Player(this.pos,{this.scaleFactor,required this.statsBloc}):super(){
-    scale = scaleFactor ?? Vector2.all(1);
-  }
+  Player({super.position,this.speed = 150,required this.statsBloc});
 
   Vector2 _velocity = Vector2.zero();
-  double _speed = 150;
   List<Trash> trashCache = [];
 
   @override
@@ -52,7 +48,6 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
 
     current = PlayerAnimationState.idle;
     anchor = Anchor.center;
-    position = pos;
 
     animationTickers?[PlayerAnimationState.catching]?.onComplete = () {
       current = PlayerAnimationState.idle;
@@ -73,7 +68,7 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
 
   @override
   void runUpdate(double dt) {
-    position+=_velocity * _speed * dt;
+    position+=_velocity * speed * dt;
     position.clamp(Vector2(width * 0.5 ,height* 0.5), Vector2(GameWorld.bounds.width - (width* 0.5) ,  GameWorld.bounds.height - (height* 0.5)));
   }
 

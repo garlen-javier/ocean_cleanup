@@ -2,17 +2,22 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ocean_cleanup/constants.dart';
 import '../../bloc/joystick_movement/joystick_movement_barrel.dart';
 import 'bloc/game/game_bloc.dart';
 import 'bloc/game_bloc_parameters.dart';
 import 'bloc/game_stats/game_stats_bloc.dart';
+import 'level_tester.dart';
 import 'scenes/game_scene.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Flame.device.fullScreen();
   Flame.device.setLandscape();
-  runApp( const GamePage());
+  if(!isTestMode)
+   runApp( const GamePage());
+  else
+    runApp(const LevelTester());
 }
 
 class GamePage extends StatelessWidget {

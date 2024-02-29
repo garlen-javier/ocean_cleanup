@@ -20,13 +20,13 @@ enum SharkAnimationState {
 class Shark extends SpriteAnimationGroupComponent with UpdateMixin, CollisionCallbacks, HasGameRef<GameScene>   {
 
   final Vector2 pos;
+  final double speed;
   final double directionX;
   final List<Vector2> sharkPoints;
-  Shark ({required this.pos,required this.sharkPoints, this.directionX = 1});
+  Shark ({required this.pos,required this.sharkPoints,this.speed = 100, this.directionX = 1});
 
   Random _rng = Random();
   Vector2 _velocityDir = Vector2.zero();
-  double _speed = 100;
 
   @override
   Future<void> onLoad() async {
@@ -56,7 +56,7 @@ class Shark extends SpriteAnimationGroupComponent with UpdateMixin, CollisionCal
 
   @override
   void runUpdate(double dt) {
-    position += _velocityDir * _speed * dt;
+    position += _velocityDir * speed * dt;
     position.y.clamp(height * 0.5, GameWorld.bounds.height - (height * 0.5));
   }
 

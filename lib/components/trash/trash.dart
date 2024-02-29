@@ -19,12 +19,12 @@ class Trash extends SpriteComponent with UpdateMixin,CollisionCallbacks,HasGameR
   final Vector2 pos;
   final TrashType type;
   final int directionX;
+  final double speed;
 
-  Trash ({required this.pos,required this.type,this.directionX = 1});
+  Trash ({required this.pos,required this.type,this.speed = 0.5,this.directionX = 1});
 
   final double _amplitude = 0.5; // Adjust the amplitude of the wiggle
   final double _frequency = 5.0; // Adjust the frequency of the wiggle
-  double _speed = 0.5;
   double _velocity = 0.0;
 
   @override
@@ -45,7 +45,7 @@ class Trash extends SpriteComponent with UpdateMixin,CollisionCallbacks,HasGameR
     double y = _amplitude * sin(_velocity * _frequency);
 
     position+=Vector2(x,y);
-    _velocity += _speed * dt;
+    _velocity += speed * dt;
     position.y.clamp(height* 0.5, GameWorld.bounds.height - (height* 0.5));
   }
 

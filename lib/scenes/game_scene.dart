@@ -33,10 +33,14 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   @override
   FutureOr<void> onLoad() async{
+    debugPrint("FlameGame: onLoad");
     await _loadGameManager();
     await _loadGame();
     //TODO: testing
-    await _gameManager.loadLevel(3);
+    if(!isTestMode)
+      await _gameManager.loadLevel(3);
+    else
+      await _gameManager.loadLevel(0);
     return super.onLoad();
   }
 
@@ -122,6 +126,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   @override
   void onRemove() {
+    debugPrint("FlameGame: onRemove");
     blocParameters.gameBloc.add(const Default());
     blocParameters.gameStatsBloc.defaultState();
     super.onRemove();

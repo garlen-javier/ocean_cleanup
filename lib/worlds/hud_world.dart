@@ -41,7 +41,7 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 
   Future<void> _showTimer() async {
     //TODO: testing
-    LevelParameters params = gameManager.levelParameters(gameManager.currentLevelIndex);
+    LevelParameters params = gameManager.currentLevelParams;
     double timeLimit = params.trashObjectives.elementAt(0).timeLimit;
     double? animalTimeLimit = params.trappedAnimals?.values.first.timeLimit;
     //double timeLimit = 10;
@@ -97,9 +97,10 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
   }
 
   Future<void> _showGameStats() async {
+    LevelParameters params = gameManager.currentLevelParams;
     _hudStats = HudStats(
         health: gameManager.health,
-        trappedAnimals: gameManager.levelParameters(gameManager.currentLevelIndex).trappedAnimals,
+        trappedAnimals: params.trappedAnimals,
         trashTypes: gameManager.currentTrashTypes);
 
     //await add(stats);

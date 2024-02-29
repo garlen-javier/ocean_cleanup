@@ -27,25 +27,47 @@ enum LevelType
 
 class TrashObjective
 {
-  TrashType trashType;
-  int goal;
-  double timeLimit;
+  final TrashType trashType;
+  final int goal;
+  final double timeLimit;
 
-  TrashObjective({
+  const TrashObjective({
     required this.trashType,
     required this.goal,
     required this.timeLimit,
   });
 }
 
+class SharkConfig
+{
+  final double speed;
+  final int count;
+  const SharkConfig({this.speed = 100,this.count = 0});
+}
+
 class LevelParameters
 {
-  List<TrashObjective> trashObjectives;
-  Map<AnimalType,TrashObjective>? trappedAnimals;
-  LevelType levelType;
-  int sharkCount;
-  int octopusCount;
+  final List<TrashObjective> trashObjectives;
+  final Map<AnimalType,TrashObjective>? trappedAnimals;
+  final LevelType levelType;
+  final SharkConfig sharkConfig;
 
+  final double playerSpeed;
+  final double trashSpeed;
+  final double animalTrashChance;
+  final double trashSpawnMin;
+  final double trashSpawnMax;
+  final int octopusCount;
 
-  LevelParameters({required this.trashObjectives,this.trappedAnimals,this.levelType = LevelType.normal,this.sharkCount = 0,this.octopusCount = 0});
+  LevelParameters({
+    required this.trashObjectives,
+    this.trappedAnimals,
+    this.levelType = LevelType.normal,
+    this.sharkConfig = const SharkConfig(),
+    this.playerSpeed = 150,
+    this.animalTrashChance = 0.6,
+    this.trashSpeed = 0.5,
+    this.trashSpawnMin = 1,
+    this.trashSpawnMax = 15,
+    this.octopusCount = 0});
 }

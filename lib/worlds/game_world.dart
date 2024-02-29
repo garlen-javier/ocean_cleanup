@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flame/components.dart';
-import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame_bloc/flame_bloc.dart';
@@ -35,7 +34,6 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
   Player? player;
   late TiledComponent<FlameGame<camWorld.World>> map;
   List<Vector2> _sharkPoints = [];
-  int sharkCount = 2;
 
   @override
   FutureOr<void> onLoad() async {
@@ -54,8 +52,12 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
   }
 
   Future<void> _initPlayer() async {
-    player = Player(Vector2(worldSize.width ,worldSize.height),
-        statsBloc: blocParameters.gameStatsBloc);
+    LevelParameters params = gameManager.currentLevelParams;
+    player = Player(
+        position:Vector2(worldSize.width ,worldSize.height),
+        statsBloc: blocParameters.gameStatsBloc,
+        speed: params.playerSpeed,
+    );
     await add(player!);
     await _addPlayerController(player!);
   }
@@ -73,6 +75,8 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
   }
 
   Future<void> _loadTrashPoints() async {
+    LevelParameters levelParams = gameManager.currentLevelParams;
+    //LevelParameters levelParams = gameManager.currentLevelParams;
     loadSpawner(String layerName,int direction)
     async {
       ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>(layerName);
@@ -84,10 +88,14 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
           SpawnComponent spawner = SpawnComponent.periodRange(
             factory: (i)  {
               TrashType type = gameManager.randomizeTrashType();
-              return Trash(pos:Vector2(col.x ,col.y),type: type, directionX: direction);
+              return Trash(
+                  pos:Vector2(col.x ,col.y),
+                  type: type,
+                  speed: levelParams.trashSpeed,
+                  directionX: direction);
             },
-            minPeriod: 1,
-            maxPeriod: 15,
+            minPeriod: levelParams.trashSpawnMin,
+            maxPeriod: levelParams.trashSpawnMax,
             selfPositioning: true,
           );
           await add(spawner);
@@ -109,10 +117,19 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
       }
     }
 
+    LevelParameters params = gameManager.currentLevelParams;
+    SharkConfig sharkConfig = params.sharkConfig;
+    int sharkCount = sharkConfig.count;
+    double sharkSpeed = sharkConfig.speed;
+
     _sharkPoints.shuffle();
     for(int i = 0; i < sharkCount; ++i){
       Vector2 pos = _sharkPoints[i];
-      Shark shark = Shark(pos: pos,sharkPoints: _sharkPoints, directionX: -pos.x.sign);
+      Shark shark = Shark(
+          pos: pos,
+          speed: sharkSpeed,
+          sharkPoints: _sharkPoints,
+          directionX: -pos.x.sign);
       await add(shark);
 
     }

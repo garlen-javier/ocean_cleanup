@@ -11,9 +11,7 @@ class LevelFactory
 
   GameWorld createLevel(GameManager gameManager,int levelIndex,GameBlocParameters blocParameters)
   {
-    LevelParameters params = gameManager.levelParameters(levelIndex);
     GameWorld world = GameWorld(gameManager: gameManager, blocParameters: blocParameters);
-    world.sharkCount = params.sharkCount;
     return world;
   }
 }

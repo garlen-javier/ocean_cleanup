@@ -5,6 +5,12 @@ import 'game_barrel.dart';
 class GameBloc extends Bloc<GameEvent, GameState> {
   GameBloc() : super(const GameState.empty()) {
 
+    on<GameReady>(
+          (event, emit)  {
+            emit(state.copyWith(phase: GamePhase.ready));
+      },
+    );
+
     on<GameStart>(
           (event, emit)  {
             emit(state.copyWith(levelIndex: event.levelIndex, phase: GamePhase.playing));
@@ -38,8 +44,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     );
 
     on<Default>(
-          (event, emit) => emit(const GameState.empty(),
-      ),
+          (event, emit) {
+            emit(const GameState.empty());
+          }
     );
   }
 

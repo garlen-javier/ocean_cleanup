@@ -27,7 +27,7 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
 
     await _loadHealth(80);
     await _loadTrashCounter(60);
-    await _loadTrappedAnimals(110);
+    await _loadTrappedAnimals(15);
     await _initBlocListener();
     return super.onLoad();
   }
@@ -100,8 +100,10 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
     if(trappedAnimals == null)
       return;
 
+    var image = gameRef.images.fromCache(pathRescueComplete);
     int count = trappedAnimals!.length;
-    Vector2 counterPos = Vector2(_gameSize.x * 0.5 * (count-1)/count,-_gameSize.y * 0.35);
+    int elementWidth = image.width;
+    Vector2 counterPos = Vector2(_gameSize.x  * 0.5 - (count * elementWidth), -_gameSize.y * 0.35);
 
     for(var entry in trappedAnimals!.entries)
     {
@@ -110,8 +112,9 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
 
       var timer = HudAnimalTimer(position: counterPos, animalType: animal, maxDuration: mission.timeLimit);
       await add(timer);
-      counterPos = Vector2(timer.x + marginX,timer.y);
+      counterPos = Vector2(timer.x + elementWidth + marginX,timer.y);
     }
+
   }
 
   @override
