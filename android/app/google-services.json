@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "542374342901",
+    "project_id": "ocean-cleanup-f6d22",
+    "storage_bucket": "ocean-cleanup-f6d22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542374342901:android:93b052857170fffbeed5bc",
+        "android_client_info": {
+          "package_name": "com.gamejam.oceancleanup.ocean_cleanup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDO4da1N8gS3epGD1P6ab7MK0ZWYfSxUVA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

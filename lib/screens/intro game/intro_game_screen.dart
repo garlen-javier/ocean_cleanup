@@ -7,6 +7,7 @@ import 'package:ocean_cleanup/bloc/joystick_movement/joystick_movement_bloc.dart
 import 'package:ocean_cleanup/bloc/player_stats/player_stats_bloc.dart';
 import 'package:ocean_cleanup/components/into%20game/start_button.dart';
 import 'package:ocean_cleanup/scenes/game_scene.dart';
+import 'package:ocean_cleanup/screens/auth/login_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
 class IntroGameScreen extends StatefulWidget {
@@ -60,6 +61,38 @@ class _IntroGameScreenState extends State<IntroGameScreen> {
                       ),
                     ),
                   ],
+                ),
+                Container(
+                  width: SizeConfig.screenWidth / 2.5,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: const Color(0xFF0097B2),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(25),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: Color(0xFF0097B2),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
