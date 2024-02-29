@@ -1,8 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ocean_cleanup/bloc/auth/login_bloc.dart';
+import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
+import 'package:ocean_cleanup/firebase_options.dart';
 import 'package:ocean_cleanup/screens/intro%20game/intro_game_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 import '../../bloc/joystick_movement/joystick_movement_barrel.dart';
@@ -10,8 +12,12 @@ import 'bloc/bloc_parameters.dart';
 import 'bloc/player_stats/player_stats_barrel.dart';
 import 'scenes/game_scene.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
   Flame.device.fullScreen();
   Flame.device.setLandscape();
   runApp(const GamePage());
@@ -28,8 +34,9 @@ class GamePage extends StatelessWidget {
         BlocProvider<JoystickMovementBloc>(
             create: (_) => JoystickMovementBloc()),
         BlocProvider<PlayerStatsBloc>(create: (_) => PlayerStatsBloc()),
-        BlocProvider<LoginBloc>(
-            create: (_) => LoginBloc()),
+        BlocProvider<AuthBloc>(
+          create: (_) => AuthBloc(),
+        ),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -1,26 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ocean_cleanup/bloc/auth/login_bloc.dart';
+import 'package:lottie/lottie.dart';
+import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
 import 'package:ocean_cleanup/components/auth/custom_text_field.dart';
+import 'package:ocean_cleanup/components/auth/error_dialog.dart';
+import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class AuthScreen extends StatelessWidget {
+  const AuthScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final TextEditingController usernameController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
     final formKey = GlobalKey<FormState>();
-    final loginBloc = BlocProvider.of<LoginBloc>(context);
-    return BlocListener<LoginBloc, LoginState>(
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+
+    return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state.status == LoginStatus.failure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error!),
-              backgroundColor: Colors.red,
+        if (state.status == AuthStatus.loading) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => AlertDialog(
+              title: const Text('Loading'),
+              content: Lottie.asset(
+                'assets/animations/loading.json',
+                width: 100,
+                height: 100,
+              ),
             ),
           );
+        } else if (state.status == AuthStatus.success) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => LevelsScreen(
+                username: state.username ?? '',
+              ),
+            ),
+          );
+        } else if (state.status == AuthStatus.failure) {
+          Navigator.of(context).pop();
+          showErrorDialog(context, state.error ?? 'Unknown error');
         }
       },
       child: Scaffold(
@@ -88,7 +110,14 @@ class LoginScreen extends StatelessWidget {
                             ),
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                
+                                if(passwordController.text.length < 6){
+                                  showErrorDialog(context, 'Password must be at least 6 characters');
+                                  return;
+                                }
+                                authBloc.signUp(
+                                  username: usernameController.text,
+                                  password: passwordController.text,
+                                );
                               }
                             },
                             child: const Text(
@@ -106,7 +135,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                loginBloc.login(
+                                authBloc.login(
                                   username: usernameController.text,
                                   password: passwordController.text,
                                 );

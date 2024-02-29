@@ -7,7 +7,7 @@ import 'package:ocean_cleanup/bloc/joystick_movement/joystick_movement_bloc.dart
 import 'package:ocean_cleanup/bloc/player_stats/player_stats_bloc.dart';
 import 'package:ocean_cleanup/components/into%20game/start_button.dart';
 import 'package:ocean_cleanup/scenes/game_scene.dart';
-import 'package:ocean_cleanup/screens/auth/login_screen.dart';
+import 'package:ocean_cleanup/screens/auth/auth_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
 class IntroGameScreen extends StatefulWidget {
@@ -79,7 +79,8 @@ class _IntroGameScreenState extends State<IntroGameScreen> {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const LoginScreen()),
+                          builder: (context) => const AuthScreen(),
+                        ),
                       ),
                       child: const Center(
                         child: Text(
