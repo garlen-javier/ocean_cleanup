@@ -4,7 +4,9 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,9 +38,10 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     debugPrint("FlameGame: onLoad");
     await _loadGameManager();
     await _loadGame();
+    FlameAudio.bgm.initialize();
     //TODO: testing
     if(!isTestMode)
-      await _gameManager.loadLevel(3);
+      await _gameManager.loadLevel(1);
     else
       await _gameManager.loadLevel(0);
     return super.onLoad();
@@ -64,9 +67,20 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
       pathFishNet,
       pathHealth,
       pathRescueComplete,
+      pathRescueFailed,
       pathAnimalFrame,
       'onscreen_control_knob.png',
       'onscreen_control_base.png',
+    ]);
+
+    await FlameAudio.audioCache.loadAll([
+      pathBgmGame,
+      pathSfxCatchTrash,
+      pathSfxSwingNet,
+      pathSfxReduceHealth,
+      pathSfxGameOver,
+      pathSfxLevelWin,
+      pathSfxAnimalRescued,
     ]);
   }
 
@@ -133,13 +147,14 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   }
 
   @override
-  void onDispose() {
+  void onDispose() async {
      blocParameters.gameBloc.close();
      blocParameters.gameStatsBloc.close();
      blocParameters.joystickMovementBloc.close();
-    // removeAll(children);
-    // Flame.images.clearCache();
+     FlameAudio.bgm.dispose();
+     //Flame.images.clearCache();
     // Flame.assets.clearCache();
+   //  await FlameAudio.audioCache.clearAll();
     //TiledAtlas.clearCache();
     super.onDispose();
   }
@@ -156,6 +171,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     else if(event.logicalKey == LogicalKeyboardKey.keyO){
       debugPrint("pressed O: testing");
       blocParameters.gameBloc.add(const GameResume());
+     // FlameAudio.play(pathSfxGameOver);
     }
     return super.onKeyEvent(event, keysPressed);
   }

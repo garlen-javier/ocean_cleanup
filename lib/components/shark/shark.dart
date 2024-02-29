@@ -48,9 +48,9 @@ class Shark extends SpriteAnimationGroupComponent with UpdateMixin, CollisionCal
     _velocityDir.x = directionX;
     _flipSpriteByXDirection(_velocityDir.x);
 
-    RectangleHitbox hitbox = RectangleHitbox(size:Vector2(width * 0.8,height * 0.7),position: Vector2(width * 0.1,height * 0.15) );
+    RectangleHitbox hitbox = RectangleHitbox(size:Vector2(width * 0.3,height * 0.25),position: Vector2(width * 0.35,height * 0.28) );
     add(hitbox);
-    //debugMode = true;
+   // debugMode = true;
     return super.onLoad();
   }
 

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ocean_cleanup/constants.dart';
@@ -53,18 +54,13 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
       current = PlayerAnimationState.idle;
     };
 
-    add(RectangleHitbox(size:size,isSolid: true));
+     RectangleHitbox hitbox = RectangleHitbox(size:Vector2(width,height * 0.65),position: Vector2(width * 0.1,0) );
+     add(hitbox);
+    //add(RectangleHitbox(size:size,isSolid: true));
     priority = playerPriority;
+    //debugMode = true;
     return super.onLoad();
   }
-
-  // @override
-  // void update(double dt) {
-  //   super.update(dt);
-  //   position+=_velocity * _speed * dt;
-  //   position.clamp(Vector2(width * 0.5 ,height* 0.5), Vector2(GameWorld.bounds.width - (width* 0.5) ,  GameWorld.bounds.height - (height* 0.5)));
-  // }
-
 
   @override
   void runUpdate(double dt) {
@@ -84,7 +80,7 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
 
   void playCatchAnimation()
   {
-   current = PlayerAnimationState.catching;
+    current = PlayerAnimationState.catching;
   }
 
   void _updateAnimationByDirection(Vector2 dir)
@@ -133,6 +129,7 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
   void _reduceHealth()
   {
     statsBloc.reduceHealth(1);
+    FlameAudio.play(pathSfxReduceHealth);
   }
 
   void tryRemoveTrash()
@@ -143,6 +140,10 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
       statsBloc.addTrash(trash.type);
       trash.removeFromParent();
       trashCache.removeLast();
+      FlameAudio.play(pathSfxCatchTrash);
+    }
+    else{
+      FlameAudio.play(pathSfxSwingNet);
     }
   }
 

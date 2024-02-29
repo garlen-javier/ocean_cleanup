@@ -7,7 +7,7 @@ class CatcherBody extends BrickBaseBody
 
   @override
   Future<void> onLoad() async {
-    debugMode = true;
+    //debugMode = true;
     return super.onLoad();
   }
 }

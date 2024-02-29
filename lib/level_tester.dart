@@ -57,8 +57,8 @@ class TesterPage extends StatelessWidget {
                   _textField(context,_trashSpeedKey,"Trash Speed :","0.5"),
                   _textField(context,_timeLimitKey,"Time Limit(in minutes) :","2"),
 
-                  _textField(context,_trashSpawnMinKey,"Trash Spawn Min Chance :","1"),
-                  _textField(context,_trashSpawnMaxKey,"Trash Spawn Max Chance :","15"),
+                  _textField(context,_trashSpawnMinKey,"Trash Spawn Min Period :","1"),
+                  _textField(context,_trashSpawnMaxKey,"Trash Spawn Max Period :","15"),
 
                   _textField(context,_sharkCountKey,"Shark Count :","2"),
                   _textField(context,_sharkSpeedKey,"Shark Speed :","100"),

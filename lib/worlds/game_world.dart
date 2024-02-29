@@ -34,6 +34,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
   Player? player;
   late TiledComponent<FlameGame<camWorld.World>> map;
   List<Vector2> _sharkPoints = [];
+  List<SpawnComponent> _spawners = [];
 
   @override
   FutureOr<void> onLoad() async {
@@ -76,12 +77,11 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
 
   Future<void> _loadTrashPoints() async {
     LevelParameters levelParams = gameManager.currentLevelParams;
-    //LevelParameters levelParams = gameManager.currentLevelParams;
-    loadSpawner(String layerName,int direction)
-    async {
+    loadSpawner(String layerName,int direction) async {
       ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>(layerName);
       if(objGroup != null)
       {
+        _spawners.clear();
         for(var col in objGroup.objects)
         {
           //TODO: need to pause/resume
@@ -99,12 +99,32 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
             selfPositioning: true,
           );
           await add(spawner);
+          _spawners.add(spawner);
         }
       }
     }
 
     loadSpawner("trash_points_left",1);
     loadSpawner("trash_points_right",-1);
+  }
+
+  void pauseTrashSpawn()
+  {
+    for(int i = 0; i < _spawners.length; ++i)
+    {
+      if(_spawners[i].timer.isRunning())
+        _spawners[i].timer.pause();
+      else
+        _spawners[i].timer.resume();
+    }
+  }
+
+  void resumeTrashSpawn()
+  {
+    for(int i = 0; i < _spawners.length; ++i)
+    {
+        _spawners[i].timer.resume();
+    }
   }
 
   Future<void> _loadSharkPoints() async {

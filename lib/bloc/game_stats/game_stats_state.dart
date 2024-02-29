@@ -6,7 +6,7 @@ import '../../levels/level_parameters.dart';
 
 class GameStatsState extends Equatable {
   final AnimalType? freedAnimal;
-  final TrashType trashType;
+  final TrashType? trashType;
   final int trashCount;
   final int health;
   final bool timerFinish;
@@ -14,14 +14,14 @@ class GameStatsState extends Equatable {
 
    const GameStatsState({
      this.freedAnimal,
-     this.trashType = TrashType.any,
+     this.trashType,
      this.trashCount = 0,
      this.health = defaultHealth,
      this.timerFinish = false,
      this.rescueFailed = false,
   });
 
-  const GameStatsState.empty() : this(freedAnimal: null, trashType:TrashType.any,trashCount:0, health: defaultHealth,timerFinish:false, rescueFailed: false);
+  const GameStatsState.empty() : this(freedAnimal: null, trashType:null,trashCount:0, health: defaultHealth,timerFinish:false, rescueFailed: false);
 
   GameStatsState copyWith({
     AnimalType? freedAnimal,
@@ -32,7 +32,7 @@ class GameStatsState extends Equatable {
     bool? rescueFailed
   }) {
     return GameStatsState(
-        freedAnimal: freedAnimal,
+        freedAnimal: freedAnimal ?? this.freedAnimal,
         trashType: trashType ?? this.trashType,
         trashCount: trashCount ?? this.trashCount,
         health: health ?? this.health,

@@ -41,6 +41,7 @@ dependencies:
   flame_bloc: ^1.10.9
   equatable: ^2.0.5
   flutter_bloc: ^8.1.3
+  flame_audio: ^1.3.3
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,8 @@ flutter:
     - assets/images/animals/
     - assets/tiles/
     - assets/audio/
+    - assets/audio/bgm/
+    - assets/audio/sfx/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

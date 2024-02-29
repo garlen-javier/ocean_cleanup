@@ -59,7 +59,8 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
           return true;
         },
         onNewState: (state) {
-           _updateCountWithState(state);
+           if(state.trashType != null)
+              _updateCountWithState(state);
         },
       ),
     );
@@ -72,7 +73,7 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
       _anyTrashCount++;
       _txtCount.text = _anyTrashCount.toString();
     }
-    else if(trashType == state.trashType){
+    else if(state.trashType == trashType){
       _txtCount.text = state.trashCount.toString();
     }
   }

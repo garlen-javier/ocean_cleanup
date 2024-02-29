@@ -1,20 +1,24 @@
 
 
 import 'package:flame/components.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import '../../../custom_paint/radial_progress_painter.dart';
 
 class RadialProgress extends CustomPainterComponent with UpdateMixin {
   final double strokeWidth;
   final double maxDuration;
+  final VoidCallback? onFinish;
   RadialProgress({
     required this.maxDuration,
     required this.strokeWidth,
+    this.onFinish,
     super.size,
     super.position});
   double value = 0;
 
   late RadialProgressPainter? _radialPainter;
+  bool isComplete = false;
 
   @override
   Future<void> onLoad() async {
@@ -32,6 +36,10 @@ class RadialProgress extends CustomPainterComponent with UpdateMixin {
     if(value < maxDuration) {
       value+=dt;
       _radialPainter?.value = value;
+    }
+    else if(!isComplete) {
+      isComplete = true;
+      onFinish?.call();
     }
   }
 

@@ -21,6 +21,7 @@ const String pathWaterGallon = "trashes/water_gallon.png";
 
 const String pathDolphin = "animals/dolphin_sprite.png";
 const String pathRescueComplete = "rescue_complete.png";
+const String pathRescueFailed = "rescue_failed.png";
 const String pathAnimalFrame = "animal_frame.png";
 
 const String pathFishNet = "fish_net.png";
@@ -43,3 +44,14 @@ const Map<AnimalType,String> animalPathMap = {
   AnimalType.seal : pathDolphin,
   AnimalType.dolphin : pathDolphin,
 };
+
+
+//#region Audio
+const String pathBgmGame = "bgm/bgm_game.mp3";
+const String pathSfxCatchTrash = "sfx/catching_trash.wav";
+const String pathSfxSwingNet = "sfx/swinging_net.mp3";
+const String pathSfxReduceHealth = "sfx/reduced_health.wav";
+const String pathSfxGameOver = "sfx/game_over.mp3";
+const String pathSfxLevelWin = "sfx/level_win.mp3";
+const String pathSfxAnimalRescued = "sfx/animal_rescued.mp3";
+//#endregion

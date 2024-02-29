@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
@@ -60,10 +61,24 @@ class GameManager extends Component
           debugPrint("Listener: " + state.toString());
           switch(state.phase)
           {
+            case GamePhase.playing:
+              FlameAudio.bgm.resume();
+              _currentLevel?.resumeTrashSpawn();
+              break;
+            case GamePhase.pause:
+              FlameAudio.bgm.pause();
+              _currentLevel?.pauseTrashSpawn();
+              break;
             case GamePhase.win:
+              FlameAudio.bgm.stop();
+              FlameAudio.play(pathSfxLevelWin);
+              _currentLevel?.pauseTrashSpawn();
               debugPrint("Win! " + state!.result.toString() );
               break;
             case GamePhase.gameOver:
+               FlameAudio.bgm.stop();
+               FlameAudio.play(pathSfxGameOver);
+              _currentLevel?.pauseTrashSpawn();
               debugPrint("GameOver!" + state!.result.toString() );
               break;
             default:
@@ -102,6 +117,9 @@ class GameManager extends Component
     _cachedLevelParameters(levelIndex);
     await _changeWorldByLevel(levelIndex);
     await _loadHud();
+    await _preloadSfx();
+    await FlameAudio.bgm.play(pathBgmGame);
+
     //Note: For some reason need to ready first to work on hot restart
     blocParameters.gameBloc.add(const GameReady());
     blocParameters.gameBloc.add(GameStart(levelIndex));
@@ -180,6 +198,7 @@ class GameManager extends Component
           _freedAnimals.add(animal);
           _trappedAnimals.remove(animal); //remove type for randomize trash
           blocParameters.gameStatsBloc.freeAnimal(animal);
+          FlameAudio.play(pathSfxAnimalRescued);
         }
       });
     }
@@ -209,10 +228,20 @@ class GameManager extends Component
     return GameResult(
       levelIndex: currentLevelIndex,
       health: health,
+      totalTrashCount: blocParameters.gameStatsBloc.totalTrashCount(),
       remainingTime: _hud!.remainingTime,
       levelType: levelType,
       freedAnimal: (_freedAnimals.isNotEmpty) ? _freedAnimals : null,
     );
+  }
+
+  Future<void> _preloadSfx() async {
+    await FlameAudio.play(pathSfxLevelWin,volume: 0);
+    await FlameAudio.play(pathSfxGameOver,volume: 0);
+    await FlameAudio.play(pathSfxCatchTrash,volume: 0);
+    await FlameAudio.play(pathSfxSwingNet,volume: 0);
+    await FlameAudio.play(pathSfxReduceHealth,volume: 0);
+    await FlameAudio.play(pathSfxAnimalRescued,volume: 0);
   }
 
 

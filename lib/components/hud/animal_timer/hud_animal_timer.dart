@@ -20,7 +20,6 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
   HudAnimalTimer({required this.animalType,required this.maxDuration,super.position});
 
   late RadialProgress? _radialProgess;
-  late SpriteComponent? _complete;
   bool _isAnimalFree = false;
 
   @override
@@ -31,21 +30,18 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
   }
 
   Future<void> _initDisplay() async {
-    var sprite = Sprite(gameRef.images.fromCache(pathRescueComplete));
-    _complete = SpriteComponent(
-      sprite: sprite,
-      anchor: Anchor.center,
-      position: Vector2.zero(),
-    );
-
+    var completeSp = Sprite(gameRef.images.fromCache(pathRescueComplete));
     await add(_radialProgess = RadialProgress(
       maxDuration: maxDuration,
-      size: sprite.srcSize,
+      size: completeSp.srcSize,
       position: Vector2(2.5,2.5),
       strokeWidth: 8,
+      onFinish: () {
+        _showFailed();
+      }
     ));
-    await add(AnimalSprite(type: animalType, position: Vector2.zero(),));
 
+    await add(AnimalSprite(type: animalType, position: Vector2.zero(),));
     //await add(complete);
   }
 
@@ -71,7 +67,27 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
   Future<void>  _showComplete() async {
     _radialProgess?.removeFromParent();
     _radialProgess = null;
-    await add(_complete!);
+
+    var completeSp = Sprite(gameRef.images.fromCache(pathRescueComplete));
+    SpriteComponent complete = SpriteComponent(
+      sprite: completeSp,
+      anchor: Anchor.center,
+      position: Vector2.zero(),
+    );
+    await add(complete);
+  }
+
+  Future<void> _showFailed() async {
+    _radialProgess?.removeFromParent();
+    _radialProgess = null;
+
+    var failedSp = Sprite(gameRef.images.fromCache(pathRescueFailed));
+    SpriteComponent failedComp = SpriteComponent(
+      sprite: failedSp,
+      anchor: Anchor.center,
+      position: Vector2.zero(),
+    );
+    await add(failedComp);
   }
 
   @override
@@ -83,7 +99,6 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
   @override
   void onRemove() {
     _radialProgess = null;
-    _complete = null;
     super.onRemove();
   }
 
