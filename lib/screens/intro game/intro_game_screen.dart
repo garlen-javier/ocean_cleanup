@@ -8,7 +8,9 @@ import 'package:ocean_cleanup/bloc/player_stats/player_stats_bloc.dart';
 import 'package:ocean_cleanup/components/into%20game/start_button.dart';
 import 'package:ocean_cleanup/scenes/game_scene.dart';
 import 'package:ocean_cleanup/screens/auth/auth_screen.dart';
+import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IntroGameScreen extends StatefulWidget {
   const IntroGameScreen({super.key});
@@ -18,6 +20,25 @@ class IntroGameScreen extends StatefulWidget {
 }
 
 class _IntroGameScreenState extends State<IntroGameScreen> {
+  bool _isLoggedIn = false;
+  String username = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthenticationStatus();
+  }
+
+   Future<void> _checkAuthenticationStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    username = prefs.getString('username') ?? '';
+    print('>>>>>>>$username');
+    setState(() {
+      _isLoggedIn = username != '' ? true : false;
+      print('>>>>>>>$_isLoggedIn');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,22 +68,23 @@ class _IntroGameScreenState extends State<IntroGameScreen> {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => GameWidget(
-                            game: GameScene(
-                              blocParameters: BlocParameters(
-                                joystickMovementBloc:
-                                    context.read<JoystickMovementBloc>(),
-                                playerStatsBloc:
-                                    context.read<PlayerStatsBloc>(),
-                              ),
-                            ),
-                          ),
+                          builder: (context) => LevelsScreen(username: username)
+                          // GameWidget(
+                          //   game: GameScene(
+                          //     blocParameters: BlocParameters(
+                          //       joystickMovementBloc:
+                          //           context.read<JoystickMovementBloc>(),
+                          //       playerStatsBloc:
+                          //           context.read<PlayerStatsBloc>(),
+                          //     ),
+                          //   ),
+                          // ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                Container(
+               !_isLoggedIn ? Container(
                   width: SizeConfig.screenWidth / 2.5,
                   height: 50,
                   decoration: BoxDecoration(
@@ -94,7 +116,7 @@ class _IntroGameScreenState extends State<IntroGameScreen> {
                       ),
                     ),
                   ),
-                ),
+                ) : Container(),
               ],
             ),
           ),
