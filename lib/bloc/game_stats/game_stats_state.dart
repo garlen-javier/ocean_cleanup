@@ -32,8 +32,8 @@ class GameStatsState extends Equatable {
     bool? rescueFailed
   }) {
     return GameStatsState(
-        freedAnimal: freedAnimal ?? this.freedAnimal,
-        trashType: trashType ?? this.trashType,
+        freedAnimal: freedAnimal,
+        trashType: trashType,
         trashCount: trashCount ?? this.trashCount,
         health: health ?? this.health,
         timerFinish: timerFinish ?? this.timerFinish,

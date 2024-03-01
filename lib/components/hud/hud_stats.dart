@@ -36,9 +36,10 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
     await add(
       FlameBlocListener<GameStatsBloc, GameStatsState>(
         listenWhen: (previousState, newState) {
-          return true;
+          return previousState.health != newState.health;
         },
         onNewState: (state) {
+          debugPrint("HEALTH NEW! " + state.health.toString());
           _updateHealthWithState(state);
         },
       ),
@@ -46,7 +47,7 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
   }
 
   Future<void> _loadHealth(int marginX) async {
-    int count = health;
+    int currentHealth = health;
     var sprite = Sprite(gameRef.images.fromCache(pathHealth));
 
     const int rowCount = 2;
@@ -61,7 +62,7 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
       int col = i % colCount;
 
       Vector2 iconPos = initialPos + Vector2(col * columnSpacing, row * rowSpacing);
-      if (i < count) {
+      if (i < maxHealth) {
         SpriteComponent healthIcon = SpriteComponent(
           sprite: sprite,
           anchor: Anchor.center,
@@ -70,6 +71,11 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
         await add(healthIcon);
         _healthIcons.add(healthIcon);
       }
+
+      if (i >= currentHealth && i < maxHealth) {
+        _healthIcons[i].opacity = 0;
+      }
+
     }
   }
 
@@ -77,6 +83,7 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
   {
     for(int i = 0;i < _healthIcons.length; ++i)
     {
+      _healthIcons[i].opacity = 1;
       if(i >= state.health)
       {
         _healthIcons[i].opacity = 0;
@@ -100,21 +107,24 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
     if(trappedAnimals == null)
       return;
 
-    var image = gameRef.images.fromCache(pathRescueComplete);
-    int count = trappedAnimals!.length;
-    int elementWidth = image.width;
-    Vector2 counterPos = Vector2(_gameSize.x  * 0.5 - (count * elementWidth), -_gameSize.y * 0.35);
+    if(trappedAnimals!.isNotEmpty) {
+      var image = gameRef.images.fromCache(pathRescueComplete);
+      int count = trappedAnimals!.length;
+      int elementWidth = image.width;
+      Vector2 counterPos = Vector2(
+          _gameSize.x * 0.5 - (count * elementWidth), -_gameSize.y * 0.35);
 
-    for(var entry in trappedAnimals!.entries)
-    {
-      AnimalType animal = entry.key;
-      TrashObjective mission = entry.value;
+      for (var entry in trappedAnimals!.entries) {
+        AnimalType animal = entry.key;
+        TrashObjective mission = entry.value;
 
-      var timer = HudAnimalTimer(position: counterPos, animalType: animal, maxDuration: mission.timeLimit);
-      await add(timer);
-      counterPos = Vector2(timer.x + elementWidth + marginX,timer.y);
+        var timer = HudAnimalTimer(position: counterPos,
+            animalType: animal,
+            maxDuration: mission.timeLimit);
+        await add(timer);
+        counterPos = Vector2(timer.x + elementWidth + marginX, timer.y);
+      }
     }
-
   }
 
   @override

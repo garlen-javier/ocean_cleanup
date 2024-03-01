@@ -54,7 +54,7 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
       current = PlayerAnimationState.idle;
     };
 
-     RectangleHitbox hitbox = RectangleHitbox(size:Vector2(width,height * 0.65),position: Vector2(width * 0.1,0) );
+     RectangleHitbox hitbox = RectangleHitbox(size:Vector2(width,height * 0.65),position: Vector2(width * 0.1,0),isSolid: true );
      add(hitbox);
     //add(RectangleHitbox(size:size,isSolid: true));
     priority = playerPriority;

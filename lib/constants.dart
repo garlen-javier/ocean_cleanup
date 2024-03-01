@@ -5,7 +5,9 @@ import 'levels/level_parameters.dart';
 const bool isTestMode = false;
 
 const int defaultHealth = 3;
+const int maxHealth = 7;
 const int playerPriority = 2;
+const int maxStageLevel = 5;
 
 const String pathPlayer = "player.png";
 

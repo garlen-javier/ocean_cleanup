@@ -11,7 +11,7 @@ class HudTimer extends PositionComponent with UpdateMixin
 {
   Vector2? pos;
   double timeLimit;
-  Function(double)? remainingTime;
+  Function(double,double)? remainingTime;
   VoidCallback? timerFinished;
   HudTimer({required this.timeLimit,this.pos,this.remainingTime,this.timerFinished}){
     pos = pos ?? Vector2.zero();
@@ -36,7 +36,7 @@ class HudTimer extends PositionComponent with UpdateMixin
     _countdown.update(dt);
     if(_countdown.isRunning()) {
       _remainingTime = timeLimit - _countdown.current;
-      remainingTime?.call(_remainingTime);
+      remainingTime?.call(_remainingTime,_countdown.current);
     }
     else if(_countdown.finished)
     {

@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/input.dart';
 import 'package:flame_bloc/flame_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../bloc/game_stats/game_stats_barrel.dart';
@@ -45,18 +46,16 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
     double timeLimit = params.trashObjectives.elementAt(0).timeLimit;
     double? animalTimeLimit = params.trappedAnimals?.values.first.timeLimit;
     //double timeLimit = 10;
-    //double? animalTimeLimit = 5;
+   // double? animalTimeLimit = 10;
     await add(HudTimer(
         timeLimit: timeLimit,
         pos:Vector2(-20,-_gameSize.y * 0.48),
-        remainingTime: (time) {
+        remainingTime: (time,countdown) {
           remainingTime = time;
           if(animalTimeLimit != null)
           {
-            if(time <= animalTimeLimit)
-            {
+            if(countdown >= animalTimeLimit)
               blocParameters.gameStatsBloc.rescueFailed();
-            }
           }
         },
         timerFinished: () {
@@ -97,10 +96,9 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
   }
 
   Future<void> _showGameStats() async {
-    LevelParameters params = gameManager.currentLevelParams;
     _hudStats = HudStats(
         health: gameManager.health,
-        trappedAnimals: params.trappedAnimals,
+        trappedAnimals: gameManager.trappedAnimalsMap,
         trashTypes: gameManager.currentTrashTypes);
 
     //await add(stats);

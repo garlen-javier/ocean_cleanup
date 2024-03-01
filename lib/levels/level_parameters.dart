@@ -29,6 +29,7 @@ class TrashObjective
 {
   final TrashType trashType;
   final int goal;
+  /// TimeLimit in seconds.
   final double timeLimit;
 
   const TrashObjective({

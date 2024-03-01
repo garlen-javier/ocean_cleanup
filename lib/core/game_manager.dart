@@ -14,6 +14,7 @@ import '../components/player/player.dart';
 import '../constants.dart';
 import '../levels/levels.dart';
 import '../scenes/game_scene.dart';
+import '../utils/save_utils.dart';
 import '../worlds/game_world.dart';
 import '../worlds/level_factory.dart';
 import 'game_result.dart';
@@ -29,6 +30,7 @@ class GameManager extends Component
   final List<AnimalType> _trappedAnimals = [];
   final List<AnimalType> _freedAnimals = [];
   final Set<TrashType> _trashTypes = {};
+  final Map<AnimalType,TrashObjective> _trappedAnimalsMap = {};
 
   Random rand = Random();
   GameWorld? _currentLevel;
@@ -38,9 +40,10 @@ class GameManager extends Component
   LevelParameters get currentLevelParams => _levels.params[_currentLevelIndex];
   int get currentLevelIndex => _currentLevelIndex;
   Set<TrashType> get currentTrashTypes => _trashTypes; ///To display current trash in UI
+  Map<AnimalType,TrashObjective> get trappedAnimalsMap => _trappedAnimalsMap;
   GamePhase _gamePhase = GamePhase.none;
   GamePhase get gamePhase => _gamePhase;
-  int _health = defaultHealth; //TODO: load start health from preference
+  int _health = defaultHealth;
   int get health => _health;
 
   @override
@@ -72,6 +75,7 @@ class GameManager extends Component
             case GamePhase.win:
               FlameAudio.bgm.stop();
               FlameAudio.play(pathSfxLevelWin);
+              _saveFreeAnimalsIndex();
               _currentLevel?.pauseTrashSpawn();
               debugPrint("Win! " + state!.result.toString() );
               break;
@@ -98,12 +102,7 @@ class GameManager extends Component
           _health = state.health;
           _updateResultWithState(state);
           if(!state.rescueFailed)
-          {
             _checkAnimalToFree();
-          }
-          else if(state.rescueFailed){
-            //TODO: failed rescue/can update ui?
-          }
         },
       ),
     );
@@ -115,6 +114,7 @@ class GameManager extends Component
     debugPrint("Phase: " + gamePhase.toString());
     _currentLevelIndex = levelIndex;
     _cachedLevelParameters(levelIndex);
+    _checkBonusHealth();
     await _changeWorldByLevel(levelIndex);
     await _loadHud();
     await _preloadSfx();
@@ -158,13 +158,29 @@ class GameManager extends Component
     LevelParameters params = _levels.params[levelIndex];
     _trappedAnimals.clear();
     _freedAnimals.clear();
+    _trappedAnimalsMap.clear();
     _trashTypes.clear();
     _trashTypes.add(TrashType.any);
+
+    List<dynamic> freedAnimalIndex = SaveUtils.instance.getFreedAnimalIndex();
     if(params.trappedAnimals != null) {
       params.trappedAnimals!.forEach((animal, animalMission) {
-        _trappedAnimals.add(animal);
-        _trashTypes.add(animalMission.trashType);
+        //If the animal has been freed it should not come back unless reset all levels
+        if(!freedAnimalIndex.contains(animal.index)) {
+          _trappedAnimals.add(animal);
+          _trashTypes.add(animalMission.trashType);
+          _trappedAnimalsMap.putIfAbsent(animal, () => animalMission);
+        }
       });
+    }
+  }
+
+  void _checkBonusHealth()
+  {
+    List<dynamic> freedAnimalIndex = SaveUtils.instance.getFreedAnimalIndex();
+    if(freedAnimalIndex.isNotEmpty) {
+      _health+=freedAnimalIndex.length;
+      blocParameters.gameStatsBloc.setHealth(_health);
     }
   }
 
@@ -198,6 +214,7 @@ class GameManager extends Component
           _freedAnimals.add(animal);
           _trappedAnimals.remove(animal); //remove type for randomize trash
           blocParameters.gameStatsBloc.freeAnimal(animal);
+          blocParameters.gameStatsBloc.addHealth(1);
           FlameAudio.play(pathSfxAnimalRescued);
         }
       });
@@ -244,5 +261,22 @@ class GameManager extends Component
     await FlameAudio.play(pathSfxAnimalRescued,volume: 0);
   }
 
+  void _saveFreeAnimalsIndex()
+  {
+    if(_freedAnimals.isNotEmpty)
+    {
+      for (AnimalType animal in _freedAnimals) {
+        SaveUtils.instance.addFreeAnimal(animal);
+      }
+    }
+  }
+
+  //Currently clear the save game data such as freed animals
+  void _restartAllLevels()
+  {
+    blocParameters.gameBloc.add(const Default());
+    blocParameters.gameStatsBloc.defaultState();
+    SaveUtils.instance.clearGameBox();
+  }
 
 }

@@ -69,6 +69,11 @@ class GameStatsBloc extends Cubit<GameStatsState> {
     emit(state.copyWith(health: health));
   }
 
+  void setHealth(int hp){
+    health = hp;
+    emit(state.copyWith(health: health));
+  }
+
   void reduceHealth(int damage){
     if(health > 0) {
       health -= damage;
@@ -91,12 +96,14 @@ class GameStatsBloc extends Cubit<GameStatsState> {
   //#region Condition
   void timerFinish()
   {
-    emit(state.copyWith(timerFinish: true));
+    if(!state.timerFinish)
+      emit(state.copyWith(timerFinish: true));
   }
 
   void rescueFailed()
   {
-    emit(state.copyWith(rescueFailed: true));
+    if(!state.rescueFailed)
+      emit(state.copyWith(rescueFailed: true));
   }
   //#endregion
 

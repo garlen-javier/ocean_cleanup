@@ -11,6 +11,8 @@ import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ocean_cleanup/core/game_manager.dart';
+import 'package:ocean_cleanup/levels/level_parameters.dart';
+import 'package:ocean_cleanup/utils/save_utils.dart';
 import '../bloc/game/game_barrel.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../bloc/game_stats/game_stats_barrel.dart';
@@ -36,6 +38,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   @override
   FutureOr<void> onLoad() async{
     debugPrint("FlameGame: onLoad");
+    await SaveUtils.instance.loadData();
     await _loadGameManager();
     await _loadGame();
     FlameAudio.bgm.initialize();
@@ -141,6 +144,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   @override
   void onRemove() {
     debugPrint("FlameGame: onRemove");
+    FlameAudio.bgm.stop();
     blocParameters.gameBloc.add(const Default());
     blocParameters.gameStatsBloc.defaultState();
     super.onRemove();
@@ -167,11 +171,13 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
       debugPrint("pressed P: testing");
       blocParameters.gameBloc.add(const GamePause());
       //blocParameters.gameBloc.add(GameWin(_gameManager.currentLevelIndex));
+     // SaveUtils.instance.addFreeAnimal(AnimalType.seal);
     }
     else if(event.logicalKey == LogicalKeyboardKey.keyO){
       debugPrint("pressed O: testing");
-      blocParameters.gameBloc.add(const GameResume());
+     // blocParameters.gameBloc.add(const GameResume());
      // FlameAudio.play(pathSfxGameOver);
+      debugPrint(SaveUtils.instance.getFreedAnimalIndex().length.toString());
     }
     return super.onKeyEvent(event, keysPressed);
   }

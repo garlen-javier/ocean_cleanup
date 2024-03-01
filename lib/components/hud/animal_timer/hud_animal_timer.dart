@@ -52,7 +52,7 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
           return previousState.freedAnimal != newState.freedAnimal;
         },
         onNewState: (state) async {
-          if(state.freedAnimal != null)
+          if(state.freedAnimal != null && !state.rescueFailed)
           {
             if(!_isAnimalFree && animalType == state.freedAnimal) {
               _isAnimalFree = true;
