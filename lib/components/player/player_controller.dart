@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_bloc/flame_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import '../../bloc/joystick_movement/joystick_movement_barrel.dart';
 import 'player.dart';
@@ -14,6 +15,8 @@ class PlayerController extends Component with KeyboardHandler
   PlayerController({required this.player});
 
   Vector2 _keyboardVelo = Vector2.zero();
+  double _keyboardAngle = 0;
+  bool _isCatchPress = false;
 
    @override
   FutureOr<void> onLoad() async {
@@ -41,31 +44,57 @@ class PlayerController extends Component with KeyboardHandler
 
     final bool handled;
     if (event.logicalKey == LogicalKeyboardKey.keyA) {
-      _keyboardVelo.x = isKeyDown ? -1 : 0;
+      if(isKeyDown) {
+        _keyboardVelo.x = -1;
+        _keyboardAngle = _keyboardVelo.screenAngle();
+      }else{
+        _keyboardVelo.x = 0;
+      }
       handled = true;
     } else if (event.logicalKey == LogicalKeyboardKey.keyD) {
-      _keyboardVelo.x = isKeyDown ? 1 : 0;
+      if(isKeyDown) {
+        _keyboardVelo.x = 1;
+        _keyboardAngle = _keyboardVelo.screenAngle();
+      }else{
+        _keyboardVelo.x = 0;
+      }
       handled = true;
     } else if (event.logicalKey == LogicalKeyboardKey.keyW) {
-      _keyboardVelo.y = isKeyDown ? -1 : 0;
+      if(isKeyDown) {
+        _keyboardVelo.y = -1;
+        _keyboardAngle = _keyboardVelo.screenAngle();
+      }
+      else{
+        _keyboardVelo.y = 0;
+      }
       handled = true;
     } else if (event.logicalKey == LogicalKeyboardKey.keyS) {
-      _keyboardVelo.y = isKeyDown ? 1 : 0;
+      if(isKeyDown) {
+        _keyboardVelo.y = 1;
+        _keyboardAngle = _keyboardVelo.screenAngle();
+      }
+      else{
+        _keyboardVelo.y = 0;
+      }
       handled = true;
     } else {
       _keyboardVelo = Vector2.zero();
       handled = false;
     }
 
-    ///TODO: check to trigger key once
     if (event.logicalKey == LogicalKeyboardKey.space) {
-      player.playCatchAnimation();
-      player.tryRemoveTrash();
+      if(isKeyDown && !_isCatchPress ) {
+        player.playCatchAnimation();
+        player.tryRemoveTrash();
+        _isCatchPress = true;
+      }
+      else if(isKeyUp){
+        _isCatchPress = false;
+      }
     }
 
     if (handled) {
-      double angle = _keyboardVelo.screenAngle();
-      _handleKeyboardMovement(_keyboardVelo, angle);
+      _handleKeyboardMovement(_keyboardVelo, _keyboardAngle);
       return false;
     } else {
       return super.onKeyEvent(event, keysPressed);

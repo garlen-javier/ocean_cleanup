@@ -14,7 +14,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Flame.device.fullScreen();
   Flame.device.setLandscape();
-  if(!isTestMode)
+  if(!isTesterMode)
    runApp( const GamePage());
   else
     runApp(const LevelTester());

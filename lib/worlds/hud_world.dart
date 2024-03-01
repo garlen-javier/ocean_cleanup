@@ -11,6 +11,7 @@ import '../bloc/game_bloc_parameters.dart';
 import '../bloc/game_stats/game_stats_barrel.dart';
 import '../components/hud/hud_stats.dart';
 import '../components/hud/hud_timer.dart';
+import '../constants.dart';
 import '../core/game_manager.dart';
 import '../levels/level_parameters.dart';
 import '../mixins/update_mixin.dart';
@@ -36,7 +37,8 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 
     await _showTimer();
     await _showGameStats();
-    await _showFPSDisplay();
+    if(!isRelease)
+       await _showFPSDisplay();
     return super.onLoad();
   }
 

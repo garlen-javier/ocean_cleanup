@@ -72,6 +72,7 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
     _velocity = pVelocity;
     _flipSpriteByDirection(pVelocity);
     _updateAnimationByDirection(pVelocity);
+
     if(pVelocity != Vector2.zero()) {
       double degree = MathUtils.radToDeg(pAngle) - 90;
       angle = MathUtils.degToRad(degree);

@@ -2,7 +2,8 @@
 
 import 'levels/level_parameters.dart';
 
-const bool isTestMode = false;
+const bool isTesterMode = false;
+const bool isRelease = false;
 
 const int defaultHealth = 3;
 const int maxHealth = 7;

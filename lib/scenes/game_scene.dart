@@ -43,7 +43,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     await _loadGame();
     FlameAudio.bgm.initialize();
     //TODO: testing
-    if(!isTestMode)
+    if(!isTesterMode)
       await _gameManager.loadLevel(1);
     else
       await _gameManager.loadLevel(0);
@@ -166,18 +166,22 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   ///TODO: to remove
   @override
   KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-
-    if (event.logicalKey == LogicalKeyboardKey.keyP) {
-      debugPrint("pressed P: testing");
-      blocParameters.gameBloc.add(const GamePause());
-      //blocParameters.gameBloc.add(GameWin(_gameManager.currentLevelIndex));
-     // SaveUtils.instance.addFreeAnimal(AnimalType.seal);
-    }
-    else if(event.logicalKey == LogicalKeyboardKey.keyO){
-      debugPrint("pressed O: testing");
-     // blocParameters.gameBloc.add(const GameResume());
-     // FlameAudio.play(pathSfxGameOver);
-      debugPrint(SaveUtils.instance.getFreedAnimalIndex().length.toString());
+    if (!isRelease) {
+      if (event.logicalKey == LogicalKeyboardKey.keyP) {
+        debugPrint("pressed P: testing");
+        blocParameters.gameBloc.add(const GamePause());
+        //blocParameters.gameBloc.add(GameWin(_gameManager.currentLevelIndex));
+        // SaveUtils.instance.addFreeAnimal(AnimalType.seal);
+      }
+      else if (event.logicalKey == LogicalKeyboardKey.keyO) {
+        debugPrint("pressed O: testing");
+        // blocParameters.gameBloc.add(const GameResume());
+        // FlameAudio.play(pathSfxGameOver);
+        debugPrint(SaveUtils.instance
+            .getFreedAnimalIndex()
+            .length
+            .toString());
+      }
     }
     return super.onKeyEvent(event, keysPressed);
   }
