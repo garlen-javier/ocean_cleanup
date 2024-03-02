@@ -26,23 +26,26 @@ class Levels
     TrashObjective mainMission = TrashObjective(
         trashType: TrashType.any,
         goal: 25,
-        timeLimit: Utils.minuteToSeconds(2));
+        timeLimit: Utils.minuteToSeconds(1.5));
 
     List<TrashObjective> objectives = [mainMission];
     SharkConfig sharkConfig = const SharkConfig(count: 2);
-    return LevelParameters(trashObjectives: objectives,sharkConfig: sharkConfig);
+    return LevelParameters(
+        trashSpawnMin: 1,
+        trashSpawnMax: 20,
+        trashObjectives: objectives,sharkConfig: sharkConfig);
   }
 
   LevelParameters _level2()
   {
     TrashObjective mainMission = TrashObjective(
         trashType: TrashType.any,
-        goal: 33,
-        timeLimit: Utils.minuteToSeconds(2.5));
+        goal: 35,
+        timeLimit: Utils.minuteToSeconds(2));
 
     TrashObjective animalMission = TrashObjective(
         trashType: TrashType.plasticCup,
-        goal: 5,
+        goal: 8,
         timeLimit: Utils.minuteToSeconds(1));
 
     Map<AnimalType,TrashObjective> trappedAnimals = {
@@ -51,7 +54,13 @@ class Levels
 
     List<TrashObjective> objectives = [mainMission];
     SharkConfig sharkConfig = const SharkConfig(count: 3);
-    return LevelParameters(trashObjectives: objectives,trappedAnimals: trappedAnimals, sharkConfig: sharkConfig);
+    return LevelParameters(
+      animalTrashChance: 0.3,
+        trashObjectives: objectives,
+        trappedAnimals: trappedAnimals,
+        trashSpawnMin: 1,
+        trashSpawnMax: 20,
+        sharkConfig: sharkConfig);
   }
 
   LevelParameters _level3()
@@ -59,11 +68,11 @@ class Levels
     TrashObjective mainMission = TrashObjective(
         trashType: TrashType.any,
         goal: 40,
-        timeLimit: Utils.minuteToSeconds(3));
+        timeLimit: Utils.minuteToSeconds(2.5));
 
     TrashObjective animalMission = TrashObjective(
         trashType: TrashType.bagTrash,
-        goal: 7,
+        goal: 10,
         timeLimit: Utils.minuteToSeconds(1));
 
     Map<AnimalType,TrashObjective> trappedAnimals = {
@@ -71,8 +80,14 @@ class Levels
     };
 
     List<TrashObjective> objectives = [mainMission];
-    SharkConfig sharkConfig = const SharkConfig(count: 4);
-    return LevelParameters(trashObjectives:objectives,trappedAnimals:trappedAnimals,sharkConfig: sharkConfig);
+    SharkConfig sharkConfig = const SharkConfig(count: 4,speed: 110);
+    return LevelParameters(
+      animalTrashChance: 0.3,
+        trashObjectives:objectives,
+        trappedAnimals:trappedAnimals,
+        trashSpawnMin: 1,
+        trashSpawnMax: 20,
+        sharkConfig: sharkConfig);
   }
 
   LevelParameters _level4()
@@ -80,17 +95,17 @@ class Levels
     TrashObjective mainMission = TrashObjective(
         trashType: TrashType.any,
         goal: 50,
-        timeLimit: Utils.minuteToSeconds(3.5));
+        timeLimit: Utils.minuteToSeconds(3));
 
     TrashObjective animalMission1 = TrashObjective(
         trashType: TrashType.styroFoam,
-        goal: 6,
-        timeLimit: Utils.minuteToSeconds(1));
+        goal: 7,
+        timeLimit: Utils.minuteToSeconds(1.5));
 
     TrashObjective animalMission2 = TrashObjective(
         trashType: TrashType.plasticCup,
         goal: 8,
-        timeLimit: Utils.minuteToSeconds(1));
+        timeLimit: Utils.minuteToSeconds(1.5));
 
     Map<AnimalType,TrashObjective> trappedAnimals = {
       AnimalType.seal: animalMission1,
@@ -98,8 +113,14 @@ class Levels
     };
 
     List<TrashObjective> objectives = [mainMission];
-    SharkConfig sharkConfig = const SharkConfig(count: 5);
-    return LevelParameters(trashObjectives: objectives,trappedAnimals:trappedAnimals,sharkConfig: sharkConfig);
+    SharkConfig sharkConfig = const SharkConfig(count: 4,speed: 120);
+    return LevelParameters(
+        animalTrashChance: 0.3,
+        trashObjectives: objectives,
+        trappedAnimals:trappedAnimals,
+        trashSpawnMin: 1,
+        trashSpawnMax: 20,
+        sharkConfig: sharkConfig);
   }
 
   LevelParameters _level5()

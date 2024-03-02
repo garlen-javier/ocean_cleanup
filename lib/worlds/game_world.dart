@@ -10,9 +10,9 @@ import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/player/player_controller.dart';
 import 'package:ocean_cleanup/components/shark/shark.dart';
+import 'package:ocean_cleanup/framework/object_pool.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import '../bloc/game_bloc_parameters.dart';
-import '../bloc/joystick_movement/joystick_movement_barrel.dart';
 import '../components/brick/catcher_body.dart';
 import '../components/player/player.dart';
 import 'package:flame/src/camera/world.dart' as camWorld;
@@ -31,8 +31,9 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
 
   GameWorld({required this.gameManager,required this.blocParameters}):super();
 
-  Player? player;
+  late PlayerController playerController;
   late TiledComponent<FlameGame<camWorld.World>> map;
+  final ObjectPool<Trash> _trashPool = ObjectPool<Trash>(18, () => Trash(),);
   List<Vector2> _sharkPoints = [];
   List<SpawnComponent> _spawners = [];
 
@@ -54,7 +55,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
 
   Future<void> _initPlayer() async {
     LevelParameters params = gameManager.currentLevelParams;
-    player = Player(
+    Player player = Player(
         position:Vector2(worldSize.width ,worldSize.height),
         statsBloc: blocParameters.gameStatsBloc,
         speed: params.playerSpeed,
@@ -76,6 +77,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
   }
 
   Future<void> _loadTrashPoints() async {
+
     LevelParameters levelParams = gameManager.currentLevelParams;
     loadSpawner(String layerName,int direction) async {
       ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>(layerName);
@@ -84,15 +86,22 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
         _spawners.clear();
         for(var col in objGroup.objects)
         {
-          //TODO: need to pause/resume
           SpawnComponent spawner = SpawnComponent.periodRange(
             factory: (i)  {
               TrashType type = gameManager.randomizeTrashType();
-              return Trash(
-                  pos:Vector2(col.x ,col.y),
-                  type: type,
+              Trash trash = _trashPool.getObjectFromPool();
+              trash.setup(
+                  pos: Vector2(col.x ,col.y),
+                  trashType: type,
                   speed: levelParams.trashSpeed,
-                  directionX: direction);
+                  directionX: direction,
+                  trashPool: _trashPool);
+              return trash;
+              // return Trash(
+              //     pos:Vector2(col.x ,col.y),
+              //     type: type,
+              //     speed: levelParams.trashSpeed,
+              //     directionX: direction);
             },
             minPeriod: levelParams.trashSpawnMin,
             maxPeriod: levelParams.trashSpawnMax,
@@ -156,20 +165,9 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
   }
 
   Future<void> _addPlayerController(Player player) async {
-    await add(
-      FlameMultiBlocProvider(
-        providers: [
-          FlameBlocProvider<JoystickMovementBloc, JoystickMovementState>.value(
-            value: blocParameters.joystickMovementBloc,
-          ),
-        ],
-        children: [
-          PlayerController(player: player),
-        ],
-      ),
-    );
+    playerController = PlayerController(player: player);
+    await add(playerController);
   }
-
 
   @override
   void runUpdate(double dt) {
@@ -182,9 +180,10 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
     }
   }
 
-
-
-  
-
+  @override
+  void onRemove() {
+    _trashPool.clearPool();
+    super.onRemove();
+  }
 
 }

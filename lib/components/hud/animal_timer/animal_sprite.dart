@@ -21,10 +21,10 @@ class AnimalSprite extends SpriteAnimationGroupComponent with HasGameRef<GameSce
    var image = gameRef.images.fromCache(animalPathMap[type]!);
     final spritesheet = SpriteSheet(
         image: image,
-        srcSize: Vector2(image.size.x/3,image.size.y)
+        srcSize: Vector2(image.size.x/4,image.size.y)
     );
 
-    final idle = spritesheet.createAnimation(row:0,stepTime: 0.5,);
+    final idle = spritesheet.createAnimation(row:0,stepTime: 0.25,);
 
     animations = {
       AnimalAnimationState.idle: idle,

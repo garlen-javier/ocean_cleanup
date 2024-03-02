@@ -4,14 +4,12 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ocean_cleanup/core/game_manager.dart';
-import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/utils/save_utils.dart';
 import '../bloc/game/game_barrel.dart';
 import '../bloc/game_bloc_parameters.dart';
@@ -44,7 +42,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     FlameAudio.bgm.initialize();
     //TODO: testing
     if(!isTesterMode)
-      await _gameManager.loadLevel(1);
+      await _gameManager.loadLevel(0);
     else
       await _gameManager.loadLevel(0);
     return super.onLoad();
@@ -66,14 +64,19 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
       pathStyrofoam,
       pathWaterBottle,
       pathWaterGallon,
+      pathCrab,
+      pathTurtle,
+      pathSeal,
       pathDolphin,
       pathFishNet,
       pathHealth,
       pathRescueComplete,
       pathRescueFailed,
       pathAnimalFrame,
-      'onscreen_control_knob.png',
-      'onscreen_control_base.png',
+      pathJoystickBase,
+      pathJoystickKnob,
+      pathCatchButtonDefault,
+      pathCatchButtonPressed,
     ]);
 
     await FlameAudio.audioCache.loadAll([
@@ -154,7 +157,6 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   void onDispose() async {
      blocParameters.gameBloc.close();
      blocParameters.gameStatsBloc.close();
-     blocParameters.joystickMovementBloc.close();
      FlameAudio.bgm.dispose();
      //Flame.images.clearCache();
     // Flame.assets.clearCache();
@@ -163,24 +165,33 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     super.onDispose();
   }
 
-  ///TODO: to remove
+  ///TODO: To Remove
+  bool isPress = false;
   @override
   KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (!isRelease) {
+    if (!isRelease && !isTesterMode) {
+      final isKeyDown = event is RawKeyDownEvent;
+      final isKeyUp = event is RawKeyUpEvent;
+
       if (event.logicalKey == LogicalKeyboardKey.keyP) {
-        debugPrint("pressed P: testing");
-        blocParameters.gameBloc.add(const GamePause());
-        //blocParameters.gameBloc.add(GameWin(_gameManager.currentLevelIndex));
-        // SaveUtils.instance.addFreeAnimal(AnimalType.seal);
+        if(isKeyDown) {
+          debugPrint("pressed P: testing");
+          if(!isPress) {
+            _gameManager.nextLevel();
+            isPress = true;
+          }
+          //blocParameters.gameBloc.add(const GamePause());
+          //blocParameters.gameBloc.add(GameWin(_gameManager.currentLevelIndex));
+          // SaveUtils.instance.addFreeAnimal(AnimalType.seal);
+        }
+        else if(isKeyUp){
+          isPress = false;
+        }
       }
       else if (event.logicalKey == LogicalKeyboardKey.keyO) {
         debugPrint("pressed O: testing");
         // blocParameters.gameBloc.add(const GameResume());
         // FlameAudio.play(pathSfxGameOver);
-        debugPrint(SaveUtils.instance
-            .getFreedAnimalIndex()
-            .length
-            .toString());
       }
     }
     return super.onKeyEvent(event, keysPressed);

@@ -138,8 +138,8 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
     if(trashCache.isNotEmpty)
     {
       Trash trash = trashCache.last;
-      statsBloc.addTrash(trash.type);
-      trash.removeFromParent();
+      statsBloc.addTrash(trash.type!);
+      trash.delete();
       trashCache.removeLast();
       FlameAudio.play(pathSfxCatchTrash);
     }

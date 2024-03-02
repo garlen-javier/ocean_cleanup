@@ -1,7 +1,7 @@
 
 import 'package:flame/components.dart';
 
-class ObjectPool<T extends SpriteComponent> {
+class ObjectPool<T extends Component> {
   final List<T> _pool = [];
   final int _maxSize;
   final Function() _createInstance;
@@ -12,20 +12,23 @@ class ObjectPool<T extends SpriteComponent> {
     }
   }
 
-  T get() {
+  T getObjectFromPool() {
     if (_pool.isNotEmpty) {
-      SpriteComponent obj = _pool.removeLast();
-      obj.opacity = 1;
       return _pool.removeLast();
     } else {
       return _createInstance();
     }
   }
 
-  void put(T object) {
-    if (_pool.length < _maxSize) {
-      object.opacity = 0;
-      _pool.add(object);
-    }
+  void returnObjectToPool(T object) {
+    _pool.add(object);
+    object.removeFromParent();
   }
+
+  void clearPool()
+  {
+    _pool.clear();
+  }
+
+  int get poolSize => _pool.length;
 }

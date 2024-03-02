@@ -22,13 +22,22 @@ const String pathStyrofoam = "trashes/styrofoam.png";
 const String pathWaterBottle = "trashes/water_bottle.png";
 const String pathWaterGallon = "trashes/water_gallon.png";
 
-const String pathDolphin = "animals/dolphin_sprite.png";
+const String pathCrab = "animals/crab.png";
+const String pathDolphin = "animals/dolphin.png";
+const String pathSeal = "animals/whale.png";
+const String pathTurtle = "animals/turtle.png";
+
 const String pathRescueComplete = "rescue_complete.png";
 const String pathRescueFailed = "rescue_failed.png";
 const String pathAnimalFrame = "animal_frame.png";
 
 const String pathFishNet = "fish_net.png";
 const String pathHealth = "health.png";
+
+const String pathJoystickBase = "onscreen_control_base.png";
+const String pathJoystickKnob = "onscreen_control_knob.png";
+const String pathCatchButtonDefault = "catch_button_default.png";
+const String pathCatchButtonPressed = "catch_button_pressed.png";
 
 const Map<TrashType,String> trashPathMap = {
   TrashType.bagTrash : pathBagTrash,
@@ -40,14 +49,12 @@ const Map<TrashType,String> trashPathMap = {
   TrashType.waterGallon : pathWaterGallon,
 };
 
-
 const Map<AnimalType,String> animalPathMap = {
-  AnimalType.crab : pathDolphin,
-  AnimalType.seaTurtle : pathDolphin,
-  AnimalType.seal : pathDolphin,
+  AnimalType.crab : pathCrab,
+  AnimalType.seaTurtle : pathTurtle,
+  AnimalType.seal : pathSeal,
   AnimalType.dolphin : pathDolphin,
 };
-
 
 //#region Audio
 const String pathBgmGame = "bgm/bgm_game.mp3";

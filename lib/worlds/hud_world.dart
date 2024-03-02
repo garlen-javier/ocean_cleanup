@@ -6,11 +6,13 @@ import 'package:flame/extensions.dart';
 import 'package:flame/input.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:ocean_cleanup/components/hud/hud_mobile_control.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../bloc/game_stats/game_stats_barrel.dart';
 import '../components/hud/hud_stats.dart';
 import '../components/hud/hud_timer.dart';
+import '../components/player/player_controller.dart';
 import '../constants.dart';
 import '../core/game_manager.dart';
 import '../levels/level_parameters.dart';
@@ -22,9 +24,9 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 {
   final GameManager gameManager;
   final GameBlocParameters blocParameters;
-  HudWorld({required this.gameManager, required this.blocParameters}):super();
+  final PlayerController? playerController;
+  HudWorld({required this.gameManager, required this.blocParameters, this.playerController}):super();
 
-  JoystickComponent? _joystick;
   late Vector2 _gameSize;
   late HudStats? _hudStats;
   double remainingTime = 0;
@@ -33,8 +35,7 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
   FutureOr<void> onLoad() async{
     _gameSize = gameRef!.size;
     if (Utils.isMobile)
-      await _showJoyStick();
-
+      await _showMobileControl();
     await _showTimer();
     await _showGameStats();
     if(!isRelease)
@@ -66,26 +67,8 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
     ));
   }
 
-  Future<void> _showJoyStick() async {
-    Image knob = gameRef.images.fromCache("onscreen_control_knob.png");
-    Image base = gameRef.images.fromCache("onscreen_control_base.png");
-
-    Sprite joyStickKnob = Sprite(knob);
-    Sprite joyStickBase = Sprite(base);
-
-    PositionComponent component = PositionComponent();
-    _joystick = JoystickComponent(
-      knob: SpriteComponent(
-        sprite: joyStickKnob ,
-      ),
-      background: SpriteComponent(
-        sprite: joyStickBase ,
-      ),
-      position: Vector2(-_gameSize.x * 0.4,_gameSize.y * 0.35),
-    );
-    _joystick!.scale = Vector2.all(0.7);
-    await component.add(_joystick!);
-    await add(component);
+  Future<void> _showMobileControl() async {
+    await add(HudMobileControl(blocParameters: blocParameters,playerController: playerController));
   }
 
   Future<void> _showFPSDisplay() async {
@@ -131,8 +114,6 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
     if(_hudStats != null)
         _hudStats!.runUpdate(dt);
 
-    if(_joystick != null)
-      blocParameters.joystickMovementBloc.move(_joystick!.relativeDelta,_joystick!.delta.screenAngle());
   }
 
   @override
@@ -146,7 +127,6 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
     _hudStats = null;
     super.onRemove();
   }
-
 
 
 }

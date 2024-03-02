@@ -6,6 +6,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
+import 'package:ocean_cleanup/utils/utils.dart';
 import 'package:ocean_cleanup/worlds/hud_world.dart';
 import '../bloc/game/game_barrel.dart';
 import '../bloc/game_bloc_parameters.dart';
@@ -61,7 +62,7 @@ class GameManager extends Component
         },
         onNewState: (state)  {
           _gamePhase = state.phase;
-          debugPrint("Listener: " + state.toString());
+          debugPrint("GameBloc Listener: $state");
           switch(state.phase)
           {
             case GamePhase.playing:
@@ -110,15 +111,22 @@ class GameManager extends Component
 
   Future<void> loadLevel(int levelIndex) async
   {
-    debugPrint("Load Level Index: " + levelIndex.toString());
-    debugPrint("Phase: " + gamePhase.toString());
+    if(!Utils.isLevelIndexValid(levelIndex))
+    {
+      print("Level Index $levelIndex out of range");
+      return;
+    }
+
+    debugPrint("Load Level Index: $levelIndex");
+    debugPrint("Phase: $gamePhase");
     _currentLevelIndex = levelIndex;
     _cachedLevelParameters(levelIndex);
     _checkBonusHealth();
     await _changeWorldByLevel(levelIndex);
     await _loadHud();
     await _preloadSfx();
-    await FlameAudio.bgm.play(pathBgmGame);
+    if(!FlameAudio.bgm.isPlaying)
+      await FlameAudio.bgm.play(pathBgmGame);
 
     //Note: For some reason need to ready first to work on hot restart
     blocParameters.gameBloc.add(const GameReady());
@@ -148,7 +156,7 @@ class GameManager extends Component
       gameScene.remove(_hud!);
     }
 
-    _hud = HudWorld(gameManager: this, blocParameters: blocParameters);
+    _hud = HudWorld(gameManager: this, blocParameters: blocParameters,playerController: _currentLevel?.playerController);
     gameScene.hudCamera.world = _hud;
     await gameScene.add(_hud!);
   }
@@ -210,7 +218,7 @@ class GameManager extends Component
         int goalCount = animalMission.goal;
         if(trashCount == goalCount && _trappedAnimals.contains(animal))
         {
-          debugPrint("Free Animal:" + animal.toString());
+          debugPrint("Free Animal:$animal");
           _freedAnimals.add(animal);
           _trappedAnimals.remove(animal); //remove type for randomize trash
           blocParameters.gameStatsBloc.freeAnimal(animal);
@@ -268,6 +276,14 @@ class GameManager extends Component
       for (AnimalType animal in _freedAnimals) {
         SaveUtils.instance.addFreeAnimal(animal);
       }
+    }
+  }
+
+  void nextLevel()
+  {
+    if(_currentLevelIndex < maxStageLevel-1) {
+      _currentLevelIndex++;
+      loadLevel(_currentLevelIndex);
     }
   }
 

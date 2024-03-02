@@ -1,11 +1,7 @@
 
 
-import 'dart:async';
 import 'package:flame/components.dart';
-import 'package:flame_bloc/flame_bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import '../../bloc/joystick_movement/joystick_movement_barrel.dart';
 import 'player.dart';
 
 ///Player inputs should be handled here
@@ -17,25 +13,6 @@ class PlayerController extends Component with KeyboardHandler
   Vector2 _keyboardVelo = Vector2.zero();
   double _keyboardAngle = 0;
   bool _isCatchPress = false;
-
-   @override
-  FutureOr<void> onLoad() async {
-    await _initBlocListener();
-    return super.onLoad();
-  }
-
-  Future<void> _initBlocListener() async {
-    await add(
-      FlameBlocListener<JoystickMovementBloc, JoystickMovementState>(
-        listenWhen: (previousState, newState) {
-          return previousState.velocityDirection != newState.velocityDirection;
-        },
-        onNewState: (state) {
-          _handleJoystickMovement(state.velocityDirection,state.angle);
-        },
-      ),
-    );
-  }
 
   @override
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
@@ -84,8 +61,7 @@ class PlayerController extends Component with KeyboardHandler
 
     if (event.logicalKey == LogicalKeyboardKey.space) {
       if(isKeyDown && !_isCatchPress ) {
-        player.playCatchAnimation();
-        player.tryRemoveTrash();
+        tryCatchTrash();
         _isCatchPress = true;
       }
       else if(isKeyUp){
@@ -101,7 +77,13 @@ class PlayerController extends Component with KeyboardHandler
     }
   }
 
-  void _handleJoystickMovement(Vector2 velocityDirection,double angle)
+  void tryCatchTrash()
+  {
+    player.playCatchAnimation();
+    player.tryRemoveTrash();
+  }
+
+  void handleJoystickMovement(Vector2 velocityDirection,double angle)
   {
      player.updateDirection(velocityDirection,angle);
   }
