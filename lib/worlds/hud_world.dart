@@ -6,6 +6,7 @@ import 'package:flame/extensions.dart';
 import 'package:flame/input.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/hud/hud_mobile_control.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import '../bloc/game_bloc_parameters.dart';
@@ -52,7 +53,7 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
    // double? animalTimeLimit = 10;
     await add(HudTimer(
         timeLimit: timeLimit,
-        pos:Vector2(-20,-_gameSize.y * 0.48),
+        position:Vector2(-20,-_gameSize.y * 0.48),
         remainingTime: (time,countdown) {
           remainingTime = time;
           if(animalTimeLimit != null)

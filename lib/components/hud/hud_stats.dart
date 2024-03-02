@@ -1,8 +1,8 @@
 
 import 'dart:async';
 import 'package:flame/components.dart';
+import 'package:flame/input.dart';
 import 'package:flame_bloc/flame_bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:ocean_cleanup/components/hud/hud_trash_count.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/mixins/update_mixin.dart';
@@ -39,7 +39,6 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
           return previousState.health != newState.health;
         },
         onNewState: (state) {
-          debugPrint("HEALTH NEW! " + state.health.toString());
           _updateHealthWithState(state);
         },
       ),

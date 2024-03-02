@@ -56,6 +56,13 @@ const Map<AnimalType,String> animalPathMap = {
   AnimalType.whale : pathWhale,
 };
 
+const Map<int,String> coralsPathMap = {
+  1 : "Coral1",
+  2 : "Coral2",
+  3 : "Coral3",
+  4 : "Coral3",
+};
+
 //#region Audio
 const String pathBgmGame = "bgm/bgm_game.mp3";
 const String pathSfxCatchTrash = "sfx/catching_trash.wav";

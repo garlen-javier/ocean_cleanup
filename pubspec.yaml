@@ -76,6 +76,12 @@ flutter:
     - assets/images/trashes/
     - assets/images/animals/
     - assets/images/bg_elements/
+    - assets/images/bg_elements/coral1/
+    - assets/images/bg_elements/coral2/
+    - assets/images/bg_elements/coral3/
+    - assets/images/bg_elements/coral4/
+    - assets/images/bg_elements/coral5/
+    - assets/images/bg_elements/coral6/
     - assets/tiles/
     - assets/audio/
     - assets/audio/bgm/

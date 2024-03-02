@@ -5,6 +5,7 @@ import 'package:flame/sprite.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import 'package:ocean_cleanup/utils/math_utils.dart';
@@ -147,6 +148,5 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
       FlameAudio.play(pathSfxSwingNet);
     }
   }
-
 
 }

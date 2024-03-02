@@ -10,6 +10,7 @@ import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/player/player_controller.dart';
 import 'package:ocean_cleanup/components/shark/shark.dart';
+import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/framework/object_pool.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import '../bloc/game_bloc_parameters.dart';
@@ -48,6 +49,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
     map = await TiledComponent.load('stage1.tmx', Vector2.all(32));
     await add(map);
 
+    _displayCorals();
     await _loadCatchers();
     await _loadTrashPoints();
     await _loadSharkPoints();
@@ -62,6 +64,22 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
     );
     await add(player!);
     await _addPlayerController(player!);
+  }
+
+  void _displayCorals()
+  {
+    for (var entry in coralsPathMap.entries) {
+      var key = entry.key;
+      var value = entry.value;
+
+      String groupName = value;
+      Group? coralGroup = map.tileMap.getLayer<Group>(groupName);
+      coralGroup?.visible = false;
+      if(key == gameManager.currentLevelIndex) {
+        coralGroup?.visible = true;
+        break;
+      }
+    }
   }
 
   Future<void> _loadCatchers() async {
@@ -97,11 +115,6 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
                   directionX: direction,
                   trashPool: _trashPool);
               return trash;
-              // return Trash(
-              //     pos:Vector2(col.x ,col.y),
-              //     type: type,
-              //     speed: levelParams.trashSpeed,
-              //     directionX: direction);
             },
             minPeriod: levelParams.trashSpawnMin,
             maxPeriod: levelParams.trashSpawnMax,

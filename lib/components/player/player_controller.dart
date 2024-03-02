@@ -20,7 +20,12 @@ class PlayerController extends Component with KeyboardHandler
     final isKeyUp = event is RawKeyUpEvent;
 
     final bool handled;
-    if (event.logicalKey == LogicalKeyboardKey.keyA) {
+    final bool isLeft = event.logicalKey == LogicalKeyboardKey.keyA || event.logicalKey == LogicalKeyboardKey.arrowLeft;
+    final bool isRight = event.logicalKey == LogicalKeyboardKey.keyD || event.logicalKey == LogicalKeyboardKey.arrowRight;
+    final bool isUp = event.logicalKey == LogicalKeyboardKey.keyW || event.logicalKey == LogicalKeyboardKey.arrowUp;
+    final bool isDown = event.logicalKey == LogicalKeyboardKey.keyS || event.logicalKey == LogicalKeyboardKey.arrowDown;
+
+    if (isLeft) {
       if(isKeyDown) {
         _keyboardVelo.x = -1;
         _keyboardAngle = _keyboardVelo.screenAngle();
@@ -28,7 +33,7 @@ class PlayerController extends Component with KeyboardHandler
         _keyboardVelo.x = 0;
       }
       handled = true;
-    } else if (event.logicalKey == LogicalKeyboardKey.keyD) {
+    } else if (isRight) {
       if(isKeyDown) {
         _keyboardVelo.x = 1;
         _keyboardAngle = _keyboardVelo.screenAngle();
@@ -36,7 +41,7 @@ class PlayerController extends Component with KeyboardHandler
         _keyboardVelo.x = 0;
       }
       handled = true;
-    } else if (event.logicalKey == LogicalKeyboardKey.keyW) {
+    } else if (isUp) {
       if(isKeyDown) {
         _keyboardVelo.y = -1;
         _keyboardAngle = _keyboardVelo.screenAngle();
@@ -45,7 +50,7 @@ class PlayerController extends Component with KeyboardHandler
         _keyboardVelo.y = 0;
       }
       handled = true;
-    } else if (event.logicalKey == LogicalKeyboardKey.keyS) {
+    } else if (isDown) {
       if(isKeyDown) {
         _keyboardVelo.y = 1;
         _keyboardAngle = _keyboardVelo.screenAngle();

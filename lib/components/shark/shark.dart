@@ -56,8 +56,8 @@ class Shark extends SpriteAnimationGroupComponent with UpdateMixin, CollisionCal
 
   @override
   void runUpdate(double dt) {
-    // position += _velocityDir * speed * dt;
-    // position.y.clamp(height * 0.5, GameWorld.bounds.height - (height * 0.5));
+    position += _velocityDir * speed * dt;
+    position.y.clamp(height * 0.5, GameWorld.bounds.height - (height * 0.5));
   }
 
   void setPosition(Vector2 pos)

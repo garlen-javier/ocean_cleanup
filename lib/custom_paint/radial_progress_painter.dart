@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RadialProgressPainter extends CustomPainter {
@@ -55,7 +53,7 @@ class RadialProgressPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final Paint borderPaint = Paint()
-      ..color = Colors.black
+      ..color = Colors.white
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
