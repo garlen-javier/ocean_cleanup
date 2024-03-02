@@ -20,6 +20,7 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
   HudAnimalTimer({required this.animalType,required this.maxDuration,super.position});
 
   late RadialProgress? _radialProgess;
+  late AnimalSprite? _animalSprite;
   bool _isAnimalFree = false;
 
   @override
@@ -41,7 +42,7 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
       }
     ));
 
-    await add(AnimalSprite(type: animalType, position: Vector2.zero(),));
+    await add(_animalSprite = AnimalSprite(type: animalType, position: Vector2.zero(),));
     //await add(complete);
   }
 
@@ -65,8 +66,7 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
   }
 
   Future<void>  _showComplete() async {
-    _radialProgess?.removeFromParent();
-    _radialProgess = null;
+    _removeAnimalDisplay();
 
     var completeSp = Sprite(gameRef.images.fromCache(pathRescueComplete));
     SpriteComponent complete = SpriteComponent(
@@ -78,8 +78,7 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
   }
 
   Future<void> _showFailed() async {
-    _radialProgess?.removeFromParent();
-    _radialProgess = null;
+    _removeAnimalDisplay();
 
     var failedSp = Sprite(gameRef.images.fromCache(pathRescueFailed));
     SpriteComponent failedComp = SpriteComponent(
@@ -88,6 +87,14 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
       position: Vector2.zero(),
     );
     await add(failedComp);
+  }
+
+  void _removeAnimalDisplay()
+  {
+    _radialProgess?.removeFromParent();
+    _animalSprite?.removeFromParent();
+    _radialProgess = null;
+    _animalSprite = null;
   }
 
   @override
@@ -99,6 +106,7 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
   @override
   void onRemove() {
     _radialProgess = null;
+    _animalSprite = null;
     super.onRemove();
   }
 

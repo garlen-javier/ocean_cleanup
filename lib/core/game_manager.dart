@@ -44,9 +44,6 @@ class GameManager extends Component
   Map<AnimalType,TrashObjective> get trappedAnimalsMap => _trappedAnimalsMap;
   GamePhase _gamePhase = GamePhase.none;
   GamePhase get gamePhase => _gamePhase;
-  int _health = defaultHealth;
-  int get health => _health;
-
   @override
   FutureOr<void> onLoad() async {
     _initBlocListener();
@@ -100,7 +97,6 @@ class GameManager extends Component
           return true;
         },
         onNewState: (state) {
-          _health = state.health;
           _updateResultWithState(state);
           if(!state.rescueFailed)
             _checkAnimalToFree();
@@ -121,7 +117,6 @@ class GameManager extends Component
     debugPrint("Phase: $gamePhase");
     _currentLevelIndex = levelIndex;
     _cachedLevelParameters(levelIndex);
-    _checkBonusHealth();
     await _changeWorldByLevel(levelIndex);
     await _loadHud();
     await _preloadSfx();
@@ -183,13 +178,15 @@ class GameManager extends Component
     }
   }
 
-  void _checkBonusHealth()
+  int get health
   {
+    int defHealth = defaultHealth;
     List<dynamic> freedAnimalIndex = SaveUtils.instance.getFreedAnimalIndex();
     if(freedAnimalIndex.isNotEmpty) {
-      _health+=freedAnimalIndex.length;
-      blocParameters.gameStatsBloc.setHealth(_health);
+      defHealth+=freedAnimalIndex.length;
+      blocParameters.gameStatsBloc.setHealth(defHealth);
     }
+    return defHealth;
   }
 
   TrashType randomizeTrashType()
@@ -283,6 +280,8 @@ class GameManager extends Component
   {
     if(_currentLevelIndex < maxStageLevel-1) {
       _currentLevelIndex++;
+      blocParameters.gameBloc.add(const Default());
+      blocParameters.gameStatsBloc.defaultState();
       loadLevel(_currentLevelIndex);
     }
   }
