@@ -15,8 +15,8 @@ enum AnimalType
 {
   crab,
   seaTurtle,
-  seal,
   dolphin,
+  whale,
 }
 
 enum LevelType

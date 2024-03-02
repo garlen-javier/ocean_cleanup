@@ -108,8 +108,8 @@ class Levels
         timeLimit: Utils.minuteToSeconds(1.5));
 
     Map<AnimalType,TrashObjective> trappedAnimals = {
-      AnimalType.seal: animalMission1,
-      AnimalType.dolphin: animalMission2,
+      AnimalType.dolphin: animalMission1,
+      AnimalType.whale: animalMission2,
     };
 
     List<TrashObjective> objectives = [mainMission];
@@ -169,7 +169,7 @@ class Levels
   {
     params.clear();
     Map<AnimalType,TrashObjective> trappedAnimals = {
-      AnimalType.dolphin: animalMission,
+      AnimalType.whale: animalMission,
     };
 
     List<TrashObjective> objectives = [mainMission];

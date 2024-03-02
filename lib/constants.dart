@@ -23,8 +23,8 @@ const String pathWaterBottle = "trashes/water_bottle.png";
 const String pathWaterGallon = "trashes/water_gallon.png";
 
 const String pathCrab = "animals/crab.png";
+const String pathWhale = "animals/whale.png";
 const String pathDolphin = "animals/dolphin.png";
-const String pathSeal = "animals/whale.png";
 const String pathTurtle = "animals/turtle.png";
 
 const String pathRescueComplete = "rescue_complete.png";
@@ -52,8 +52,8 @@ const Map<TrashType,String> trashPathMap = {
 const Map<AnimalType,String> animalPathMap = {
   AnimalType.crab : pathCrab,
   AnimalType.seaTurtle : pathTurtle,
-  AnimalType.seal : pathSeal,
   AnimalType.dolphin : pathDolphin,
+  AnimalType.whale : pathWhale,
 };
 
 //#region Audio
