@@ -5,7 +5,6 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
-import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/player/player_controller.dart';
@@ -62,8 +61,8 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
         statsBloc: blocParameters.gameStatsBloc,
         speed: params.playerSpeed,
     );
-    await add(player!);
-    await _addPlayerController(player!);
+    await add(player);
+    await _addPlayerController(player);
   }
 
   void _displayCorals()
@@ -185,11 +184,11 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
   @override
   void runUpdate(double dt) {
     if(hasChildren) {
-      children.forEach((child) {
+      for (var child in children) {
         if(child is UpdateMixin){
           (child as dynamic)?.runUpdate(dt);
         }
-      });
+      }
     }
   }
 

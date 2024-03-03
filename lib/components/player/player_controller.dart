@@ -13,6 +13,7 @@ class PlayerController extends Component with KeyboardHandler
   Vector2 _keyboardVelo = Vector2.zero();
   double _keyboardAngle = 0;
   bool _isCatchPress = false;
+  bool enable = false;
 
   @override
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
@@ -84,17 +85,26 @@ class PlayerController extends Component with KeyboardHandler
 
   void tryCatchTrash()
   {
+    if(!enable)
+      return;
+
     player.playCatchAnimation();
     player.tryRemoveTrash();
   }
 
   void handleJoystickMovement(Vector2 velocityDirection,double angle)
   {
-     player.updateDirection(velocityDirection,angle);
+    if(!enable)
+      return;
+
+    player.updateDirection(velocityDirection,angle);
   }
 
   void _handleKeyboardMovement(Vector2 velocityDirection,double angle)
   {
+    if(!enable)
+      return;
+
      player.updateDirection(velocityDirection,angle);
   }
 

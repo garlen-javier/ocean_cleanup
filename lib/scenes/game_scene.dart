@@ -42,7 +42,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     FlameAudio.bgm.initialize();
     //TODO: testing
     if(!isTesterMode)
-      await _gameManager.loadLevel(0);
+      await _gameManager.loadLevel(1);
     else
       await _gameManager.loadLevel(0);
     return super.onLoad();
@@ -103,10 +103,16 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
       ..position = Vector2(GameWorld.worldSize.width, GameWorld.worldSize.height);
     // ..anchor = Anchor.topLeft;
 
+
     hudCamera = CameraComponent.withFixedResolution(
       width: view.physicalSize.width / view.devicePixelRatio,
       height: view.physicalSize.height / view.devicePixelRatio,
     );
+
+    // hudCamera.viewfinder
+    //   ..zoom = 0.5;
+    // //  ..position = Vector2(GameWorld.worldSize.width + 100, GameWorld.worldSize.height);
+    // // ..anchor = Anchor.topLeft;
 
     await addAll([gameCamera, hudCamera]);
   }
@@ -133,13 +139,13 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   @override
   void update(double dt) {
     if(hasChildren) {
-      children.forEach((child) {
+      for (var child in children) {
         if(child is HasUpdateMixin){
           if(_gameManager.gamePhase == GamePhase.playing) {
             (child as dynamic)?.runUpdate(dt);
           }
         }
-      });
+      }
     }
     super.update(dt);
   }

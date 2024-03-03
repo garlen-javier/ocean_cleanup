@@ -91,7 +91,7 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
       current = PlayerAnimationState.idle;
     }
     else{
-      if(current != PlayerAnimationState.running)
+      if(current != PlayerAnimationState.running && current != PlayerAnimationState.catching)
         current = PlayerAnimationState.running;
     }
   }

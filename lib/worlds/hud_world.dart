@@ -2,15 +2,13 @@
 
 import 'dart:async';
 import 'package:flame/components.dart';
-import 'package:flame/extensions.dart';
-import 'package:flame/input.dart';
 import 'package:flame_bloc/flame_bloc.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:ocean_cleanup/bloc/game/game_barrel.dart';
 import 'package:ocean_cleanup/components/hud/hud_mobile_control.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../bloc/game_stats/game_stats_barrel.dart';
+import '../components/hud/hud_pause_button.dart';
 import '../components/hud/hud_stats.dart';
 import '../components/hud/hud_timer.dart';
 import '../components/player/player_controller.dart';
@@ -37,10 +35,11 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
     _gameSize = gameRef!.size;
     if (Utils.isMobile)
       await _showMobileControl();
-    await _showTimer();
-    await _showGameStats();
     if(!isRelease)
        await _showFPSDisplay();
+    await _showTimer();
+    await _showGameStats();
+    //await _showPauseButton();
     return super.onLoad();
   }
 
@@ -102,19 +101,40 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
     );
   }
 
+  Future<void> _showPauseButton() async {
+    SpriteComponent sp1 = SpriteComponent(sprite: Sprite(gameRef.images.fromCache(pathBagTrash),));
+    SpriteComponent sp2 = SpriteComponent(sprite: Sprite(gameRef.images.fromCache(pathCrab),));
+    HudPauseButton a = HudPauseButton(
+      defaultSkin:  sp1,
+      selectedSkin: sp2,
+      position: Vector2(10,50),
+      onPressDown:(button) {
+        if(gameManager.gamePhase == GamePhase.playing)
+        {
+          button.toggle();
+          blocParameters.gameBloc.add(const GamePause());
+        }
+        else if(gameManager.gamePhase == GamePhase.pause)
+        {
+          button.toggle();
+          blocParameters.gameBloc.add(const GameResume());
+        }
+      },);
+    await add(a);
+  }
+
   @override
   void runUpdate(double dt) {
     if(hasChildren) {
-      children.forEach((child) {
+      for (var child in children) {
         if(child is UpdateMixin){
           (child as dynamic)?.runUpdate(dt);
         }
-      });
+      }
     }
 
     if(_hudStats != null)
         _hudStats!.runUpdate(dt);
-
   }
 
   @override
@@ -128,6 +148,5 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
     _hudStats = null;
     super.onRemove();
   }
-
 
 }

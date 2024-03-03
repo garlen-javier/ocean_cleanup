@@ -63,14 +63,17 @@ class GameManager extends Component
           switch(state.phase)
           {
             case GamePhase.playing:
+              _currentLevel?.playerController.enable = true;
               FlameAudio.bgm.resume();
               _currentLevel?.resumeTrashSpawn();
               break;
             case GamePhase.pause:
+              _currentLevel?.playerController.enable = false;
               FlameAudio.bgm.pause();
               _currentLevel?.pauseTrashSpawn();
               break;
             case GamePhase.win:
+              _currentLevel?.playerController.enable = false;
               FlameAudio.bgm.stop();
               FlameAudio.play(pathSfxLevelWin);
               _saveFreeAnimalsIndex();
@@ -78,6 +81,7 @@ class GameManager extends Component
               debugPrint("Win! " + state!.result.toString() );
               break;
             case GamePhase.gameOver:
+              _currentLevel?.playerController.enable = false;
                FlameAudio.bgm.stop();
                FlameAudio.play(pathSfxGameOver);
               _currentLevel?.pauseTrashSpawn();
@@ -123,6 +127,7 @@ class GameManager extends Component
     if(!FlameAudio.bgm.isPlaying)
       await FlameAudio.bgm.play(pathBgmGame);
 
+    _currentLevel?.playerController.enable = true;
     //Note: For some reason need to ready first to work on hot restart
     blocParameters.gameBloc.add(const GameReady());
     blocParameters.gameBloc.add(GameStart(levelIndex));

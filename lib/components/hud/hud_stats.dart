@@ -6,6 +6,7 @@ import 'package:flame_bloc/flame_bloc.dart';
 import 'package:ocean_cleanup/components/hud/hud_trash_count.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/mixins/update_mixin.dart';
+import 'package:ocean_cleanup/worlds/game_world.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
 import '../../levels/level_parameters.dart';
 import '../../scenes/game_scene.dart';
@@ -110,8 +111,7 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
       var image = gameRef.images.fromCache(pathRescueComplete);
       int count = trappedAnimals!.length;
       int elementWidth = image.width;
-      Vector2 counterPos = Vector2(
-          _gameSize.x * 0.5 - (count * elementWidth), -_gameSize.y * 0.35);
+      Vector2 counterPos = Vector2((_gameSize.x * 0.5 - (count * elementWidth)), -_gameSize.y * 0.35);
 
       for (var entry in trappedAnimals!.entries) {
         AnimalType animal = entry.key;
@@ -135,11 +135,11 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
   @override
   void runUpdate(double dt) {
     if(hasChildren) {
-      children.forEach((child) {
+      for (var child in children) {
         if(child is UpdateMixin){
           (child as dynamic)?.runUpdate(dt);
         }
-      });
+      }
     }
   }
 
