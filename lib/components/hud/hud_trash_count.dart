@@ -12,7 +12,8 @@ import '../../scenes/game_scene.dart';
 class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
 {
   final TrashType trashType;
-  HudTrashCount({required this.trashType,super.position});
+  final int totalTrash;
+  HudTrashCount({required this.trashType,required this.totalTrash, super.position});
 
   int _anyTrashCount = 0;
 
@@ -42,8 +43,8 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
     await add(trashIcon);
 
     _txtCount = TextComponent(
-      text: '0',
-      position: Vector2(trashIcon.position.x + 35,trashIcon.y),
+      text: '0/$totalTrash',
+      position: Vector2(trashIcon.position.x + 40,trashIcon.y),
       textRenderer: _countPaint ,
       anchor: Anchor.center,
     );
@@ -71,10 +72,10 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
     if(trashType == TrashType.any)
     {
       _anyTrashCount++;
-      _txtCount.text = _anyTrashCount.toString();
+      _txtCount.text = "$_anyTrashCount/$totalTrash";
     }
     else if(state.trashType == trashType){
-      _txtCount.text = state.trashCount.toString();
+      _txtCount.text = "${state.trashCount}/$totalTrash";
     }
   }
 

@@ -86,7 +86,7 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
     _hudStats = HudStats(
         health: gameManager.health,
         trappedAnimals: gameManager.trappedAnimalsMap,
-        trashTypes: gameManager.currentTrashTypes);
+        totalTrash: gameManager.currentLevelParams.trashObjectives.first.goal);
 
     await add(
       FlameMultiBlocProvider(

@@ -30,7 +30,6 @@ class GameManager extends Component
   final Levels _levels = Levels.instance;
   final List<AnimalType> _trappedAnimals = [];
   final List<AnimalType> _freedAnimals = [];
-  final Set<TrashType> _trashTypes = {};
   final Map<AnimalType,TrashObjective> _trappedAnimalsMap = {};
 
   Random rand = Random();
@@ -40,7 +39,6 @@ class GameManager extends Component
 
   LevelParameters get currentLevelParams => _levels.params[_currentLevelIndex];
   int get currentLevelIndex => _currentLevelIndex;
-  Set<TrashType> get currentTrashTypes => _trashTypes; ///To display current trash in UI
   Map<AnimalType,TrashObjective> get trappedAnimalsMap => _trappedAnimalsMap;
   GamePhase _gamePhase = GamePhase.none;
   GamePhase get gamePhase => _gamePhase;
@@ -167,8 +165,6 @@ class GameManager extends Component
     _trappedAnimals.clear();
     _freedAnimals.clear();
     _trappedAnimalsMap.clear();
-    _trashTypes.clear();
-    _trashTypes.add(TrashType.any);
 
     List<dynamic> freedAnimalIndex = SaveUtils.instance.getFreedAnimalIndex();
     if(params.trappedAnimals != null) {
@@ -176,7 +172,6 @@ class GameManager extends Component
         //If the animal has been freed it should not come back unless reset all levels
         if(!freedAnimalIndex.contains(animal.index)) {
           _trappedAnimals.add(animal);
-          _trashTypes.add(animalMission.trashType);
           _trappedAnimalsMap.putIfAbsent(animal, () => animalMission);
         }
       });

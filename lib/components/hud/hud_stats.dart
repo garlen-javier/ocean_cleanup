@@ -2,12 +2,10 @@
 import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
-import 'package:flame/input.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:ocean_cleanup/components/hud/hud_trash_count.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/mixins/update_mixin.dart';
-import 'package:ocean_cleanup/worlds/game_world.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
 import '../../levels/level_parameters.dart';
 import '../../scenes/game_scene.dart';
@@ -17,8 +15,8 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
 {
   int health;
   final Map<AnimalType, TrashObjective>? trappedAnimals;
-  final Set<TrashType> trashTypes;
-  HudStats({required this.health, required this.trappedAnimals, required this.trashTypes});
+  final int totalTrash;
+  HudStats({required this.health, required this.trappedAnimals, required this.totalTrash});
 
   late Vector2 _gameSize;
   final List<SpriteComponent> _healthIcons = [];
@@ -28,7 +26,7 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
     _gameSize = screenRatio.toVector2();
 
     await _loadHealth(80);
-    await _loadTrashCounter(60);
+    await _loadTrashCounter(62);
     await _loadTrappedAnimals(15);
     await _initBlocListener();
     return super.onLoad();
@@ -56,7 +54,7 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
     const double rowSpacing = 20;
     const double columnSpacing = 25;
 
-    Vector2 initialPos = Vector2(-_gameSize.x * 0.28,-_gameSize.y * 0.2);
+    Vector2 initialPos = Vector2(-_gameSize.x * 0.28,-_gameSize.y * 0.23);
     _healthIcons.clear();
     for (int i = 0; i < rowCount * colCount; ++i) {
       int row = i ~/ colCount;
@@ -93,14 +91,18 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
   }
 
   Future<void> _loadTrashCounter(int marginX) async {
-    int count = trashTypes.length;
-    double totalWidth = marginX * (count - 1);
+    int count =  1 + trappedAnimals!.length;
+    double totalWidth = (marginX  * (count - 1) ) + 27;
     double initialX = -totalWidth * 0.5;
 
-    Vector2 counterPos = Vector2(initialX, -_gameSize.y * 0.2);
+    Vector2 counterPos = Vector2(initialX, -_gameSize.y * 0.23);
+    var trashCounter = HudTrashCount(trashType: TrashType.any,totalTrash: totalTrash, position: counterPos);
+    await add(trashCounter);
+    counterPos = Vector2(trashCounter.x + marginX, trashCounter.y);
 
-    for (int i = 0; i < count; ++i) {
-      var trashCounter = HudTrashCount(trashType: trashTypes.elementAt(i), position: counterPos);
+    for (var entry in trappedAnimals!.entries) {
+      TrashObjective mission = entry.value;
+      var trashCounter = HudTrashCount(trashType: mission.trashType,totalTrash: mission.goal, position: counterPos);
       await add(trashCounter);
       counterPos = Vector2(trashCounter.x + marginX, trashCounter.y);
     }

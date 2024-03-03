@@ -67,17 +67,37 @@ class TesterPage extends StatelessWidget {
                   _textField(context,_animalTrashChanceKey,"Animal Trash Chance(percentage) :","0.6"),
                   _textField(context,_animalTimeLimitKey,"Animal Time Limit(in minutes) :","1"),
                   const SizedBox(height: 28,),
-                  Card(
-                    child: CupertinoButton(
-                        padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-                        onPressed: () {
+                  Row(
+                    children: [
+                      Card(
+                        child: CupertinoButton(
+                            padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                            onPressed: () {
 
-                           _runTestLevel(context);
-                        },
-                        child: const Text(
-                          "Start Game",
-                          style:  TextStyle(fontSize: 14),
-                        )),
+                               _runTestLevel(context);
+                            },
+                            child: const Text(
+                              "With Test Level",
+                              style:  TextStyle(fontSize: 14),
+                            )),
+                      ),
+                      const SizedBox(width: 16,),
+                      Card(
+                        child: CupertinoButton(
+                            padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                            onPressed: () {
+
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const GamePage()));
+                            },
+                            child: const Text(
+                              "Normal Run",
+                              style:  TextStyle(fontSize: 14),
+                            )),
+                      )
+                    ],
                   ),
                 ],
               ),

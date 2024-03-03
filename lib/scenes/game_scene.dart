@@ -42,7 +42,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     FlameAudio.bgm.initialize();
     //TODO: testing
     if(!isTesterMode)
-      await _gameManager.loadLevel(1);
+      await _gameManager.loadLevel(0);
     else
       await _gameManager.loadLevel(0);
     return super.onLoad();
@@ -171,7 +171,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   bool isPress = false;
   @override
   KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (!isRelease && !isTesterMode) {
+    if (!isRelease) {
       final isKeyDown = event is RawKeyDownEvent;
       final isKeyUp = event is RawKeyUpEvent;
 
