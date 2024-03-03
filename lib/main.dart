@@ -40,6 +40,7 @@ class GameView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GameWidget(
+      focusNode: FocusNode(),
       game: GameScene(
         blocParameters: GameBlocParameters(
             gameBloc: context.read<GameBloc>(),
