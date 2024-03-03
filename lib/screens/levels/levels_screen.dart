@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
 import 'package:ocean_cleanup/components/levels/level_item.dart';
+import 'package:ocean_cleanup/screens/leaderboard/leaderboard_screen.dart';
 
 class LevelsScreen extends StatefulWidget {
   final String username;
@@ -29,6 +31,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authBloc = BlocProvider.of<AuthBloc>(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -40,9 +43,14 @@ class _LevelsScreenState extends State<LevelsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
+          Text(
+            widget.username,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.red),
             onPressed: () {
+              authBloc.signOut(context);
               Navigator.of(context).pop();
             },
           ),
@@ -60,12 +68,22 @@ class _LevelsScreenState extends State<LevelsScreen> {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Lottie.asset(
-              "assets/animations/leaderboard.json",
-              height: 100,
-              width: 100,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const LeaderboardScreen(),
+                ),
+              );
+            },
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Lottie.asset(
+                "assets/animations/leaderboard.json",
+                repeat: false,
+                height: 100,
+                width: 100,
+              ),
             ),
           ),
           Align(
