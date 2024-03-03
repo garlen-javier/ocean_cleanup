@@ -2,10 +2,10 @@
 
 import 'dart:async';
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:ocean_cleanup/bloc/game/game_barrel.dart';
 import 'package:ocean_cleanup/components/hud/hud_mobile_control.dart';
-import 'package:ocean_cleanup/utils/utils.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../bloc/game_stats/game_stats_barrel.dart';
 import '../components/hud/hud_pause_button.dart';
@@ -18,6 +18,8 @@ import '../levels/level_parameters.dart';
 import '../mixins/update_mixin.dart';
 import '../scenes/game_scene.dart';
 import 'package:flutter/material.dart' as material;
+
+import '../utils/utils.dart';
 
 class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 {
@@ -32,14 +34,14 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 
   @override
   FutureOr<void> onLoad() async{
-    _gameSize = gameRef!.size;
+    _gameSize = screenRatio.toVector2();
     if (Utils.isMobile)
       await _showMobileControl();
     if(!isRelease)
        await _showFPSDisplay();
     await _showTimer();
     await _showGameStats();
-    //await _showPauseButton();
+    await _showPauseButton();
     return super.onLoad();
   }
 
@@ -52,7 +54,7 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
    // double? animalTimeLimit = 10;
     await add(HudTimer(
         timeLimit: timeLimit,
-        position:Vector2(-20,-_gameSize.y * 0.48),
+        position:Vector2(-20,-_gameSize.y * 0.3),
         remainingTime: (time,countdown) {
           remainingTime = time;
           if(animalTimeLimit != null)
@@ -76,7 +78,7 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
       textRenderer: TextPaint(
         style: const material.TextStyle(color: material.Colors.black, fontSize: 20),
       ),
-       position: Vector2(_gameSize.x * 0.35,_gameSize.y * 0.4),
+       position: Vector2(_gameSize.x * 0.24,_gameSize.y * 0.255),
     ));
   }
 
@@ -86,7 +88,6 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
         trappedAnimals: gameManager.trappedAnimalsMap,
         trashTypes: gameManager.currentTrashTypes);
 
-    //await add(stats);
     await add(
       FlameMultiBlocProvider(
         providers: [
@@ -102,12 +103,12 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
   }
 
   Future<void> _showPauseButton() async {
-    SpriteComponent sp1 = SpriteComponent(sprite: Sprite(gameRef.images.fromCache(pathBagTrash),));
-    SpriteComponent sp2 = SpriteComponent(sprite: Sprite(gameRef.images.fromCache(pathCrab),));
-    HudPauseButton a = HudPauseButton(
-      defaultSkin:  sp1,
-      selectedSkin: sp2,
-      position: Vector2(10,50),
+    SpriteComponent defaultSkin = SpriteComponent(sprite: Sprite(gameRef.images.fromCache(pathPauseButton),));
+    SpriteComponent selectedSkin = SpriteComponent(sprite: Sprite(gameRef.images.fromCache(pathPlayButton),));
+    HudPauseButton pauseButton = HudPauseButton(
+      defaultSkin:  defaultSkin,
+      selectedSkin: selectedSkin,
+      position: Vector2(_gameSize.x * 0.29 , -_gameSize.y * 0.28),
       onPressDown:(button) {
         if(gameManager.gamePhase == GamePhase.playing)
         {
@@ -120,7 +121,7 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
           blocParameters.gameBloc.add(const GameResume());
         }
       },);
-    await add(a);
+    await add(pauseButton);
   }
 
   @override
@@ -135,12 +136,6 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 
     if(_hudStats != null)
         _hudStats!.runUpdate(dt);
-  }
-
-  @override
-  void onGameResize(Vector2 size) {
-    _gameSize = size;
-    super.onGameResize(size);
   }
 
   @override

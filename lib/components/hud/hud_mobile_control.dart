@@ -9,6 +9,7 @@ import '../../bloc/game_bloc_parameters.dart';
 import '../../constants.dart';
 import '../../mixins/update_mixin.dart';
 import '../../scenes/game_scene.dart';
+import '../../worlds/game_world.dart';
 import '../player/player_controller.dart';
 
 class HudMobileControl extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
@@ -22,7 +23,7 @@ class HudMobileControl extends PositionComponent with HasGameRef<GameScene>,Upda
 
   @override
   FutureOr<void> onLoad() async {
-    _gameSize = gameRef!.size;
+    _gameSize = screenRatio.toVector2();
     _showJoyStick();
     _showCatchButton();
     return super.onLoad();
@@ -43,7 +44,7 @@ class HudMobileControl extends PositionComponent with HasGameRef<GameScene>,Upda
       background: SpriteComponent(
         sprite: joyStickBase ,
       ),
-      position: Vector2(-_gameSize.x * 0.38,_gameSize.y * 0.32),
+      position: Vector2(-_gameSize.x * 0.27,_gameSize.y * 0.22 ),
     );
    // _joystick!.scale = Vector2.all(0.7);
     await component.add(_joystick!);
@@ -59,7 +60,7 @@ class HudMobileControl extends PositionComponent with HasGameRef<GameScene>,Upda
       onPressed: () {
         playerController?.tryCatchTrash();
       },
-      position: Vector2(_gameSize.x * 0.34,_gameSize.y * 0.25),// Position on the screen// Size of the button
+      position: Vector2(_gameSize.x * 0.24,_gameSize.y * 0.17),
     );
     await add(button);
   }
@@ -70,10 +71,5 @@ class HudMobileControl extends PositionComponent with HasGameRef<GameScene>,Upda
       playerController?.handleJoystickMovement(_joystick!.relativeDelta,_joystick!.delta.screenAngle());
   }
 
-  @override
-  void onGameResize(Vector2 size) {
-    _gameSize = size;
-    super.onGameResize(size);
-  }
 
 }

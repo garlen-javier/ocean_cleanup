@@ -77,6 +77,8 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
       pathJoystickKnob,
       pathCatchButtonDefault,
       pathCatchButtonPressed,
+      pathPauseButton,
+      pathPlayButton,
     ]);
 
     await FlameAudio.audioCache.loadAll([
@@ -91,8 +93,6 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   }
 
   Future<void> _loadCameras() async {
-    FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
-
     gameCamera = CameraComponent.withFixedResolution(
       width: GameWorld.worldSize.width,
       height: GameWorld.worldSize.height,
@@ -103,16 +103,12 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
       ..position = Vector2(GameWorld.worldSize.width, GameWorld.worldSize.height);
     // ..anchor = Anchor.topLeft;
 
-
     hudCamera = CameraComponent.withFixedResolution(
-      width: view.physicalSize.width / view.devicePixelRatio,
-      height: view.physicalSize.height / view.devicePixelRatio,
+      width: screenRatio.width,
+      height: screenRatio.height,
     );
 
-    // hudCamera.viewfinder
-    //   ..zoom = 0.5;
-    // //  ..position = Vector2(GameWorld.worldSize.width + 100, GameWorld.worldSize.height);
-    // // ..anchor = Anchor.topLeft;
+    hudCamera.viewfinder.scale = Vector2.all(1.5);
 
     await addAll([gameCamera, hudCamera]);
   }

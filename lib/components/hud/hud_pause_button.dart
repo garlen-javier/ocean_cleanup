@@ -20,7 +20,8 @@ class HudPauseButton extends PositionComponent with TapCallbacks {
   Future<void> onLoad() async {
     add(defaultSkin);
     add(selectedSkin);
-    size = defaultSkin.size;
+    size = defaultSkin.size * 1.5;
+    anchor = Anchor.center;
     selectedSkin.opacity = 0;
   }
 

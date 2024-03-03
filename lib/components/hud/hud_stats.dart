@@ -1,6 +1,7 @@
 
 import 'dart:async';
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
 import 'package:flame/input.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:ocean_cleanup/components/hud/hud_trash_count.dart';
@@ -24,7 +25,7 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
 
   @override
   FutureOr<void> onLoad() async{
-    _gameSize = gameRef!.size;
+    _gameSize = screenRatio.toVector2();
 
     await _loadHealth(80);
     await _loadTrashCounter(60);
@@ -55,7 +56,7 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
     const double rowSpacing = 20;
     const double columnSpacing = 25;
 
-    Vector2 initialPos = Vector2(-_gameSize.x * 0.43, -_gameSize.y * 0.35);
+    Vector2 initialPos = Vector2(-_gameSize.x * 0.28,-_gameSize.y * 0.2);
     _healthIcons.clear();
     for (int i = 0; i < rowCount * colCount; ++i) {
       int row = i ~/ colCount;
@@ -93,13 +94,15 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
 
   Future<void> _loadTrashCounter(int marginX) async {
     int count = trashTypes.length;
+    double totalWidth = marginX * (count - 1);
+    double initialX = -totalWidth * 0.5;
 
-    Vector2 counterPos = Vector2(-_gameSize.x * 0.12 * (count-1)/count,-_gameSize.y * 0.35);
-    for(int i = 0; i < count ; ++i)
-    {
+    Vector2 counterPos = Vector2(initialX, -_gameSize.y * 0.2);
+
+    for (int i = 0; i < count; ++i) {
       var trashCounter = HudTrashCount(trashType: trashTypes.elementAt(i), position: counterPos);
       await add(trashCounter);
-      counterPos = Vector2(trashCounter.x + marginX,trashCounter.y);
+      counterPos = Vector2(trashCounter.x + marginX, trashCounter.y);
     }
   }
 
@@ -111,7 +114,8 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
       var image = gameRef.images.fromCache(pathRescueComplete);
       int count = trappedAnimals!.length;
       int elementWidth = image.width;
-      Vector2 counterPos = Vector2((_gameSize.x * 0.5 - (count * elementWidth)), -_gameSize.y * 0.35);
+
+      Vector2 counterPos  = Vector2((_gameSize.x * 0.33 - (count * elementWidth)), -_gameSize.y * 0.2);
 
       for (var entry in trappedAnimals!.entries) {
         AnimalType animal = entry.key;
@@ -124,12 +128,6 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
         counterPos = Vector2(timer.x + elementWidth + marginX, timer.y);
       }
     }
-  }
-
-  @override
-  void onGameResize(Vector2 size) {
-    _gameSize = size;
-    super.onGameResize(size);
   }
 
   @override
