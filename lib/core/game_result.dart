@@ -9,6 +9,7 @@ class GameResult
   final int levelIndex;
   final int health;
   final int totalTrashCount;
+  final int score;
   final double remainingTime; //in seconds
   final LevelType levelType;
   final List<AnimalType>? freedAnimal;
@@ -16,6 +17,7 @@ class GameResult
   GameResult({required this.levelIndex,
     required this.health,
     required this.totalTrashCount,
+    required this.score,
     required this.remainingTime,
     required this.levelType,
     this.freedAnimal,
@@ -29,8 +31,9 @@ class GameResult
     _sb.writeln("Level Index : $levelIndex");
     _sb.writeln("health : $health");
     _sb.writeln("total trash count : $totalTrashCount");
+    _sb.writeln("Score: $score");
     _sb.writeln("remainingTime : $remainingTime");
-    _sb.writeln("formattedTime : ${Utils.formatTime(remainingTime)}");
+    _sb.writeln("formattedTime : ${Utils.formatTime(remainingTime.floorToDouble())}");
     if(freedAnimal != null)
     {
         freedAnimal!.forEach((element) {

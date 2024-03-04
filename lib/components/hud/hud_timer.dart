@@ -53,7 +53,7 @@ class HudTimer extends PositionComponent with UpdateMixin
 
   String get _runningTime
   {
-    return (_countdown.isRunning()) ? Utils.formatTime(_remainingTime + 1) : "00:00";
+    return (_countdown.isRunning()) ? Utils.formatTime(_remainingTime) : "00:00";
   }
 
 }

@@ -10,7 +10,10 @@ import 'package:ocean_cleanup/utils/utils.dart';
 import 'package:path_provider/path_provider.dart';
 
 const String hiveGameBoxKey = "hiveGameBoxKey";
+
+//Keys
 const String hiveFreedAnimalsKey = "hiveFreedAnimalsKey";
+const String hiveUnlockLevelKey = "hiveUnlockLevelKey";
 
 class SaveUtils{
 
@@ -44,13 +47,13 @@ class SaveUtils{
   ///Should save the level the would get unlock
   void saveUnlockLevel(int levelIndex)
   {
-    String key = hiveFreedAnimalsKey;
+    String key = hiveUnlockLevelKey;
     int lastIndex = _gameBox.get(key,defaultValue:0);
     if(levelIndex > lastIndex)
         _gameBox.put(key, levelIndex);
   }
 
-  int get getUnlockedLevel => _gameBox.get(hiveFreedAnimalsKey,defaultValue:0);
+  int get getUnlockedLevel => _gameBox.get(hiveUnlockLevelKey,defaultValue:0);
 
   void addFreeAnimal(AnimalType animal)
   {

@@ -164,6 +164,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
      blocParameters.gameBloc.close();
      blocParameters.gameStatsBloc.close();
      FlameAudio.bgm.dispose();
+     //FlameAudio.audioCache.clearAll();
      //Flame.images.clearCache();
     // Flame.assets.clearCache();
    //  await FlameAudio.audioCache.clearAll();

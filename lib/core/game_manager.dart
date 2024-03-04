@@ -256,10 +256,18 @@ class GameManager extends Component
       levelIndex: currentLevelIndex,
       health: health,
       totalTrashCount: blocParameters.gameStatsBloc.totalTrashCount(),
+      score: _getScore(),
       remainingTime: _hud!.remainingTime,
       levelType: levelType,
       freedAnimal: (_freedAnimals.isNotEmpty) ? _freedAnimals : null,
     );
+  }
+
+  int _getScore()
+  {
+    int timeScore = _hud!.remainingTime.floor() * 5;
+    int animalScore = _freedAnimals.length * 100;
+    return timeScore + animalScore;
   }
 
   Future<void> _preloadSfx() async {
