@@ -44,7 +44,6 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     FlameAudio.bgm.initialize();
     //TODO: testing
     if(!isTesterMode) {
-      //await _gameManager.loadLevel(levelIndex);
       blocParameters.gameBloc.add(GameStart(levelIndex));
     }
     else
@@ -149,6 +148,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     }
     super.update(dt);
   }
+
 
   @override
   void onRemove() {

@@ -64,14 +64,15 @@ class GameManager extends Component
               blocParameters.gameStatsBloc.defaultState();
               loadLevel(state.levelIndex);
               break;
-              break;
             case GamePhase.playing:
-              FlameAudio.bgm.resume();
+              if(FlameAudio.bgm.audioPlayer.state == PlayerState.paused)
+                 FlameAudio.bgm.resume();
               _currentLevel?.playerController.enable = true;
               _currentLevel?.resumeTrashSpawn();
               break;
             case GamePhase.pause:
-              FlameAudio.bgm.pause();
+              if(FlameAudio.bgm.audioPlayer.state == PlayerState.playing)
+                FlameAudio.bgm.pause();
               _currentLevel?.playerController.enable = false;
               _currentLevel?.pauseTrashSpawn();
               break;
@@ -126,13 +127,12 @@ class GameManager extends Component
     _cachedLevelParameters(levelIndex);
     await _changeWorldByLevel(levelIndex);
     await _loadHud();
-    await _preloadSfx();
-    if(!FlameAudio.bgm.isPlaying)
-      await FlameAudio.bgm.play(pathBgmGame);
-
     _currentLevel?.playerController.enable = true;
     blocParameters.gameBloc.add(const GamePlaying());
     //_zoomFollowPlayer(gameScene.gameCamera, level.player);
+
+    //Important: this could crash on web if the game is called at start so call this method in last line
+    await _loadAudio();
   }
 
   void _zoomFollowPlayer(CameraComponent cam,Player player)
@@ -267,6 +267,12 @@ class GameManager extends Component
     await FlameAudio.play(pathSfxSwingNet,volume: 0);
     await FlameAudio.play(pathSfxReduceHealth,volume: 0);
     await FlameAudio.play(pathSfxAnimalRescued,volume: 0);
+  }
+
+  Future<void> _loadAudio() async {
+    await _preloadSfx();
+    if(!FlameAudio.bgm.isPlaying)
+      await FlameAudio.bgm.play(pathBgmGame);
   }
 
   void _saveFreeAnimalsIndex()
