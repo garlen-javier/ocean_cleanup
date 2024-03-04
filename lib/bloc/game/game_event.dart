@@ -24,6 +24,20 @@ class GameStart extends GameEvent {
   List<Object?> get props => [];
 }
 
+class GameStartNext extends GameEvent {
+  const GameStartNext();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class GamePlaying extends GameEvent {
+  const GamePlaying();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class GamePause extends GameEvent {
   const GamePause();
 

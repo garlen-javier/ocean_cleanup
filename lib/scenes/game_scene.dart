@@ -43,10 +43,12 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     await _loadGame();
     FlameAudio.bgm.initialize();
     //TODO: testing
-    if(!isTesterMode)
-      await _gameManager.loadLevel(levelIndex);
+    if(!isTesterMode) {
+      //await _gameManager.loadLevel(levelIndex);
+      blocParameters.gameBloc.add(GameStart(levelIndex));
+    }
     else
-      await _gameManager.loadLevel(0);
+      blocParameters.gameBloc.add(GameStart(0));
     return super.onLoad();
   }
 
@@ -181,7 +183,8 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
         if(isKeyDown) {
           debugPrint("pressed P: testing");
           if(!isPress) {
-            _gameManager.nextLevel();
+           // _gameManager.nextLevel();
+            blocParameters.gameBloc.add(const GameStartNext());
             isPress = true;
           }
           //blocParameters.gameBloc.add(const GamePause());

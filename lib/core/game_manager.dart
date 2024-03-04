@@ -60,28 +60,33 @@ class GameManager extends Component
           debugPrint("GameBloc Listener: $state");
           switch(state.phase)
           {
+            case GamePhase.start:
+              blocParameters.gameStatsBloc.defaultState();
+              loadLevel(state.levelIndex);
+              break;
+              break;
             case GamePhase.playing:
-              _currentLevel?.playerController.enable = true;
               FlameAudio.bgm.resume();
+              _currentLevel?.playerController.enable = true;
               _currentLevel?.resumeTrashSpawn();
               break;
             case GamePhase.pause:
-              _currentLevel?.playerController.enable = false;
               FlameAudio.bgm.pause();
+              _currentLevel?.playerController.enable = false;
               _currentLevel?.pauseTrashSpawn();
               break;
             case GamePhase.win:
-              _currentLevel?.playerController.enable = false;
               FlameAudio.bgm.stop();
               FlameAudio.play(pathSfxLevelWin);
               _saveFreeAnimalsIndex();
+              _currentLevel?.playerController.enable = false;
               _currentLevel?.pauseTrashSpawn();
               debugPrint("Win! " + state!.result.toString() );
               break;
             case GamePhase.gameOver:
-              _currentLevel?.playerController.enable = false;
                FlameAudio.bgm.stop();
                FlameAudio.play(pathSfxGameOver);
+               _currentLevel?.playerController.enable = false;
               _currentLevel?.pauseTrashSpawn();
               debugPrint("GameOver!" + state!.result.toString() );
               break;
@@ -126,9 +131,7 @@ class GameManager extends Component
       await FlameAudio.bgm.play(pathBgmGame);
 
     _currentLevel?.playerController.enable = true;
-    //Note: For some reason need to ready first to work on hot restart
-    blocParameters.gameBloc.add(const GameReady());
-    blocParameters.gameBloc.add(GameStart(levelIndex));
+    blocParameters.gameBloc.add(const GamePlaying());
     //_zoomFollowPlayer(gameScene.gameCamera, level.player);
   }
 
@@ -276,20 +279,9 @@ class GameManager extends Component
     }
   }
 
-  void nextLevel()
-  {
-    if(_currentLevelIndex < maxStageLevel-1) {
-      _currentLevelIndex++;
-      blocParameters.gameBloc.add(const Default());
-      blocParameters.gameStatsBloc.defaultState();
-      loadLevel(_currentLevelIndex);
-    }
-  }
-
   //Currently clear the save game data such as freed animals
   void _restartAllLevels()
   {
-    blocParameters.gameBloc.add(const Default());
     blocParameters.gameStatsBloc.defaultState();
     SaveUtils.instance.clearGameBox();
   }

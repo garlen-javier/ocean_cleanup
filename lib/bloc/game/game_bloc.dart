@@ -1,19 +1,32 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../constants.dart';
 import 'game_barrel.dart';
 
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   GameBloc() : super(const GameState.empty()) {
 
-    on<GameReady>(
+    on<GameStart>(
           (event, emit)  {
-            emit(state.copyWith(phase: GamePhase.ready));
+            emit(const GameState.empty());
+            emit(state.copyWith(levelIndex: event.levelIndex, phase: GamePhase.start));
       },
     );
 
-    on<GameStart>(
+    on<GameStartNext>(
           (event, emit)  {
-            emit(state.copyWith(levelIndex: event.levelIndex, phase: GamePhase.playing));
+            int currentLevel = state.levelIndex;
+            if(currentLevel < maxStageLevel-1) {
+              currentLevel++;
+              emit(const GameState.empty());
+              emit(state.copyWith(levelIndex: currentLevel, phase: GamePhase.start));
+            }
+      },
+    );
+
+    on<GamePlaying>(
+          (event, emit)  {
+        emit(state.copyWith(phase: GamePhase.playing));
       },
     );
 

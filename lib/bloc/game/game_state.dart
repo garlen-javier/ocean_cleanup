@@ -6,7 +6,7 @@ import '../../core/game_result.dart';
 
 enum GamePhase{
   none,
-  ready,
+  start,
   playing,
   pause,
   gameOver,
