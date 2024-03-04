@@ -82,6 +82,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
       pathCatchButtonPressed,
       pathPauseButton,
       pathPlayButton,
+      pathBubble,
     ]);
 
     await FlameAudio.audioCache.loadAll([

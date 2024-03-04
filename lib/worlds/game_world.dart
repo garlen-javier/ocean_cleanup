@@ -1,6 +1,7 @@
 
 
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
@@ -14,14 +15,16 @@ import 'package:ocean_cleanup/framework/object_pool.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../components/brick/catcher_body.dart';
+import '../components/bubble_particle.dart';
 import '../components/player/player.dart';
 import 'package:flame/src/camera/world.dart' as camWorld;
 import '../components/trash/trash.dart';
 import '../core/game_manager.dart';
 import '../mixins/update_mixin.dart';
+import '../scenes/game_scene.dart';
 
 
-class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
+class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameRef<GameScene>
 {
   static const Size worldSize = Size(16 * 25,16 * 15);
   static final Rectangle bounds = Rectangle.fromLTRB(0, 0 , worldSize.width * 2, worldSize.height * 2);
@@ -34,8 +37,13 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
   late PlayerController playerController;
   late TiledComponent<FlameGame<camWorld.World>> map;
   final ObjectPool<Trash> _trashPool = ObjectPool<Trash>(18, () => Trash(),);
+  final List<double> _bubbleSizes = [12.0, 8.0, 6.0];
+  final _random = Random();
+
   List<Vector2> _sharkPoints = [];
+  List<Vector2> _bubblePoints = [];
   List<SpawnComponent> _spawners = [];
+  Timer? _bubbleSpawner;
 
   @override
   FutureOr<void> onLoad() async {
@@ -52,6 +60,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
     await _loadCatchers();
     await _loadTrashPoints();
     await _loadSharkPoints();
+    await _loadBubbles();
   }
 
   Future<void> _initPlayer() async {
@@ -100,19 +109,32 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
       ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>(layerName);
       if(objGroup != null)
       {
+        objGroup.objects.shuffle();
         _spawners.clear();
+
+        int i = 0;
+        int firstSpawn = _random.nextInt(objGroup.objects.length-1);
         for(var col in objGroup.objects)
         {
+          //Spawn first set of trashes first
+          if(i < firstSpawn) {
+            i++;
+            Trash firstTrash = _randomTrash(pos: Vector2(col.x, col.y),
+                speed: levelParams.trashSpeed,
+                directionX: direction);
+            await add(
+                TimerComponent(
+                  period: _random.nextDouble() * 2.5,
+                  repeat: false,
+                  removeOnFinish: true,
+                  onTick: () => add(firstTrash),
+                )
+            );
+          }
+
           SpawnComponent spawner = SpawnComponent.periodRange(
             factory: (i)  {
-              TrashType type = gameManager.randomizeTrashType();
-              Trash trash = _trashPool.getObjectFromPool();
-              trash.setup(
-                  pos: Vector2(col.x ,col.y),
-                  trashType: type,
-                  speed: levelParams.trashSpeed,
-                  directionX: direction,
-                  trashPool: _trashPool);
+              Trash trash = _randomTrash(pos: Vector2(col.x ,col.y), speed: levelParams.trashSpeed, directionX: direction);
               return trash;
             },
             minPeriod: levelParams.trashSpawnMin,
@@ -127,6 +149,19 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
 
     loadSpawner("trash_points_left",1);
     loadSpawner("trash_points_right",-1);
+  }
+
+  Trash _randomTrash({required Vector2 pos,required double speed,required directionX})
+  {
+    TrashType type = gameManager.randomizeTrashType();
+    Trash trash = _trashPool.getObjectFromPool();
+    trash.setup(
+        pos: pos,
+        trashType: type,
+        speed: speed,
+        directionX: directionX,
+        trashPool: _trashPool);
+    return trash;
   }
 
   void pauseTrashSpawn()
@@ -152,6 +187,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
     ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>("shark_points");
     if(objGroup != null)
     {
+      _sharkPoints.clear();
       for(var col in objGroup.objects)
       {
         _sharkPoints.add(Vector2(col.x, col.y));
@@ -172,13 +208,66 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin
           sharkPoints: _sharkPoints,
           directionX: -pos.x.sign);
       await add(shark);
-
     }
   }
+
+  //#region Bubbles
+  Future<void> _loadBubbles() async {
+    ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>("bubble_points");
+    if(objGroup != null)
+    {
+      _bubblePoints.clear();
+      for(var col in objGroup.objects)
+         _bubblePoints.add(Vector2(col.x, col.y));
+    }
+
+    _bubbleSpawner = Timer(
+      0.5,
+      onTick: () => _spawnBubbles(),
+      repeat: true,
+    );
+  }
+
+  void _spawnBubbles()
+  {
+    for(Vector2 pos in _bubblePoints)
+    {
+      Vector2 newPos = Vector2(pos.x + 37 * 0.5,pos.y - 37 * 0.5);
+      _spawnBubble(newPos);
+    }
+  }
+
+  void _spawnBubble(Vector2 pos)   {
+    var from = Vector2(pos.x, pos.y);
+    var to =  Vector2(pos.x, -GameWorld.bounds.height);
+    from.x+=_random.nextDouble() * 20 - 10;
+    to.x+=_random.nextDouble() * 20 - 10;
+
+    const double min = 10.0;
+    const double max = 12.0;
+    double lifeSpan = min + _random.nextDouble() * (max - min);
+
+    _bubbleSizes.shuffle();
+    var sprite =  Sprite(gameRef.images.fromCache(pathBubble));
+    add(BubbleParticle(
+      from: from,
+      to: to,
+      sprite: sprite,
+      lifeSpan: lifeSpan,
+      randomSizes: _bubbleSizes,
+    ));
+  }
+  //#endregion
 
   Future<void> _addPlayerController(Player player) async {
     playerController = PlayerController(player: player);
     await add(playerController);
+  }
+
+  @override
+  void update(double dt) {
+    _bubbleSpawner?.update(dt);
+    super.update(dt);
   }
 
   @override

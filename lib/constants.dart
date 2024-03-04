@@ -14,6 +14,7 @@ const int playerPriority = 2;
 const int maxStageLevel = 5;
 
 const String pathPlayer = "player.png";
+const String pathBubble = "bubble.png";
 
 const String pathShark = "enemies/shark.png";
 

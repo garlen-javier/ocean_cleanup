@@ -27,6 +27,7 @@ class Shark extends SpriteAnimationGroupComponent with UpdateMixin, CollisionCal
 
   Random _rng = Random();
   Vector2 _velocityDir = Vector2.zero();
+  bool _canMove = false;
 
   @override
   Future<void> onLoad() async {
@@ -50,12 +51,28 @@ class Shark extends SpriteAnimationGroupComponent with UpdateMixin, CollisionCal
 
     RectangleHitbox hitbox = RectangleHitbox(size:Vector2(width * 0.3,height * 0.25),position: Vector2(width * 0.35,height * 0.28) );
     add(hitbox);
+    _addMoveDelay();
    // debugMode = true;
     return super.onLoad();
   }
 
+  void _addMoveDelay()
+  {
+    add(
+        TimerComponent(
+          period: 6,
+          repeat: false,
+          removeOnFinish: true,
+          onTick: () => _canMove = true,
+        )
+    );
+  }
+
   @override
   void runUpdate(double dt) {
+    if(!_canMove)
+      return;
+
     position += _velocityDir * speed * dt;
     position.y.clamp(height * 0.5, GameWorld.bounds.height - (height * 0.5));
   }
