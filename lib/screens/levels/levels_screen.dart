@@ -43,17 +43,23 @@ class _LevelsScreenState extends State<LevelsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          Text(
-            widget.username,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.red),
-            onPressed: () {
-              authBloc.signOut(context);
-              Navigator.of(context).pop();
-            },
-          ),
+          widget.username != ''
+              ? Text(
+                  widget.username,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                )
+              : SizedBox(),
+          widget.username != ''
+              ? IconButton(
+                  icon: const Icon(Icons.logout, color: Colors.red),
+                  onPressed: () {
+                    authBloc.signOut(context);
+
+                    Navigator.of(context).pop();
+                    setState(() {});
+                  },
+                )
+              : SizedBox(),
         ],
       ),
       body: Stack(
