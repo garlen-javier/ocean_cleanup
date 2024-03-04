@@ -154,7 +154,6 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   @override
   void onRemove() {
     debugPrint("FlameGame: onRemove");
-    FlameAudio.bgm.stop();
     blocParameters.gameBloc.add(const Default());
     blocParameters.gameStatsBloc.defaultState();
     super.onRemove();
