@@ -38,10 +38,10 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   @override
   FutureOr<void> onLoad() async{
     debugPrint("FlameGame: onLoad");
+    FlameAudio.bgm.initialize();
     await SaveUtils.instance.loadData();
     await _loadGameManager();
     await _loadGame();
-    FlameAudio.bgm.initialize();
     //TODO: testing
     if(!isTesterMode) {
       blocParameters.gameBloc.add(GameStart(levelIndex));

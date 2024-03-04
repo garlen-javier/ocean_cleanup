@@ -82,6 +82,8 @@ class GameManager extends Component
               _saveFreeAnimalsIndex();
               _currentLevel?.playerController.enable = false;
               _currentLevel?.pauseTrashSpawn();
+              int nextLevel = _getNextLevelIndex();
+              SaveUtils.instance.saveUnlockLevel(nextLevel);
               debugPrint("Win! " + state!.result.toString() );
               break;
             case GamePhase.gameOver:
@@ -283,6 +285,15 @@ class GameManager extends Component
         SaveUtils.instance.addFreeAnimal(animal);
       }
     }
+  }
+
+  int _getNextLevelIndex()
+  {
+    int levelIndex = _currentLevelIndex;
+    if(levelIndex < maxStageLevel-1) {
+      levelIndex++;
+    }
+    return levelIndex;
   }
 
   //Currently clear the save game data such as freed animals

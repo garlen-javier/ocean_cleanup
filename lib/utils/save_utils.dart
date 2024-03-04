@@ -41,6 +41,17 @@ class SaveUtils{
     await Hive.openBox(hiveGameBoxKey);
   }
 
+  ///Should save the level the would get unlock
+  void saveUnlockLevel(int levelIndex)
+  {
+    String key = hiveFreedAnimalsKey;
+    int lastIndex = _gameBox.get(key,defaultValue:0);
+    if(levelIndex > lastIndex)
+        _gameBox.put(key, levelIndex);
+  }
+
+  int get getUnlockedLevel => _gameBox.get(hiveFreedAnimalsKey,defaultValue:0);
+
   void addFreeAnimal(AnimalType animal)
   {
     String key = hiveFreedAnimalsKey;
