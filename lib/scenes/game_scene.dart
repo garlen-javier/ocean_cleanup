@@ -21,8 +21,10 @@ import '../worlds/game_world.dart';
 class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   final GameBlocParameters blocParameters;
+  final int levelIndex;
 
   GameScene({
+    required this.levelIndex,
     required this.blocParameters,
   });
 
@@ -42,7 +44,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     FlameAudio.bgm.initialize();
     //TODO: testing
     if(!isTesterMode)
-      await _gameManager.loadLevel(0);
+      await _gameManager.loadLevel(levelIndex);
     else
       await _gameManager.loadLevel(0);
     return super.onLoad();

@@ -8,13 +8,15 @@ import '../../bloc/game_stats/game_stats_bloc.dart';
 import '../../scenes/game_scene.dart';
 
 class GameView extends StatelessWidget {
-  const GameView({super.key});
+  final int levelIndex;
+  const GameView({required this.levelIndex,super.key});
 
   @override
   Widget build(BuildContext context) {
     return GameWidget(
       focusNode: FocusNode(),
       game: GameScene(
+          levelIndex: levelIndex,
           blocParameters: GameBlocParameters(
             gameBloc: context.read<GameBloc>(),
             gameStatsBloc:  context.read<GameStatsBloc>(),
