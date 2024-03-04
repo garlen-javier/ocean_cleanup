@@ -1,52 +1,48 @@
-import 'package:flame/flame.dart';
-import 'package:flame/game.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flame/flame.dart';
 import 'bloc/game/game_bloc.dart';
-import 'bloc/game_bloc_parameters.dart';
 import 'bloc/game_stats/game_stats_bloc.dart';
 import 'constants.dart';
 import 'level_tester.dart';
-import 'scenes/game_scene.dart';
+import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
+import 'package:ocean_cleanup/firebase_options.dart';
+import 'package:ocean_cleanup/screens/intro%20game/intro_game_screen.dart';
+import 'package:ocean_cleanup/utils/config_size.dart';
 
-void main() {
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
   Flame.device.fullScreen();
   Flame.device.setLandscape();
   if(!isTesterMode)
-   runApp( const GamePage());
+   runApp( const MyApp());
   else
     runApp(const LevelTester());
 }
 
-class GamePage extends StatelessWidget {
-  const GamePage({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return MultiBlocProvider(
       providers: [
         BlocProvider<GameBloc>(create: (_) => GameBloc()),
         BlocProvider<GameStatsBloc>(create: (_) => GameStatsBloc()),
+        BlocProvider<AuthBloc>(create: (_) => AuthBloc(),),
       ],
-      child: const GameView(),
-    );
-  }
-}
-
-class GameView extends StatelessWidget {
-  const GameView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GameWidget(
-      focusNode: FocusNode(),
-      game: GameScene(
-        blocParameters: GameBlocParameters(
-            gameBloc: context.read<GameBloc>(),
-            gameStatsBloc:  context.read<GameStatsBloc>(),
-        )
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: IntroGameScreen(),
       ),
     );
   }
 }
+

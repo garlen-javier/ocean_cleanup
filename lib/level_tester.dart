@@ -90,7 +90,7 @@ class TesterPage extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const GamePage()));
+                                      builder: (context) => const MyApp()));
                             },
                             child: const Text(
                               "Normal Run",
@@ -132,7 +132,7 @@ class TesterPage extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const GamePage()));
+            builder: (context) => const MyApp()));
   }
 
   Widget _textField(BuildContext context,GlobalKey<FormFieldState> key,String label,String defaultValue) {
