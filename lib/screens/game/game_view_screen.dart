@@ -7,9 +7,9 @@ import '../../bloc/game_bloc_parameters.dart';
 import '../../bloc/game_stats/game_stats_bloc.dart';
 import '../../scenes/game_scene.dart';
 
-class GameView extends StatelessWidget {
+class GameViewScreen extends StatelessWidget {
   final int levelIndex;
-  const GameView({required this.levelIndex,super.key});
+  const GameViewScreen({required this.levelIndex,super.key});
 
   @override
   Widget build(BuildContext context) {
