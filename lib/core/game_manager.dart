@@ -67,20 +67,20 @@ class GameManager extends Component
             case GamePhase.playing:
               if(FlameAudio.bgm.audioPlayer.state == PlayerState.paused)
                  FlameAudio.bgm.resume();
-              _currentLevel?.playerController.enable = true;
+              _currentLevel?.playerController?.enable = true;
               _currentLevel?.resumeTrashSpawn();
               break;
             case GamePhase.pause:
               if(FlameAudio.bgm.audioPlayer.state == PlayerState.playing)
                 FlameAudio.bgm.pause();
-              _currentLevel?.playerController.enable = false;
+              _currentLevel?.playerController?.enable = false;
               _currentLevel?.pauseTrashSpawn();
               break;
             case GamePhase.win:
               FlameAudio.bgm.stop();
               FlameAudio.play(pathSfxLevelWin);
               _saveFreeAnimalsIndex();
-              _currentLevel?.playerController.enable = false;
+              _currentLevel?.playerController?.enable = false;
               _currentLevel?.pauseTrashSpawn();
               int nextLevel = _getNextLevelIndex();
               SaveUtils.instance.saveUnlockLevel(nextLevel);
@@ -89,7 +89,7 @@ class GameManager extends Component
             case GamePhase.gameOver:
                FlameAudio.bgm.stop();
                FlameAudio.play(pathSfxGameOver);
-               _currentLevel?.playerController.enable = false;
+               _currentLevel?.playerController?.enable = false;
               _currentLevel?.pauseTrashSpawn();
               debugPrint("GameOver!" + state!.result.toString() );
               break;
@@ -129,7 +129,7 @@ class GameManager extends Component
     _cachedLevelParameters(levelIndex);
     await _changeWorldByLevel(levelIndex);
     await _loadHud();
-    _currentLevel?.playerController.enable = true;
+    _currentLevel?.playerController?.enable = true;
     blocParameters.gameBloc.add(const GamePlaying());
     //_zoomFollowPlayer(gameScene.gameCamera, level.player);
 

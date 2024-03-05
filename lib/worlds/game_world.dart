@@ -34,7 +34,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
 
   GameWorld({required this.gameManager,required this.blocParameters}):super();
 
-  late PlayerController playerController;
+  PlayerController? playerController;
   late TiledComponent<FlameGame<camWorld.World>> map;
   final ObjectPool<Trash> _trashPool = ObjectPool<Trash>(18, () => Trash(),);
   final List<double> _bubbleSizes = [12.0, 8.0, 6.0];
@@ -261,7 +261,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
 
   Future<void> _addPlayerController(Player player) async {
     playerController = PlayerController(player: player);
-    await add(playerController);
+    await add(playerController!);
   }
 
   @override

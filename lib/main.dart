@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flame/flame.dart';
+import 'package:ocean_cleanup/utils/save_utils.dart';
 import 'bloc/game/game_bloc.dart';
 import 'bloc/game_stats/game_stats_bloc.dart';
 import 'constants.dart';
@@ -11,15 +13,19 @@ import 'package:ocean_cleanup/firebase_options.dart';
 import 'package:ocean_cleanup/screens/intro%20game/intro_game_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
+import 'screens/game/game_view_screen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
+//   await Firebase.initializeApp(
+//   options: DefaultFirebaseOptions.currentPlatform,
+// );
   Flame.device.fullScreen();
   Flame.device.setLandscape();
+  FlameAudio.bgm.initialize();
+  await SaveUtils.instance.loadData();
   if(!isTesterMode)
    runApp( const MyApp());
   else
