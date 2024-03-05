@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:ocean_cleanup/components/into%20game/start_button.dart';
+import 'package:ocean_cleanup/components/popups/tutorials/introduction_popup.dart';
 import 'package:ocean_cleanup/screens/auth/auth_screen.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
@@ -59,22 +60,23 @@ class _IntroGameScreenState extends State<IntroGameScreen> {
                     Lottie.asset('assets/animations/bubbles.json',
                         width: 150.0, height: SizeConfig.screenHeight / 6),
                     StartButton(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LevelsScreen(username: username)
-                          // GameWidget(
-                          //   game: GameScene(
-                          //     blocParameters: BlocParameters(
-                          //       joystickMovementBloc:
-                          //           context.read<JoystickMovementBloc>(),
-                          //       playerStatsBloc:
-                          //           context.read<PlayerStatsBloc>(),
-                          //     ),
-                          //   ),
-                          // ),
-                        ),
-                      ),
+                      onTap: () => showIntroPopup(context),
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => LevelsScreen(username: username)
+                      //     // GameWidget(
+                      //     //   game: GameScene(
+                      //     //     blocParameters: BlocParameters(
+                      //     //       joystickMovementBloc:
+                      //     //           context.read<JoystickMovementBloc>(),
+                      //     //       playerStatsBloc:
+                      //     //           context.read<PlayerStatsBloc>(),
+                      //     //     ),
+                      //     //   ),
+                      //     // ),
+                      //   ),
+                      // ),
                     ),
                   ],
                 ),
