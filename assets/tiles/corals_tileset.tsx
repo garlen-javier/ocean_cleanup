@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.2" name="corals_tileset" tilewidth="117" tileheight="104" tilecount="36" columns="0">
+<tileset version="1.10" tiledversion="1.10.2" name="corals_tileset" tilewidth="117" tileheight="109" tilecount="48" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
-  <image width="77" height="104" source="../images/bg_elements/coral1/frame_00_delay-0.08s.png"/>
+  <image width="82" height="109" source="../images/bg_elements/coral1/frame_00_delay-0.08s.png"/>
   <animation>
    <frame tileid="0" duration="170"/>
    <frame tileid="1" duration="170"/>
@@ -13,19 +13,19 @@
   </animation>
  </tile>
  <tile id="1">
-  <image width="77" height="104" source="../images/bg_elements/coral1/frame_01_delay-0.09s.png"/>
+  <image width="82" height="109" source="../images/bg_elements/coral1/frame_01_delay-0.09s.png"/>
  </tile>
  <tile id="2">
-  <image width="77" height="104" source="../images/bg_elements/coral1/frame_02_delay-0.08s.png"/>
+  <image width="82" height="109" source="../images/bg_elements/coral1/frame_02_delay-0.08s.png"/>
  </tile>
  <tile id="3">
-  <image width="77" height="104" source="../images/bg_elements/coral1/frame_03_delay-0.08s.png"/>
+  <image width="82" height="109" source="../images/bg_elements/coral1/frame_03_delay-0.08s.png"/>
  </tile>
  <tile id="4">
-  <image width="77" height="104" source="../images/bg_elements/coral1/frame_04_delay-0.09s.png"/>
+  <image width="82" height="109" source="../images/bg_elements/coral1/frame_04_delay-0.09s.png"/>
  </tile>
  <tile id="5">
-  <image width="77" height="104" source="../images/bg_elements/coral1/frame_05_delay-0.08s.png"/>
+  <image width="82" height="109" source="../images/bg_elements/coral1/frame_05_delay-0.08s.png"/>
  </tile>
  <tile id="6">
   <image width="57" height="40" source="../images/bg_elements/coral2/frame_00_delay-0.08s-copy-0.png"/>
@@ -106,7 +106,7 @@
   <image width="24" height="22" source="../images/bg_elements/coral4/frame_00_delay-0.08s-copy-2.png"/>
  </tile>
  <tile id="24">
-  <image width="54" height="95" source="../images/bg_elements/coral5/frame_00_delay-0.08s-copy-3.png"/>
+  <image width="59" height="100" source="../images/bg_elements/coral5/frame_00_delay-0.08s-copy-3.png"/>
   <animation>
    <frame tileid="24" duration="350"/>
    <frame tileid="25" duration="350"/>
@@ -117,22 +117,22 @@
   </animation>
  </tile>
  <tile id="25">
-  <image width="54" height="95" source="../images/bg_elements/coral5/frame_01_delay-0.09s-copy-3.png"/>
+  <image width="59" height="100" source="../images/bg_elements/coral5/frame_01_delay-0.09s-copy-3.png"/>
  </tile>
  <tile id="26">
-  <image width="54" height="95" source="../images/bg_elements/coral5/frame_02_delay-0.08s-copy-3.png"/>
+  <image width="59" height="100" source="../images/bg_elements/coral5/frame_02_delay-0.08s-copy-3.png"/>
  </tile>
  <tile id="27">
-  <image width="54" height="95" source="../images/bg_elements/coral5/frame_03_delay-0.08s-copy-3.png"/>
+  <image width="59" height="100" source="../images/bg_elements/coral5/frame_03_delay-0.08s-copy-3.png"/>
  </tile>
  <tile id="28">
-  <image width="54" height="95" source="../images/bg_elements/coral5/frame_04_delay-0.09s-copy-3.png"/>
+  <image width="59" height="100" source="../images/bg_elements/coral5/frame_04_delay-0.09s-copy-3.png"/>
  </tile>
  <tile id="29">
-  <image width="54" height="95" source="../images/bg_elements/coral5/frame_05_delay-0.08s-copy-3.png"/>
+  <image width="59" height="100" source="../images/bg_elements/coral5/frame_05_delay-0.08s-copy-3.png"/>
  </tile>
  <tile id="30">
-  <image width="29" height="79" source="../images/bg_elements/coral6/frame_00_delay-0.04s.png"/>
+  <image width="34" height="84" source="../images/bg_elements/coral6/frame_00_delay-0.04s.png"/>
   <animation>
    <frame tileid="30" duration="350"/>
    <frame tileid="31" duration="350"/>
@@ -143,18 +143,70 @@
   </animation>
  </tile>
  <tile id="31">
-  <image width="29" height="79" source="../images/bg_elements/coral6/frame_01_delay-0.04s.png"/>
+  <image width="34" height="84" source="../images/bg_elements/coral6/frame_01_delay-0.04s.png"/>
  </tile>
  <tile id="32">
-  <image width="29" height="79" source="../images/bg_elements/coral6/frame_02_delay-0.05s.png"/>
+  <image width="34" height="84" source="../images/bg_elements/coral6/frame_02_delay-0.05s.png"/>
  </tile>
  <tile id="33">
-  <image width="29" height="79" source="../images/bg_elements/coral6/frame_03_delay-0.04s.png"/>
+  <image width="34" height="84" source="../images/bg_elements/coral6/frame_03_delay-0.04s.png"/>
  </tile>
  <tile id="34">
-  <image width="29" height="79" source="../images/bg_elements/coral6/frame_04_delay-0.04s.png"/>
+  <image width="34" height="84" source="../images/bg_elements/coral6/frame_04_delay-0.04s.png"/>
  </tile>
  <tile id="35">
-  <image width="29" height="79" source="../images/bg_elements/coral6/frame_05_delay-0.04s.png"/>
+  <image width="34" height="84" source="../images/bg_elements/coral6/frame_05_delay-0.04s.png"/>
+ </tile>
+ <tile id="36">
+  <image width="34" height="84" source="../images/bg_elements/coral_6_flip/coral6_frame1.png"/>
+  <animation>
+   <frame tileid="36" duration="350"/>
+   <frame tileid="37" duration="350"/>
+   <frame tileid="38" duration="350"/>
+   <frame tileid="39" duration="350"/>
+   <frame tileid="40" duration="350"/>
+   <frame tileid="41" duration="350"/>
+  </animation>
+ </tile>
+ <tile id="37">
+  <image width="34" height="84" source="../images/bg_elements/coral_6_flip/coral6_frame2.png"/>
+ </tile>
+ <tile id="38">
+  <image width="34" height="84" source="../images/bg_elements/coral_6_flip/coral6_frame3.png"/>
+ </tile>
+ <tile id="39">
+  <image width="34" height="84" source="../images/bg_elements/coral_6_flip/coral6_frame4.png"/>
+ </tile>
+ <tile id="40">
+  <image width="34" height="84" source="../images/bg_elements/coral_6_flip/coral6_frame5.png"/>
+ </tile>
+ <tile id="41">
+  <image width="34" height="84" source="../images/bg_elements/coral_6_flip/coral6_frame6.png"/>
+ </tile>
+ <tile id="42">
+  <image width="82" height="109" source="../images/bg_elements/coral_1_flip/coral1_frame1.png"/>
+  <animation>
+   <frame tileid="42" duration="350"/>
+   <frame tileid="43" duration="350"/>
+   <frame tileid="44" duration="350"/>
+   <frame tileid="45" duration="350"/>
+   <frame tileid="46" duration="350"/>
+   <frame tileid="47" duration="350"/>
+  </animation>
+ </tile>
+ <tile id="43">
+  <image width="82" height="109" source="../images/bg_elements/coral_1_flip/coral1_frame2.png"/>
+ </tile>
+ <tile id="44">
+  <image width="82" height="109" source="../images/bg_elements/coral_1_flip/coral1_frame3.png"/>
+ </tile>
+ <tile id="45">
+  <image width="82" height="109" source="../images/bg_elements/coral_1_flip/coral1_frame4.png"/>
+ </tile>
+ <tile id="46">
+  <image width="82" height="109" source="../images/bg_elements/coral_1_flip/coral1_frame5.png"/>
+ </tile>
+ <tile id="47">
+  <image width="82" height="109" source="../images/bg_elements/coral_1_flip/coral1_frame6.png"/>
  </tile>
 </tileset>
