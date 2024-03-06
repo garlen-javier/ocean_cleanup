@@ -27,38 +27,16 @@ class PlayerController extends Component with KeyboardHandler
     final bool isDown = event.logicalKey == LogicalKeyboardKey.keyS || event.logicalKey == LogicalKeyboardKey.arrowDown;
 
     if (isLeft) {
-      if(isKeyDown) {
-        _keyboardVelo.x = -1;
-        _keyboardAngle = _keyboardVelo.screenAngle();
-      }else{
-        _keyboardVelo.x = 0;
-      }
+      _changeXDirection(isKeyDown, -1);
       handled = true;
     } else if (isRight) {
-      if(isKeyDown) {
-        _keyboardVelo.x = 1;
-        _keyboardAngle = _keyboardVelo.screenAngle();
-      }else{
-        _keyboardVelo.x = 0;
-      }
+      _changeXDirection(isKeyDown, 1);
       handled = true;
     } else if (isUp) {
-      if(isKeyDown) {
-        _keyboardVelo.y = -1;
-        _keyboardAngle = _keyboardVelo.screenAngle();
-      }
-      else{
-        _keyboardVelo.y = 0;
-      }
+      _changeYDirection(isKeyDown, -1);
       handled = true;
     } else if (isDown) {
-      if(isKeyDown) {
-        _keyboardVelo.y = 1;
-        _keyboardAngle = _keyboardVelo.screenAngle();
-      }
-      else{
-        _keyboardVelo.y = 0;
-      }
+      _changeYDirection(isKeyDown, 1);
       handled = true;
     } else {
       _keyboardVelo = Vector2.zero();
@@ -80,6 +58,27 @@ class PlayerController extends Component with KeyboardHandler
       return false;
     } else {
       return super.onKeyEvent(event, keysPressed);
+    }
+  }
+
+  void _changeXDirection(bool isKeyDown,double dir)
+  {
+    if(isKeyDown) {
+      _keyboardVelo.x = dir;
+      _keyboardAngle = _keyboardVelo.screenAngle();
+    }
+    else {
+      _keyboardVelo.x = 0;
+    }
+  }
+
+  void _changeYDirection(bool isKeyDown,double dir)
+  {
+    if(isKeyDown) {
+      _keyboardVelo.y = dir;
+      _keyboardAngle = _keyboardVelo.screenAngle();
+    }else{
+      _keyboardVelo.y = 0;
     }
   }
 
