@@ -29,7 +29,7 @@ class _LeaderboardState extends State<LeaderboardScreen> {
     var scores = List.from(data.docs.map((doc) => doc['score']));
 
     for (var i = 0; i < names.length; i++) {
-      users.add(UserModel(username: names[i], score: scores[i]));
+      users.add(UserModel(username: names[i], score: scores[i] , id: data.docs[i].id));
     }
 
     inspect(users);

@@ -4,7 +4,6 @@ import 'package:lottie/lottie.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
 import 'package:ocean_cleanup/components/auth/custom_text_field.dart';
 import 'package:ocean_cleanup/components/auth/error_dialog.dart';
-import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
@@ -32,14 +31,7 @@ class AuthScreen extends StatelessWidget {
             ),
           );
         } else if (state.status == AuthStatus.success) {
-          Navigator.of(context).pop();
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => LevelsScreen(
-                username: state.username ?? '',
-              ),
-            ),
-          );
+          Navigator.popUntil(context, ModalRoute.withName('/'));
         } else if (state.status == AuthStatus.failure) {
           Navigator.of(context).pop();
           showErrorDialog(context, state.error ?? 'Unknown error');
@@ -110,8 +102,9 @@ class AuthScreen extends StatelessWidget {
                             ),
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                if(passwordController.text.length < 6){
-                                  showErrorDialog(context, 'Password must be at least 6 characters');
+                                if (passwordController.text.length < 6) {
+                                  showErrorDialog(context,
+                                      'Password must be at least 6 characters');
                                   return;
                                 }
                                 authBloc.signUp(

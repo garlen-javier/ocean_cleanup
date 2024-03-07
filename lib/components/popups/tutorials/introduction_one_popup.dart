@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
-void showIntroPopup(BuildContext context) {
+void showIntroOnePopup(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -46,7 +46,7 @@ void showIntroPopup(BuildContext context) {
                       ),
                       const Spacer(),
                       Image.asset(
-                        'assets/images/text/introduction.png',
+                        'assets/images/tutorials/introduction.png',
                         width: SizeConfig.screenWidth / 2.5,
                       ),
                       const Spacer(),
@@ -128,7 +128,7 @@ void showIntroPopup(BuildContext context) {
                 GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
                   child: Image.asset(
-                    'assets/images/text/ready.png',
+                    'assets/images/tutorials/ready.png',
                     width: SizeConfig.screenWidth / 2.5,
                   ),
                 )
