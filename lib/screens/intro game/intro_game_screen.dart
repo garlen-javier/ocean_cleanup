@@ -4,10 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
 import 'package:ocean_cleanup/bloc/game_stats/sound_state.dart';
 import 'package:ocean_cleanup/components/popups/account_popup.dart';
-import 'package:ocean_cleanup/screens/auth/auth_screen.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class IntroGameScreen extends StatefulWidget {
   const IntroGameScreen({super.key});

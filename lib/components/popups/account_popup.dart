@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
 import 'package:ocean_cleanup/components/into%20game/custom_button.dart';
+import 'package:ocean_cleanup/components/popups/auth_popup.dart';
 import 'package:ocean_cleanup/models/user_model.dart';
-import 'package:ocean_cleanup/screens/auth/auth_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
 void showAccount(
@@ -128,14 +128,7 @@ void showAccount(
                       ),
                       const Spacer(),
                       CustomButton(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AuthScreen(),
-                            ),
-                          );
-                        },
+                        onTap: () => showAuth(context),
                         text: 'Login / Register',
                       ),
                     ],
