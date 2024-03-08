@@ -1,127 +1,125 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
-import 'package:ocean_cleanup/components/levels/level_item.dart';
+import 'package:ocean_cleanup/components/popups/start_popup.dart';
 import 'package:ocean_cleanup/screens/leaderboard/leaderboard_screen.dart';
+import 'package:ocean_cleanup/utils/config_size.dart';
+import 'package:ocean_cleanup/utils/save_utils.dart';
 
 class LevelsScreen extends StatefulWidget {
-  final String username;
-  const LevelsScreen({super.key, required this.username});
+  const LevelsScreen({super.key});
 
   @override
   State<LevelsScreen> createState() => _LevelsScreenState();
 }
 
 class _LevelsScreenState extends State<LevelsScreen> {
-  final List<String> time = ["1.5", "2", "2.5", "3"];
-  final List<String> trash = ["0", "8", "10", "15"];
-  final List<Color> colorprimary = [
-    Colors.yellow,
-    Colors.blue,
-    Colors.green,
-    Colors.red
-  ];
-  final List<Color> colorSecondary = [
-    Colors.orange,
-    Colors.cyan,
-    Colors.teal,
-    Colors.pink
-  ];
-
   @override
   Widget build(BuildContext context) {
-    final authBloc = BlocProvider.of<AuthBloc>(context);
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'Levels',
-          style: TextStyle(fontWeight: FontWeight.bold),
+    print('Level : ${SaveUtils.instance.getUnlockedLevel}');
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/background.png"),
+          fit: BoxFit.cover,
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          widget.username != ''
-              ? Text(
-                  widget.username,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                )
-              : SizedBox(),
-          widget.username != ''
-              ? IconButton(
-                  icon: const Icon(Icons.logout, color: Colors.red),
-                  onPressed: () {
-                    authBloc.signOut(context);
-
-                    Navigator.of(context).pop();
-                    setState(() {});
-                  },
-                )
-              : SizedBox(),
-        ],
       ),
-      body: Stack(
-        children: [
-          const Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/background.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: const Text(
+            'Select Level',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.orange,
+              fontSize: 30,
+              fontFamily: 'wendyOne',
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const LeaderboardScreen(),
-                ),
-              );
-            },
-            child: Align(
-              alignment: Alignment.bottomRight,
+          foregroundColor: const Color(0xFF6874ca),
+          actions: [
+            GestureDetector(
               child: Lottie.asset(
                 "assets/animations/leaderboard.json",
                 repeat: false,
-                height: 100,
-                width: 100,
               ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                double screenWidth = constraints.maxWidth;
-                double screenHeight = constraints.maxHeight;
-                double cardWidth = screenWidth * 0.4;
-                double cardHeight = screenHeight * 0.2;
-
-                return GridView.count(
-                  crossAxisCount: 2,
-                  childAspectRatio: cardWidth / cardHeight,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                  padding: const EdgeInsets.all(10.0),
-                  shrinkWrap: true,
-                  children: List.generate(
-                    4,
-                    (index) => LevelCard(
-                      index + 1,
-                      time[index],
-                      trash[index],
-                      [colorprimary[index], colorSecondary[index]],
-                    ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LeaderboardScreen(),
                   ),
                 );
               },
             ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Center(
+            child: SizedBox(
+              width: SizeConfig.screenWidth / 1.5,
+              height: SizeConfig.screenHeight / 1.3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(3, (index) {
+                      if (index + 1 <= SaveUtils.instance.getUnlockedLevel) {
+                        return GestureDetector(
+                            child: Image.asset(
+                                'assets/images/levels/Level${index + 1}.png'),
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return StartPopup(
+                                    levelIndex: index + 1,
+                                  );
+                                },
+                              );
+                            });
+                      } else {
+                        return Image.asset(
+                            'assets/images/levels/Unlocked_Level.png');
+                      }
+                    }),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(
+                      2,
+                      (index) {
+                        if (index + 4 <= SaveUtils.instance.getUnlockedLevel) {
+                          return GestureDetector(
+                            child: Image.asset(
+                                'assets/images/levels/Level${index + 4}.png'),
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return StartPopup(
+                                    levelIndex: index + 4,
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        } else {
+                          return Image.asset(
+                              'assets/images/levels/Unlocked_Level.png');
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
