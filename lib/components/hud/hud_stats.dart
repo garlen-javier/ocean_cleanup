@@ -15,10 +15,12 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
 {
   int health;
   final Map<AnimalType, TrashObjective>? trappedAnimals;
+  TrashType trashType;
   final int totalTrash;
-  HudStats({required this.health, required this.trappedAnimals, required this.totalTrash});
+  HudStats({required this.health, required this.trappedAnimals,required this.trashType, required this.totalTrash});
 
   late Vector2 _gameSize;
+  late HudTrashCount _trashCounter;
   final List<SpriteComponent> _healthIcons = [];
 
   @override
@@ -96,16 +98,22 @@ class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
     double initialX = -totalWidth * 0.5;
 
     Vector2 counterPos = Vector2(initialX, -_gameSize.y * 0.23);
-    var trashCounter = HudTrashCount(trashType: TrashType.any,totalTrash: totalTrash, position: counterPos);
-    await add(trashCounter);
-    counterPos = Vector2(trashCounter.x + marginX, trashCounter.y);
+    _trashCounter = HudTrashCount(trashType: trashType,totalTrash: totalTrash, position: counterPos);
+    await add(_trashCounter);
+    counterPos = Vector2(_trashCounter.x + marginX, _trashCounter.y);
 
     for (var entry in trappedAnimals!.entries) {
       TrashObjective mission = entry.value;
-      var trashCounter = HudTrashCount(trashType: mission.trashType,totalTrash: mission.goal, position: counterPos);
-      await add(trashCounter);
-      counterPos = Vector2(trashCounter.x + marginX, trashCounter.y);
+      var missionCounter = HudTrashCount(trashType: mission.trashType,totalTrash: mission.goal, position: counterPos);
+      await add(missionCounter);
+      counterPos = Vector2(missionCounter.x + marginX, missionCounter.y);
     }
+  }
+
+  void setNewTrashGoal(TrashType type,int total)
+  {
+    _trashCounter.setTrash(type, total);
+    _trashCounter.resetCount();
   }
 
   Future<void> _loadTrappedAnimals(int marginX) async {

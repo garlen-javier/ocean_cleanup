@@ -62,7 +62,8 @@ class GameStatsBloc extends Cubit<GameStatsState> {
 
   //#region Health
   void addHealth(int hp){
-    health+=hp;
+    health += hp;
+    health = health > maxHealth ? maxHealth : health;
     emit(state.copyWith(health: health));
   }
 
@@ -95,6 +96,12 @@ class GameStatsBloc extends Cubit<GameStatsState> {
   {
     if(!state.timerFinish)
       emit(state.copyWith(timerFinish: true));
+  }
+
+  void timerReset()
+  {
+    if(state.timerFinish)
+      emit(state.copyWith(timerFinish: false));
   }
 
   void rescueFailed()

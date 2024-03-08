@@ -146,14 +146,20 @@ class Levels
         timeLimit:  30);
 
     TrashObjective stage5 = const TrashObjective(
-        trashType: TrashType.waterGallon,
+        trashType: TrashType.bagTrash,
         goal: 12,
         timeLimit:  30);
 
     List<TrashObjective> objectives = [stage1,stage2,stage3,stage4,stage5];
-    //TODO: make boss level
-    SharkConfig sharkConfig = const SharkConfig(count: 5);
-    return LevelParameters(trashObjectives: objectives,sharkConfig: sharkConfig);
+    SharkConfig sharkConfig = const SharkConfig(count: 4,speed: 120);
+    return LevelParameters(
+        mainTrashChance: 0.3,
+        trashObjectives: objectives,
+        sharkConfig: sharkConfig,
+        trashSpawnMin: 1,
+        trashSpawnMax: 20,
+        levelType: LevelType.boss,
+        octopusCount: 1);
   }
 
   void createTestLevel(

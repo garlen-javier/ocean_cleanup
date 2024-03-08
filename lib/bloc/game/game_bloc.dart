@@ -9,7 +9,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     on<GameStart>(
           (event, emit)  {
             emit(const GameState.empty());
-            emit(state.copyWith(levelIndex: event.levelIndex, phase: GamePhase.start));
+            emit(state.copyWith(levelIndex: event.levelIndex, stageIndex: event.stageIndex, phase: GamePhase.start));
       },
     );
 

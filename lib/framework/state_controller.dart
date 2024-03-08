@@ -1,8 +1,12 @@
 import 'package:flame/components.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class State {
   void onEnter(Object? args);
-  void onUpdate();
+  ///Manually runs update from state controller
+  void onRunUpdate(double dt);
+  ///Overrides and call the update from component itself
+  void onUpdate(double dt);
   void onExit();
 }
 
@@ -13,8 +17,13 @@ abstract class StateController extends Component {
 
   @override
   void update(double dt) {
+    _currentState?.onUpdate(dt);
     super.update(dt);
-    _currentState?.onUpdate();
+  }
+
+  void runUpdate(double dt)
+  {
+    _currentState?.onRunUpdate(dt);
   }
 
   Type? get state => _currentState?.runtimeType;
@@ -35,7 +44,9 @@ abstract class StateController extends Component {
     _currentState?.onExit();
     final constructor = _stateConstructors[next];
     if (constructor != null) {
+     // debugPrint("Previous State: $_currentState");
       _currentState = constructor() as State;
+     // debugPrint("New State: $_currentState");
       _currentState!.onEnter(args);
     }
   }

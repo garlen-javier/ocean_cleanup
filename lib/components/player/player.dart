@@ -6,6 +6,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ocean_cleanup/components/lightning.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import 'package:ocean_cleanup/utils/math_utils.dart';
@@ -55,7 +56,7 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
       current = PlayerAnimationState.idle;
     };
 
-     RectangleHitbox hitbox = RectangleHitbox(size:Vector2(width,height * 0.65),position: Vector2(width * 0.1,0),isSolid: true );
+     RectangleHitbox hitbox = RectangleHitbox(size:Vector2(width * 0.6,height * 0.65),position: Vector2(width * 0.3,0),isSolid: true );
      add(hitbox);
     //add(RectangleHitbox(size:size,isSolid: true));
     priority = playerPriority;
@@ -113,6 +114,11 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
       trashCache.add(trash);
     }
     if (other is Shark) {
+      _reduceHealth();
+    }
+    if (other is Lightning) {
+      Lightning lightning = other;
+      lightning.removeFromParent();
       _reduceHealth();
     }
     super.onCollisionStart(intersectionPoints, other);

@@ -42,10 +42,11 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     await _loadGame();
     //TODO: testing
     if(!isTesterMode) {
-      blocParameters.gameBloc.add(GameStart(levelIndex));
+      blocParameters.gameBloc.add(GameStart(levelIndex:levelIndex));
+      //blocParameters.gameBloc.add(GameStart(levelIndex: 4));
     }
     else
-      blocParameters.gameBloc.add(GameStart(0));
+      blocParameters.gameBloc.add(GameStart(levelIndex: 0));
     return super.onLoad();
   }
 
@@ -58,6 +59,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     await images.loadAll([
       pathPlayer,
       pathShark,
+      pathOctopus,
       pathBagTrash,
       pathCutleries,
       pathPlasticCup,
@@ -81,6 +83,9 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
       pathPauseButton,
       pathPlayButton,
       pathBubble,
+      pathMeterBar,
+      pathMeterHolder,
+      pathLightning,
     ]);
 
     await FlameAudio.audioCache.loadAll([
@@ -96,8 +101,8 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   Future<void> _loadCameras() async {
     gameCamera = CameraComponent.withFixedResolution(
-      width: GameWorld.worldSize.width,
-      height: GameWorld.worldSize.height,
+      width: GameWorld.worldSize.width ,
+      height: GameWorld.worldSize.height ,
     );
 
     gameCamera.viewfinder
@@ -136,6 +141,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   @override
   void update(double dt) {
+    super.update(dt);
     if(hasChildren) {
       for (var child in children) {
         if(child is HasUpdateMixin){
@@ -145,7 +151,6 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
         }
       }
     }
-    super.update(dt);
   }
 
 
@@ -172,6 +177,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   ///TODO: To Remove
   bool isPress = false;
+  bool isPressO = false;
   @override
   KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (!isRelease) {
@@ -182,22 +188,27 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
         if(isKeyDown) {
           debugPrint("pressed P: testing");
           if(!isPress) {
-           // _gameManager.nextLevel();
-            blocParameters.gameBloc.add(const GameStartNext());
+            //_gameManager.nextStage();
+            _gameManager.blocParameters.gameBloc.add(GamePause());
             isPress = true;
           }
-          //blocParameters.gameBloc.add(const GamePause());
-          //blocParameters.gameBloc.add(GameWin(_gameManager.currentLevelIndex));
-          // SaveUtils.instance.addFreeAnimal(AnimalType.seal);
         }
         else if(isKeyUp){
           isPress = false;
         }
       }
       else if (event.logicalKey == LogicalKeyboardKey.keyO) {
-        debugPrint("pressed O: testing");
-        // blocParameters.gameBloc.add(const GameResume());
-        // FlameAudio.play(pathSfxGameOver);
+        if(isKeyDown) {
+          debugPrint("pressed O: testing");
+          if(!isPressO) {
+           // blocParameters.gameBloc.add(GameStart(levelIndex: 4));
+            _gameManager.blocParameters.gameBloc.add(GameResume());
+            isPressO = true;
+          }
+        }
+        else if(isKeyUp){
+          isPressO = false;
+        }
       }
     }
     return super.onKeyEvent(event, keysPressed);

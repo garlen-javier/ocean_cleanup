@@ -15,8 +15,10 @@ const int maxStageLevel = 5;
 
 const String pathPlayer = "player.png";
 const String pathBubble = "bubble.png";
+const String pathLightning = "lightning.png";
 
 const String pathShark = "enemies/shark.png";
+const String pathOctopus = "enemies/octopus.png";
 
 const String pathBagTrash = "trashes/bag_trash.png";
 const String pathCutleries = "trashes/cutleries.png";
@@ -34,6 +36,9 @@ const String pathTurtle = "animals/turtle.png";
 const String pathRescueComplete = "rescue_complete.png";
 const String pathRescueFailed = "rescue_failed.png";
 const String pathAnimalFrame = "animal_frame.png";
+
+const String pathMeterBar = "meter_bar.png";
+const String pathMeterHolder = "meter_holder.png";
 
 const String pathFishNet = "fish_net.png";
 const String pathHealth = "health.png";

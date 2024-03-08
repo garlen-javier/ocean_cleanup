@@ -9,10 +9,10 @@ import '../../utils/utils.dart';
 
 class HudTimer extends PositionComponent with UpdateMixin
 {
-  double timeLimit;
+  double initialLimit;
   Function(double,double)? remainingTime;
   VoidCallback? timerFinished;
-  HudTimer({required this.timeLimit,this.remainingTime,this.timerFinished,super.position});
+  HudTimer({required this.initialLimit,this.remainingTime,this.timerFinished,super.position});
 
   final TextPaint _textPaint = TextPaint(
     style: const material.TextStyle(color: material.Colors.black, fontSize: 20),
@@ -23,15 +23,18 @@ class HudTimer extends PositionComponent with UpdateMixin
 
   @override
   FutureOr<void> onLoad() async{
-    _countdown = Timer(timeLimit);
+    _countdown = Timer(initialLimit);
     return super.onLoad();
   }
+
+  void setTimeLimit(double limit) =>  _countdown.limit = limit;
+  void start() => _countdown.start();
 
   @override
   void runUpdate(double dt) {
     _countdown.update(dt);
     if(_countdown.isRunning()) {
-      _remainingTime = timeLimit - _countdown.current;
+      _remainingTime = _countdown.limit - _countdown.current;
       remainingTime?.call(_remainingTime,_countdown.current);
     }
     else if(_countdown.finished)

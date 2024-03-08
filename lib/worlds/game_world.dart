@@ -8,11 +8,14 @@ import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
+import 'package:ocean_cleanup/components/lightning.dart';
+import 'package:ocean_cleanup/components/octopus/octopus.dart';
 import 'package:ocean_cleanup/components/player/player_controller.dart';
 import 'package:ocean_cleanup/components/shark/shark.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/framework/object_pool.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
+import '../bloc/game/game_event.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../components/brick/catcher_body.dart';
 import '../components/bubble_particle.dart';
@@ -34,16 +37,18 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
 
   GameWorld({required this.gameManager,required this.blocParameters}):super();
 
-  PlayerController? playerController;
   late TiledComponent<FlameGame<camWorld.World>> map;
   final ObjectPool<Trash> _trashPool = ObjectPool<Trash>(18, () => Trash(),);
   final List<double> _bubbleSizes = [12.0, 8.0, 6.0];
   final _random = Random();
 
+  PlayerController? playerController;
+  Octopus? octopus;
+  Timer? _bubbleSpawner;
+
   List<Vector2> _sharkPoints = [];
   List<Vector2> _bubblePoints = [];
-  List<SpawnComponent> _spawners = [];
-  Timer? _bubbleSpawner;
+  List<SpawnComponent> _trashSpawners = [];
 
   @override
   FutureOr<void> onLoad() async {
@@ -60,6 +65,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
     await _loadCatchers();
     await _loadTrashPoints();
     await _loadSharkPoints();
+    await _loadOctopus();
     await _loadBubbles();
   }
 
@@ -110,7 +116,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
       if(objGroup != null)
       {
         objGroup.objects.shuffle();
-        _spawners.clear();
+        _trashSpawners.clear();
 
         int i = 0;
         int firstSpawn = _random.nextInt(objGroup.objects.length-1);
@@ -142,7 +148,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
             selfPositioning: true,
           );
           await add(spawner);
-          _spawners.add(spawner);
+          _trashSpawners.add(spawner);
         }
       }
     }
@@ -166,20 +172,28 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
 
   void pauseTrashSpawn()
   {
-    for(int i = 0; i < _spawners.length; ++i)
+    for(int i = 0; i < _trashSpawners.length; ++i)
     {
-      if(_spawners[i].timer.isRunning())
-        _spawners[i].timer.pause();
+      if(_trashSpawners[i].timer.isRunning())
+        _trashSpawners[i].timer.pause();
       else
-        _spawners[i].timer.resume();
+        _trashSpawners[i].timer.resume();
+    }
+  }
+
+  void stopTrashSpawn()
+  {
+    for(int i = 0; i < _trashSpawners.length; ++i)
+    {
+      _trashSpawners[i].timer.stop();
     }
   }
 
   void resumeTrashSpawn()
   {
-    for(int i = 0; i < _spawners.length; ++i)
+    for(int i = 0; i < _trashSpawners.length; ++i)
     {
-        _spawners[i].timer.resume();
+        _trashSpawners[i].timer.resume();
     }
   }
 
@@ -211,6 +225,71 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
     }
   }
 
+  Future<void> _spawnLightning() async {
+
+    List<Vector2> leftPos = [];
+    List<Vector2> rightPos = [];
+    List<Vector2> upPos = [];
+    List<Vector2> downPos = [];
+
+    loadPoints(String layerName,List<Vector2> vecList) {
+      ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>(layerName);
+      if (objGroup != null) {
+        for (var col in objGroup.objects) {
+          vecList.add(Vector2(col.x, col.y));
+        }
+      }
+    }
+
+    spawnHorizontal(List<Vector2> fromList,List<Vector2> toList) async{
+      toList.shuffle();
+      for(int i = 0; i < fromList.length; ++i)
+      {
+        Vector2 from = fromList[i];
+        Vector2 to = toList[i]; //toList must  have same length with fromList
+        Lightning lightning = Lightning(from: from, to: to,upperDir:rightPos,lowerDir: leftPos, direction: LightningDirection.horizontal);
+        await add(lightning);
+      }
+    }
+
+    spawnVertical(List<Vector2> fromList,List<Vector2> toList) async{
+      toList.shuffle();
+      for(int i = 0; i < fromList.length; ++i)
+      {
+        Vector2 from = fromList[i];
+        Vector2 to = toList[i]; //toList must have same length with fromList
+        Lightning lightning = Lightning(from: from, to: to,upperDir:upPos,lowerDir:downPos,direction: LightningDirection.vertical);
+        await add(lightning);
+      }
+    }
+
+    loadPoints("lightning_points_left",leftPos);
+    loadPoints("lightning_points_right",rightPos);
+    loadPoints("lightning_points_up",upPos);
+    loadPoints("lightning_points_down",downPos);
+
+    await spawnHorizontal(leftPos, rightPos);
+    await spawnHorizontal(rightPos, leftPos);
+    await spawnVertical(upPos, downPos);
+    await spawnVertical(downPos, upPos);
+  }
+
+  Future<void> _loadOctopus() async {
+    if(gameManager.currentLevelParams.levelType == LevelType.boss) {
+      octopus = Octopus(
+        onAngry: () async {
+          stopTrashSpawn();
+          await _spawnLightning();
+        }, onStopAttack: () {
+        //Reset stage
+        blocParameters.gameBloc.add(GameStart(
+            levelIndex: gameManager.currentLevelIndex,
+            stageIndex: gameManager.currentStageIndex));
+      },
+      );
+      await add(octopus!);
+    }
+  }
   //#region Bubbles
   Future<void> _loadBubbles() async {
     ObjectGroup? objGroup = map.tileMap.getLayer<ObjectGroup>("bubble_points");
@@ -283,6 +362,9 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
 
   @override
   void onRemove() {
+    playerController = null;
+    octopus = null;
+    _bubbleSpawner = null;
     _trashPool.clearPool();
     super.onRemove();
   }

@@ -1,43 +1,87 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
+import 'package:flame/sprite.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:ocean_cleanup/components/lightning.dart';
+import 'package:ocean_cleanup/extensions/random_range.dart';
 import 'package:ocean_cleanup/worlds/game_world.dart';
 import 'dart:async' as dartAsync;
+import '../../constants.dart';
+import '../../mixins/update_mixin.dart';
+import '../../scenes/game_scene.dart';
 import '../../utils/math_utils.dart';
-import 'octopus_sprite.dart';
+import 'octopus_state_controller.dart';
 
+enum OctopusAnimationState {
+  normal,
+  transform,
+  angry
+}
 
-class Octopus extends BodyComponent  {
-  final Vector2 pos;
+class Octopus extends SpriteAnimationGroupComponent with UpdateMixin, HasGameRef<GameScene> {
 
-  Octopus ({required this.pos});
-  late OctopusSprite sprite;
+  VoidCallback? onAngry;
+  VoidCallback? onStopAttack;
+  Octopus ({this.onAngry,this.onStopAttack});
 
   final Random _random = Random();
   Vector2 _velocityDir = Vector2.zero();
-  double _speed = 500;
+  double _speed = 80;
   bool _isReverse = false;
+  bool irritated = false;
+  OctopusStateController? _stateController;
 
   @override
   Future<void> onLoad() async {
-    sprite = OctopusSprite();
-    await add(sprite);
+    Image image = gameRef.images.fromCache(pathOctopus);
+    final spritesheet = SpriteSheet(
+        image: image ,
+        srcSize: Vector2(image.size.x/4,image.size.y/3)
+    );
 
+    final normal = spritesheet.createAnimation(row:0,stepTime: 0.25);
+    final transform = spritesheet.createAnimation(row:1,stepTime: 0.25,loop: false);
+    final angry = spritesheet.createAnimation(row:2,stepTime: 0.25);
+
+    animations = {
+      OctopusAnimationState.normal: normal,
+      OctopusAnimationState.transform: transform,
+      OctopusAnimationState.angry: angry,
+    };
+
+    current = OctopusAnimationState.transform;
+    anchor = Anchor.center;
+
+    await add(_stateController = OctopusStateController(this));
+    _spawnAtRandom();
     _initRandomMove();
-    renderBody = false;
+    debugMode = false;
     return super.onLoad();
+  }
+
+  void _spawnAtRandom()
+  {
+    double x = _random.nextDoubleInRange(min: width * 0.5, max: GameWorld.bounds.width - width * 0.5);
+    double y = _random.nextDoubleInRange(min: height * 0.5, max: GameWorld.bounds.height - height * 0.5);
+    position = Vector2(x, y);
   }
 
   void _initRandomMove()
   {
-    _randomizeDirection();
+    if(_isPositionXOut || _isPositionYOut)
+      _reverseDirection();
+    else
+      _randomizeDirection();
+
     add(
         TimerComponent(
-          period: 3,
+          period: 6,
           repeat: true,
           onTick: () {
-            if(_isPositionXValidMove && _isPositionYValidMove ) {
+            if(!(_isPositionXOut || _isPositionYOut)) {
               _randomizeDirection();
             }
           },
@@ -52,52 +96,34 @@ class Octopus extends BodyComponent  {
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
+  void runUpdate(double dt) {
+    _stateController?.runUpdate(dt);
+  }
+
+  void makeMovement(double dt)
+  {
     _tryReverseDirection();
-    body.linearVelocity+= _velocityDir * _speed * dt;
-    body.position.clamp(Vector2(sprite.width , sprite.height), Vector2(GameWorld.bounds.width - (sprite.width) ,  GameWorld.bounds.height - (sprite.height)));
+    position += _velocityDir * _speed * dt;
   }
 
   void _tryReverseDirection()
   {
     if(!_isReverse && (_isPositionXOut || _isPositionYOut))
-    {
-      _velocityDir*=-1;
-      _isReverse = true;
-    }
+      _reverseDirection();
     else if(_isReverse && !(_isPositionXOut || _isPositionYOut))
-    {
       _isReverse = false;
-    }
   }
 
-  bool get _isPositionXOut => body.position.x < sprite.width || body.position.x > GameWorld.bounds.width - (sprite.width);
-  bool get _isPositionYOut => body.position.y < sprite.height || body.position.y > GameWorld.bounds.height -(sprite.height);
-
-  bool get _isPositionXValidMove => body.position.x > GameWorld.bounds.width * 0.3 && body.position.x < GameWorld.bounds.width * 0.8;
-  bool get _isPositionYValidMove => body.position.y > GameWorld.bounds.height * 0.3 && body.position.y < GameWorld.bounds.height * 0.8;
-
-  @override
-  Body createBody() {
-    final bodyDef = BodyDef(
-      type: BodyType.dynamic,
-      userData: this,
-      position: pos,
-      gravityScale: Vector2.zero(),
-      linearDamping: 3,
-      fixedRotation: false,
-    );
-
-    final fixtureDef = FixtureDef(
-      PolygonShape()..setAsBoxXY(sprite.width * 0.5,sprite.height * 0.5),
-      isSensor: true,
-    );
-
-    final body = world.createBody(bodyDef);
-    body.createFixture(fixtureDef);
-    return body;
+  void _reverseDirection()
+  {
+    bool isRightSide = position.x > GameWorld.bounds.width * 0.5;
+    _velocityDir.x = isRightSide ? -1 : 1;
+    _velocityDir.y*=-1;
+    _isReverse = true;
   }
 
+
+  bool get _isPositionXOut => position.x < width * 0.5 || position.x > GameWorld.bounds.width - width * 0.5;
+  bool get _isPositionYOut => position.y < height * 0.5 || position.y > GameWorld.bounds.height - height  * 0.5;
 
 }

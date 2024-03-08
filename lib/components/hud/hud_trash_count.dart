@@ -11,8 +11,8 @@ import '../../scenes/game_scene.dart';
 
 class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
 {
-  final TrashType trashType;
-  final int totalTrash;
+  TrashType trashType;
+  int totalTrash;
   HudTrashCount({required this.trashType,required this.totalTrash, super.position});
 
   int _anyTrashCount = 0;
@@ -23,6 +23,7 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
         color: material.Colors.blue, fontSize: 20),
   );
 
+  late SpriteComponent _trashIcon;
   late TextComponent _txtCount;
 
   @override
@@ -35,16 +36,16 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
   Future<void> _loadDisplay() async {
     String trashPath = (trashType == TrashType.any) ? pathFishNet : trashPathMap[trashType]!;
     var sprite = Sprite(gameRef.images.fromCache(trashPath));
-    SpriteComponent trashIcon = SpriteComponent(
+    _trashIcon = SpriteComponent(
         sprite: sprite,
         anchor: Anchor.center
     );
 
-    await add(trashIcon);
+    await add(_trashIcon);
 
     _txtCount = TextComponent(
       text: '0/$totalTrash',
-      position: Vector2(trashIcon.position.x + 40,trashIcon.y),
+      position: Vector2(_trashIcon.position.x + 40,_trashIcon.y),
       textRenderer: _countPaint ,
       anchor: Anchor.center,
     );
@@ -65,6 +66,22 @@ class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
         },
       ),
     );
+  }
+
+  void setTrash(TrashType type,int total)
+  {
+    trashType = type;
+    totalTrash = total;
+
+    String trashPath = (trashType == TrashType.any) ? pathFishNet : trashPathMap[trashType]!;
+    var sprite = Sprite(gameRef.images.fromCache(trashPath));
+    _trashIcon.sprite = sprite;
+  }
+
+  void resetCount()
+  {
+    _anyTrashCount = 0;
+     _txtCount.text = '0/$totalTrash';
   }
 
   void _updateCountWithState(GameStatsState state)

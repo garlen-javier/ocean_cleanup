@@ -27,6 +27,9 @@ class Trash extends SpriteComponent with UpdateMixin,CollisionCallbacks,HasGameR
 
   @override
   void onMount() {
+    if(type == TrashType.any)
+      throw Exception("No available trash path for TrashType.any");
+
     sprite = Sprite(gameRef.images.fromCache(trashPathMap[type]!));
     anchor = Anchor.center;
     position = Vector2(_pos.x + width * 0.5,_pos.y - height * 0.5);

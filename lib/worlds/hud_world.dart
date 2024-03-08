@@ -8,6 +8,7 @@ import 'package:ocean_cleanup/bloc/game/game_barrel.dart';
 import 'package:ocean_cleanup/components/hud/hud_mobile_control.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../bloc/game_stats/game_stats_barrel.dart';
+import '../components/hud/hud_octopus_meter.dart';
 import '../components/hud/hud_pause_button.dart';
 import '../components/hud/hud_stats.dart';
 import '../components/hud/hud_timer.dart';
@@ -30,6 +31,10 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 
   late Vector2 _gameSize;
   late HudStats? _hudStats;
+
+  HudTimer? _hudTimer;
+  HudPauseButton? _pauseButton;
+  HudOctopusMeter? _octopusMeter;
   double remainingTime = 0;
 
   @override
@@ -42,18 +47,36 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
     await _showTimer();
     await _showGameStats();
     await _showPauseButton();
+    await _showOctopusMeter();
+    await _addBlocProvider();
     return super.onLoad();
   }
 
+  Future<void> _addBlocProvider() async {
+    await add(
+      FlameMultiBlocProvider(
+        providers: [
+          FlameBlocProvider<GameStatsBloc, GameStatsState>.value(
+            value: blocParameters.gameStatsBloc,
+          ),
+          FlameBlocProvider<GameBloc, GameState>.value(
+            value: blocParameters.gameBloc,
+          ),
+        ],
+        children: [
+          _hudStats!,
+          _pauseButton!,
+        ],
+      ),
+    );
+  }
+
   Future<void> _showTimer() async {
-    //TODO: testing
     LevelParameters params = gameManager.currentLevelParams;
-    double timeLimit = params.trashObjectives.elementAt(0).timeLimit;
+    double timeLimit = gameManager.currentTrashObjective.timeLimit;
     double? animalTimeLimit = params.trappedAnimals?.values.first.timeLimit;
-    //double timeLimit = 10;
-   // double? animalTimeLimit = 10;
-    await add(HudTimer(
-        timeLimit: timeLimit,
+    await add(_hudTimer = HudTimer(
+        initialLimit: timeLimit,
         position:Vector2(-20,-_gameSize.y * 0.3),
         remainingTime: (time,countdown) {
           remainingTime = time;
@@ -67,6 +90,17 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
           blocParameters.gameStatsBloc.timerFinish();
         }
     ));
+  }
+
+  void startNewTimeLimit(double timeLimit)
+  {
+     _hudTimer?.setTimeLimit(timeLimit);
+     _hudTimer?.start();
+  }
+
+  void startNewTrashGoal(TrashType type,int total)
+  {
+    _hudStats?.setNewTrashGoal(type, total);
   }
 
   Future<void> _showMobileControl() async {
@@ -84,28 +118,16 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 
   Future<void> _showGameStats() async {
     _hudStats = HudStats(
-        health: gameManager.health,
+        health: gameManager.initialHealth,
         trappedAnimals: gameManager.trappedAnimalsMap,
-        totalTrash: gameManager.currentLevelParams.trashObjectives.first.goal);
-
-    await add(
-      FlameMultiBlocProvider(
-        providers: [
-          FlameBlocProvider<GameStatsBloc, GameStatsState>.value(
-            value: blocParameters.gameStatsBloc,
-          ),
-        ],
-        children: [
-          _hudStats!,
-        ],
-      ),
-    );
+        trashType: gameManager.currentTrashObjective.trashType,
+        totalTrash: gameManager.currentTrashObjective.goal);
   }
 
   Future<void> _showPauseButton() async {
     SpriteComponent defaultSkin = SpriteComponent(sprite: Sprite(gameRef.images.fromCache(pathPauseButton),));
     SpriteComponent selectedSkin = SpriteComponent(sprite: Sprite(gameRef.images.fromCache(pathPlayButton),));
-    HudPauseButton pauseButton = HudPauseButton(
+    _pauseButton = HudPauseButton(
       defaultSkin:  defaultSkin,
       selectedSkin: selectedSkin,
       position: Vector2(_gameSize.x * 0.29 , -_gameSize.y * 0.28),
@@ -121,7 +143,30 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
           blocParameters.gameBloc.add(const GameResume());
         }
       },);
-    await add(pauseButton);
+  }
+
+  Future<void> _showOctopusMeter() async {
+    if(gameManager.currentLevelParams.levelType == LevelType.boss)
+    {
+      LevelParameters params = gameManager.currentLevelParams;
+      _octopusMeter = HudOctopusMeter(
+          stageIndex: gameManager.currentStageIndex,
+          totalStageNum: params.trashObjectives.length,
+          timeLimit: gameManager.currentTrashObjective.timeLimit,
+          position: Vector2(_gameSize.x * 0.27 , -_gameSize.y * 0.23));
+
+      await add(_octopusMeter!);
+    }
+  }
+
+  void updateOctopusMeterWithStage(int stageIndex,double limit)
+  {
+    _octopusMeter?.updateLimitWithStage(stageIndex, limit);
+  }
+
+  void updateOctopusMeterValue(double value)
+  {
+    _octopusMeter?.changeBarPercent(value);
   }
 
   @override
@@ -140,7 +185,9 @@ class HudWorld extends World with HasUpdateMixin,HasGameRef<GameScene>
 
   @override
   void onRemove() {
+    _hudTimer = null;
     _hudStats = null;
+    _pauseButton = null;
     super.onRemove();
   }
 

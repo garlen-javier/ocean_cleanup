@@ -11,7 +11,8 @@ abstract class GameEvent extends Equatable {
 class GameStart extends GameEvent {
 
   final int levelIndex;
-  const GameStart(this.levelIndex);
+  final int stageIndex;
+  const GameStart({required this.levelIndex,this.stageIndex = 0});
 
   @override
   List<Object?> get props => [];

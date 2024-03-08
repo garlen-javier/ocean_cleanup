@@ -22,10 +22,12 @@ class SaveUtils{
   static SaveUtils get instance => _instance;
 
   Box get _gameBox => Hive.box(hiveGameBoxKey);
+  bool _isLoaded = false;
 
   Future<void> loadData() async {
     await _loadHive();
     await _loadBoxes();
+    _isLoaded = true;
     debugPrint("Hive Loading Done!");
   }
 
@@ -47,16 +49,21 @@ class SaveUtils{
   ///Should save the level the would get unlock
   void saveUnlockLevel(int levelIndex)
   {
+    assertMessage();
     String key = hiveUnlockLevelKey;
     int lastIndex = _gameBox.get(key,defaultValue:0);
     if(levelIndex > lastIndex)
         _gameBox.put(key, levelIndex);
   }
 
-  int get getUnlockedLevel => _gameBox.get(hiveUnlockLevelKey,defaultValue:0);
+  int get getUnlockedLevel {
+    assertMessage();
+    return _gameBox.get(hiveUnlockLevelKey,defaultValue:0);
+  }
 
   void addFreeAnimal(AnimalType animal)
   {
+    assertMessage();
     String key = hiveFreedAnimalsKey;
     List<dynamic> animals = _gameBox.get(key,defaultValue:<dynamic>[]);
     if(!animals.contains(animal.index)) {
@@ -67,6 +74,7 @@ class SaveUtils{
 
   List<dynamic> getFreedAnimalIndex()
   {
+    assertMessage();
     String key = hiveFreedAnimalsKey;
     List<dynamic> list = _gameBox.get(key,defaultValue:<dynamic>[]);
     return list;
@@ -74,10 +82,14 @@ class SaveUtils{
 
   void clearGameBox()
   {
+    assertMessage();
     _gameBox.clear();
   }
 
-
+  void assertMessage()
+  {
+    assert(_isLoaded,"SaveUtils should be loaded first");
+  }
 
 
 

@@ -56,6 +56,7 @@ class LevelParameters
   final double playerSpeed;
   final double trashSpeed;
   final double animalTrashChance;
+  final double mainTrashChance;
   final double trashSpawnMin;
   final double trashSpawnMax;
   final int octopusCount;
@@ -67,6 +68,7 @@ class LevelParameters
     this.sharkConfig = const SharkConfig(),
     this.playerSpeed = 150,
     this.animalTrashChance = 0.6,
+    this.mainTrashChance = 0.3,
     this.trashSpeed = 0.5,
     this.trashSpawnMin = 1,
     this.trashSpawnMax = 15,

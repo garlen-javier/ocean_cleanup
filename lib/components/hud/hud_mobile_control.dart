@@ -36,6 +36,7 @@ class HudMobileControl extends PositionComponent with HasGameRef<GameScene>,Upda
     Sprite joyStickKnob = Sprite(knob);
     Sprite joyStickBase = Sprite(base);
 
+    //Note: there's a current bug in flame where removing the joystick while holding the knob could cause crash.
     PositionComponent component = PositionComponent();
     _joystick = JoystickComponent(
       knob: SpriteComponent(
@@ -67,9 +68,15 @@ class HudMobileControl extends PositionComponent with HasGameRef<GameScene>,Upda
 
   @override
   void runUpdate(double dt) {
-    if(_joystick != null)
-      playerController?.handleJoystickMovement(_joystick!.relativeDelta,_joystick!.delta.screenAngle());
+    if(_joystick != null) {
+        playerController?.handleJoystickMovement(_joystick!.relativeDelta, _joystick!.delta.screenAngle());
+    }
   }
 
+  @override
+  void onRemove() {
+    _joystick = null;
+    super.onRemove();
+  }
 
 }
