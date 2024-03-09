@@ -1,115 +1,205 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
+import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
+import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
-void showVictoryPopup(BuildContext context) {
+void showVictoryPopup(BuildContext context, int level, int score) {
   showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (BuildContext context) {
       return Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(50),
+          side: const BorderSide(color: Colors.yellow, width: 5),
         ),
-        child: Container(
-          width: SizeConfig.screenWidth / 3,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            color: Colors.white,
-          ),
+        backgroundColor: const Color.fromARGB(255, 181, 188, 239),
+        child: SizedBox(
+          width: SizeConfig.screenWidth / 2,
           child: Stack(
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Image.asset(
-                    'assets/images/victory.png',
-                    width: SizeConfig.screenWidth / 2,
-                  ),
-                  const SizedBox(height: 30.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.star_rate_rounded,
+                            color: Colors.yellow, size: 50.0),
+                        Icon(Icons.star_rate_rounded,
+                            color: Colors.yellow, size: 80.0),
+                        Icon(Icons.star_rate_rounded,
+                            color: Colors.yellow, size: 50.0),
+                      ],
+                    ),
+                    Text(
+                      "COMPLETED !",
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: SizeConfig.mediumText1,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "wendyOne",
+                      ),
+                    ),
+                    Container(
+                      width: SizeConfig.screenWidth / 2.5,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: const Color(0xFF6874ca),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Target: ",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.smallText1,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "wendyOne",
+                                  ),
+                                ),
+                                Container(
+                                  color: Colors.white,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.check,
+                                      color: Colors.green,
+                                      size: SizeConfig.mediumText1,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Score: ",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.smallText1,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "wendyOne",
+                                  ),
+                                ),
+                                Text(
+                                  score.toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.smallText1,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "wendyOne",
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.screenWidth / 2.5,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Image.asset(
-                            'assets/images/requin.png',
-                            width: 40.0,
-                            height: 50.0,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => GameViewScreen(
+                                    levelIndex: level,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.refresh_rounded,
+                                      color: Colors.white,
+                                      size: SizeConfig.largeText1 + 10,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  "Retry",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.smallText1,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "wendyOne",
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(
-                            '5 animals',
-                            style: TextStyle(
-                              fontSize: SizeConfig.smallText1,
-                              color: Colors.black,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LevelsScreen(),
+                                ),
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.arrow_right_alt_rounded,
+                                      color: Colors.white,
+                                      size: SizeConfig.largeText1 + 10,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  "Next",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: SizeConfig.smallText1,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "wendyOne",
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/plastic.png',
-                            width: 40.0,
-                            height: 50.0,
-                          ),
-                          Text(
-                            '25 plastic',
-                            style: TextStyle(
-                              fontSize: SizeConfig.smallText1,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 30.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.blue),
-                        ),
-                        child: Text(
-                          'Home',
-                          style: TextStyle(
-                            fontSize: SizeConfig.smallText1,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.green),
-                        ),
-                        child: Text(
-                          'Next',
-                          style: TextStyle(
-                            fontSize: SizeConfig.smallText1,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
               Lottie.asset(
                 'assets/animations/confetti.json',

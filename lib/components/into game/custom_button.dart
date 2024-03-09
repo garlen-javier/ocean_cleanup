@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
-class StartButton extends StatelessWidget {
+class CustomButton extends StatelessWidget {
+  final String text;
   final void Function() onTap;
-  const StartButton({super.key, required this.onTap});
+  const CustomButton({super.key, required this.onTap, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +12,7 @@ class StartButton extends StatelessWidget {
       width: SizeConfig.screenWidth / 2.5,
       height: 50,
       decoration: BoxDecoration(
-        color: const Color(0xFF0097B2),
+        color: const Color(0xFF6874ca),
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
@@ -26,13 +27,14 @@ class StartButton extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(25),
           onTap: onTap,
-          child: const Center(
+          child: Center(
             child: Text(
-              'Play Game',
+              text,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 16,
+                fontSize: SizeConfig.smallText1,
                 fontWeight: FontWeight.bold,
+                fontFamily: 'wendyOne',
               ),
             ),
           ),

@@ -1,127 +1,175 @@
+import 'package:expandable_menu/expandable_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
-import 'package:ocean_cleanup/components/levels/level_item.dart';
+import 'package:ocean_cleanup/bloc/game_stats/sound_state.dart';
+import 'package:ocean_cleanup/components/popups/account_popup.dart';
+import 'package:ocean_cleanup/components/popups/start_popup.dart';
 import 'package:ocean_cleanup/screens/leaderboard/leaderboard_screen.dart';
+import 'package:ocean_cleanup/utils/config_size.dart';
+import 'package:ocean_cleanup/utils/save_utils.dart';
 
 class LevelsScreen extends StatefulWidget {
-  final String username;
-  const LevelsScreen({super.key, required this.username});
+  const LevelsScreen({super.key});
 
   @override
   State<LevelsScreen> createState() => _LevelsScreenState();
 }
 
 class _LevelsScreenState extends State<LevelsScreen> {
-  final List<String> time = ["1.5", "2", "2.5", "3"];
-  final List<String> trash = ["0", "8", "10", "15"];
-  final List<Color> colorprimary = [
-    Colors.yellow,
-    Colors.blue,
-    Colors.green,
-    Colors.red
-  ];
-  final List<Color> colorSecondary = [
-    Colors.orange,
-    Colors.cyan,
-    Colors.teal,
-    Colors.pink
-  ];
-
   @override
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'Levels',
-          style: TextStyle(fontWeight: FontWeight.bold),
+    final SoundStateBloc bloc = SoundStateBloc();
+    print('Level : ${SaveUtils.instance.getUnlockedLevel}');
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/background.png"),
+          fit: BoxFit.cover,
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          widget.username != ''
-              ? Text(
-                  widget.username,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                )
-              : SizedBox(),
-          widget.username != ''
-              ? IconButton(
-                  icon: const Icon(Icons.logout, color: Colors.red),
-                  onPressed: () {
-                    authBloc.signOut(context);
-
-                    Navigator.of(context).pop();
-                    setState(() {});
-                  },
-                )
-              : SizedBox(),
-        ],
       ),
-      body: Stack(
-        children: [
-          const Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/background.png'),
-                  fit: BoxFit.cover,
-                ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        floatingActionButton: FloatingActionButton.large(
+          elevation: 0,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LeaderboardScreen(),
               ),
+            );
+          },
+          backgroundColor: Colors.transparent,
+          child: Lottie.asset(
+            "assets/animations/leaderboard.json",
+            repeat: false,
+          ),
+        ),
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: const Text(
+            'Select Level',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.orange,
+              fontSize: 30,
+              fontFamily: 'wendyOne',
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const LeaderboardScreen(),
-                ),
-              );
-            },
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Lottie.asset(
-                "assets/animations/leaderboard.json",
-                repeat: false,
-                height: 100,
-                width: 100,
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                double screenWidth = constraints.maxWidth;
-                double screenHeight = constraints.maxHeight;
-                double cardWidth = screenWidth * 0.4;
-                double cardHeight = screenHeight * 0.2;
-
-                return GridView.count(
-                  crossAxisCount: 2,
-                  childAspectRatio: cardWidth / cardHeight,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                  padding: const EdgeInsets.all(10.0),
-                  shrinkWrap: true,
-                  children: List.generate(
-                    4,
-                    (index) => LevelCard(
-                      index + 1,
-                      time[index],
-                      trash[index],
-                      [colorprimary[index], colorSecondary[index]],
+          foregroundColor: const Color(0xFF6874ca),
+          actions: [
+            SizedBox(
+              height: double.infinity,
+              width: SizeConfig.screenWidth / 4,
+              child: ExpandableMenu(
+                backgroundColor: Colors.transparent,
+                height: 70,
+                width: 70,
+                iconColor: const Color(0xFF6874ca),
+                itemContainerColor: Colors.transparent,
+                items: [
+                  IconButton(
+                    onPressed: () => showAccount(
+                      context,
+                      authBloc.isLoggedIn,
+                    ),
+                    icon: const Icon(
+                      Icons.person_2_rounded,
+                      color: Color(0xFF6874ca),
+                      size: 30,
                     ),
                   ),
-                );
-              },
+                  StreamBuilder<bool>(
+                      stream: bloc.soundState,
+                      initialData: bloc.isSoundOn,
+                      builder: (context, snapshot) {
+                        return GestureDetector(
+                          onTap: () {
+                            bloc.toggleSound();
+                          },
+                          child: Image.asset(
+                            snapshot.data!
+                                ? 'assets/images/Sound_On1x.png'
+                                : 'assets/images/Sound_Off1x.png',
+                            width: 50,
+                          ),
+                        );
+                      })
+                ],
+              ),
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Center(
+            child: SizedBox(
+              width: SizeConfig.screenWidth / 1.5,
+              height: SizeConfig.screenHeight / 1.3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(3, (index) {
+                      if (index <= SaveUtils.instance.getUnlockedLevel) {
+                        return GestureDetector(
+                            child: Image.asset(
+                                'assets/images/levels/Level${index + 1}.png'),
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return StartPopup(
+                                    levelIndex: index + 1,
+                                  );
+                                },
+                              );
+                            });
+                      } else {
+                        return Image.asset(
+                            'assets/images/levels/Unlocked_Level.png');
+                      }
+                    }),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(
+                      2,
+                      (index) {
+                        if (index + 3 <= SaveUtils.instance.getUnlockedLevel) {
+                          return GestureDetector(
+                            child: Image.asset(
+                                'assets/images/levels/Level${index + 4}.png'),
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return StartPopup(
+                                    levelIndex: index + 4,
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        } else {
+                          return Image.asset(
+                              'assets/images/levels/Unlocked_Level.png');
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

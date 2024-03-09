@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -8,6 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const String hiveGameBoxKey = "hiveGameBoxKey";
 
@@ -15,8 +14,7 @@ const String hiveGameBoxKey = "hiveGameBoxKey";
 const String hiveFreedAnimalsKey = "hiveFreedAnimalsKey";
 const String hiveUnlockLevelKey = "hiveUnlockLevelKey";
 
-class SaveUtils{
-
+class SaveUtils {
   static final SaveUtils _instance = SaveUtils.constructor();
   SaveUtils.constructor();
   static SaveUtils get instance => _instance;
@@ -32,12 +30,11 @@ class SaveUtils{
   }
 
   Future<void> _loadHive() async {
-    if(Utils.isMobile) {
+    if (Utils.isMobile) {
       Directory appDir = await getApplicationDocumentsDirectory();
       String appPath = appDir.path;
       Hive.init(appPath);
-    }
-    else{
+    } else {
       Hive.initFlutter();
     }
   }
@@ -51,9 +48,8 @@ class SaveUtils{
   {
     assertMessage();
     String key = hiveUnlockLevelKey;
-    int lastIndex = _gameBox.get(key,defaultValue:0);
-    if(levelIndex > lastIndex)
-        _gameBox.put(key, levelIndex);
+    int lastIndex = _gameBox.get(key, defaultValue: 0);
+    if (levelIndex > lastIndex) _gameBox.put(key, levelIndex);
   }
 
   int get getUnlockedLevel {
@@ -65,8 +61,8 @@ class SaveUtils{
   {
     assertMessage();
     String key = hiveFreedAnimalsKey;
-    List<dynamic> animals = _gameBox.get(key,defaultValue:<dynamic>[]);
-    if(!animals.contains(animal.index)) {
+    List<dynamic> animals = _gameBox.get(key, defaultValue: <dynamic>[]);
+    if (!animals.contains(animal.index)) {
       animals.add(animal.index);
       _gameBox.put(key, animals);
     }
@@ -76,7 +72,7 @@ class SaveUtils{
   {
     assertMessage();
     String key = hiveFreedAnimalsKey;
-    List<dynamic> list = _gameBox.get(key,defaultValue:<dynamic>[]);
+    List<dynamic> list = _gameBox.get(key, defaultValue: <dynamic>[]);
     return list;
   }
 
@@ -91,7 +87,17 @@ class SaveUtils{
     assert(_isLoaded,"SaveUtils should be loaded first");
   }
 
+  void saveTutorialStatus(String tuto , bool status) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(tuto, status);
+  }
 
-
-
+  Future<bool> getTutorialStatus(String tuto) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(tuto) ?? false;
+  }
 }
+
+
+
+

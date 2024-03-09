@@ -29,7 +29,8 @@ class _LeaderboardState extends State<LeaderboardScreen> {
     var scores = List.from(data.docs.map((doc) => doc['score']));
 
     for (var i = 0; i < names.length; i++) {
-      users.add(UserModel(username: names[i], score: scores[i]));
+      users.add(
+          UserModel(username: names[i], score: scores[i], id: data.docs[i].id));
     }
 
     inspect(users);
@@ -41,7 +42,7 @@ class _LeaderboardState extends State<LeaderboardScreen> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/images/leaderboard_bg.png"),
+          image: AssetImage("assets/images/background.png"),
           fit: BoxFit.fill,
         ),
       ),
@@ -50,7 +51,17 @@ class _LeaderboardState extends State<LeaderboardScreen> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          foregroundColor: Colors.white,
+          centerTitle: true,
+          title: const Text(
+            'Leaderboard',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.orange,
+              fontSize: 30,
+              fontFamily: 'wendyOne',
+            ),
+          ),
+          foregroundColor: const Color(0xFF6874ca),
         ),
         body: FutureBuilder<List<UserModel>>(
             future: getListUser(),
