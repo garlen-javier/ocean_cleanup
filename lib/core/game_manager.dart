@@ -78,7 +78,7 @@ class GameManager extends Component
         },
         onNewState: (state)  {
           _gamePhase = state.phase;
-          debugPrint("GameBloc Listener: $state");
+          debugPrint("GameManager GameBloc Listener: $state");
           switch(state.phase)
           {
             case GamePhase.start:
