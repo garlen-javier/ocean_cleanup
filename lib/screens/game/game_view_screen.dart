@@ -68,7 +68,7 @@ class _GameViewScreenState extends State<GameViewScreen> {
       listener: (BuildContext context, GameStatsState state) {
         if(state.freedAnimal != null && !state.rescueFailed)
         {
-          _gameBloc.add(const GameSuspend());
+          //_gameBloc.add(const GameSuspend());
           debugPrint("GameViewScreen freedAnimal: ${state.freedAnimal}");
           //TODO: an Animal is free
           //call _gameBloc.add(const GameResume()); to unsuspend
