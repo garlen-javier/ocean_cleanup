@@ -92,7 +92,7 @@ class GameManager extends Component
               _currentLevel?.playerController?.enable = true;
               _currentLevel?.resumeTrashSpawn();
               break;
-            case GamePhase.pause:
+            case GamePhase.pause || GamePhase.suspended:
               if(FlameAudio.bgm.audioPlayer.state == PlayerState.playing)
                 FlameAudio.bgm.pause();
               _currentLevel?.playerController?.enable = false;

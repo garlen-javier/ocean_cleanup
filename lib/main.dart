@@ -3,6 +3,9 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flame/flame.dart';
+import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
+import 'package:ocean_cleanup/screens/leaderboard/leaderboard_screen.dart';
+import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/save_utils.dart';
 import 'bloc/game/game_bloc.dart';
 import 'bloc/game_stats/game_stats_bloc.dart';
@@ -16,7 +19,6 @@ import 'screens/level_tester.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -45,9 +47,14 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthBloc(),
         ),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: IntroGameScreen(),
+        initialRoute: "/home",
+        routes: {
+          "/home": (context) => const IntroGameScreen(),
+          "/levels": (context) => const LevelsScreen(),
+          "/leaderboard": (context) => const LeaderboardScreen(),
+        },
       ),
     );
   }

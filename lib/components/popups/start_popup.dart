@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/popups/tutorials/intoduction_two_popup.dart';
 import 'package:ocean_cleanup/levels/levels.dart';
 import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
+import 'package:ocean_cleanup/screens/intro%20game/intro_game_screen.dart';
+import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 import 'package:ocean_cleanup/utils/save_utils.dart';
 
@@ -271,7 +273,6 @@ class _StartPopupState extends State<StartPopup> {
                             MaterialStateProperty.all(Colors.orange),
                       ),
                       onPressed: () async {
-                        Navigator.of(context).pop();
                         bool tuto2 =
                             await SaveUtils.instance.getTutorialStatus("tuto2");
                         if (!tuto2) {
@@ -282,13 +283,12 @@ class _StartPopupState extends State<StartPopup> {
                           SaveUtils.instance.saveTutorialStatus("tuto2", true);
                         } else {
                           if (mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => GameViewScreen(
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(builder: (BuildContext context) => GameViewScreen(
                                   levelIndex: widget.levelIndex - 1,
-                                ),
-                              ),
+                                )),
+                                ModalRoute.withName('/home')
                             );
                           }
                         }

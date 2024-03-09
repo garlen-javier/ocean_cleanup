@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_bloc/flame_bloc.dart';
@@ -164,11 +165,9 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   @override
   void onDispose() async {
-     blocParameters.gameBloc.close();
-     blocParameters.gameStatsBloc.close();
-     FlameAudio.bgm.dispose();
+     FlameAudio.bgm.stop();
      //FlameAudio.audioCache.clearAll();
-     //Flame.images.clearCache();
+    // Flame.images.clearCache();
     // Flame.assets.clearCache();
    //  await FlameAudio.audioCache.clearAll();
     //TiledAtlas.clearCache();

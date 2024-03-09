@@ -12,6 +12,7 @@ enum GamePhase{
   gameOver,
   win,
   quit,
+  suspended,
   error,
 }
 

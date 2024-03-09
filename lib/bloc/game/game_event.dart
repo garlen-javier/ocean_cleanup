@@ -46,6 +46,14 @@ class GameResume extends GameEvent {
   List<Object?> get props => [];
 }
 
+///Call this if you need to suspend the state of the game instead of just pausing it.
+class GameSuspend extends GameEvent {
+  const GameSuspend();
+
+  @override
+  List<Object?> get props => [];
+}
+
 abstract class GameFinish extends GameEvent {
   final GameResult result;
   const GameFinish(this.result);

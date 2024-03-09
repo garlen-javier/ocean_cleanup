@@ -31,6 +31,13 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       },
     );
 
+    on<GameSuspend>(
+          (event, emit) {
+        if(state.phase == GamePhase.playing)
+          emit(state.copyWith(phase:GamePhase.suspended));
+      },
+    );
+
     on<GamePause>(
           (event, emit) {
             if(state.phase == GamePhase.playing)
@@ -40,7 +47,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
     on<GameResume>(
           (event, emit) {
-            if(state.phase == GamePhase.pause)
+            if(state.phase == GamePhase.pause || state.phase == GamePhase.suspended)
               emit(state.copyWith(phase: GamePhase.playing));
       },
     );
