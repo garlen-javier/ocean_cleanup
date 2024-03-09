@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
+import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
-void showGameOverPopup(BuildContext context) {
+void showGameOverPopup(BuildContext context, int level, int score) {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -88,7 +90,7 @@ void showGameOverPopup(BuildContext context) {
                               ),
                             ),
                             Text(
-                              "25",
+                              score.toString(),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: SizeConfig.smallText1,
@@ -110,63 +112,85 @@ void showGameOverPopup(BuildContext context) {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        children: [
-                          Container(
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.green,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LevelsScreen(),
                             ),
-                            child: Center(
-                              child: Icon(
-                                Icons.arrow_back_rounded,
-                                color: Colors.white,
-                                size: SizeConfig.largeText1 + 10,
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.green,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.arrow_back_rounded,
+                                  color: Colors.white,
+                                  size: SizeConfig.largeText1 + 10,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Back",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: SizeConfig.smallText1,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "wendyOne",
+                            const SizedBox(
+                              height: 5,
                             ),
-                          ),
-                        ],
+                            Text(
+                              "Back",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: SizeConfig.smallText1,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "wendyOne",
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      Column(
-                        children: [
-                          Container(
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.green,
-                            ),
-                            child: Center(
-                              child: Icon(
-                                Icons.refresh_rounded,
-                                color: Colors.white,
-                                size: SizeConfig.largeText1 + 10,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GameViewScreen(
+                                levelIndex: level,
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Restart",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: SizeConfig.smallText1,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "wendyOne",
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.green,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.refresh_rounded,
+                                  color: Colors.white,
+                                  size: SizeConfig.largeText1 + 10,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "Restart",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: SizeConfig.smallText1,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "wendyOne",
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

@@ -1,5 +1,11 @@
+import 'package:expandable_menu/expandable_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
+import 'package:ocean_cleanup/bloc/game_stats/sound_state.dart';
+import 'package:ocean_cleanup/components/popups/account_popup.dart';
 import 'package:ocean_cleanup/components/popups/start_popup.dart';
 import 'package:ocean_cleanup/screens/leaderboard/leaderboard_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
@@ -15,6 +21,8 @@ class LevelsScreen extends StatefulWidget {
 class _LevelsScreenState extends State<LevelsScreen> {
   @override
   Widget build(BuildContext context) {
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    final SoundStateBloc bloc = SoundStateBloc();
     print('Level : ${SaveUtils.instance.getUnlockedLevel}');
     return Container(
       decoration: const BoxDecoration(
@@ -25,6 +33,22 @@ class _LevelsScreenState extends State<LevelsScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        floatingActionButton: FloatingActionButton.large(
+          elevation: 0,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LeaderboardScreen(),
+              ),
+            );
+          },
+          backgroundColor: Colors.transparent,
+          child: Lottie.asset(
+            "assets/animations/leaderboard.json",
+            repeat: false,
+          ),
+        ),
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Colors.transparent,
@@ -40,19 +64,45 @@ class _LevelsScreenState extends State<LevelsScreen> {
           ),
           foregroundColor: const Color(0xFF6874ca),
           actions: [
-            GestureDetector(
-              child: Lottie.asset(
-                "assets/animations/leaderboard.json",
-                repeat: false,
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LeaderboardScreen(),
+            SizedBox(
+              height: double.infinity,
+              width: SizeConfig.screenWidth / 4,
+              child: ExpandableMenu(
+                backgroundColor: Colors.transparent,
+                height: 70,
+                width: 70,
+                iconColor: const Color(0xFF6874ca),
+                itemContainerColor: Colors.transparent,
+                items: [
+                  IconButton(
+                    onPressed: () => showAccount(
+                      context,
+                      authBloc.isLoggedIn,
+                    ),
+                    icon: const Icon(
+                      Icons.person_2_rounded,
+                      color: Color(0xFF6874ca),
+                      size: 30,
+                    ),
                   ),
-                );
-              },
+                  StreamBuilder<bool>(
+                      stream: bloc.soundState,
+                      initialData: bloc.isSoundOn,
+                      builder: (context, snapshot) {
+                        return GestureDetector(
+                          onTap: () {
+                            bloc.toggleSound();
+                          },
+                          child: Image.asset(
+                            snapshot.data!
+                                ? 'assets/images/Sound_On1x.png'
+                                : 'assets/images/Sound_Off1x.png',
+                            width: 50,
+                          ),
+                        );
+                      })
+                ],
+              ),
             ),
           ],
         ),
@@ -68,7 +118,6 @@ class _LevelsScreenState extends State<LevelsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: List.generate(3, (index) {
-                      
                       if (index <= SaveUtils.instance.getUnlockedLevel) {
                         return GestureDetector(
                             child: Image.asset(

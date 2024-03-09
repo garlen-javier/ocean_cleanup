@@ -40,6 +40,7 @@ Expanded firstPlayer(UserModel user) {
                         fontSize: 20,
                         color: Color(0xffF99D26),
                         fontWeight: FontWeight.bold,
+                        fontFamily: "wendyOne",
                       ),
                     ),
                   ),
@@ -51,17 +52,19 @@ Expanded firstPlayer(UserModel user) {
         Text(
           user.username,
           style: const TextStyle(
-            color: Color(0xffE8E8E8),
+            color: Colors.black,
             fontWeight: FontWeight.w700,
             fontSize: 20,
+            fontFamily: "wendyOne",
           ),
         ),
         Text(
           user.score.toString(),
           style: const TextStyle(
-            color: Color(0xffE8E8E8),
+            color:  Colors.black,
             fontWeight: FontWeight.w700,
             fontSize: 20,
+            fontFamily: "wendyOne",
           ),
         ),
       ],

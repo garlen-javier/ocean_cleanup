@@ -116,4 +116,12 @@ class AuthBloc extends Cubit<AuthState> {
     }
     return null;
   }
+
+  Future<void> updateScore(int score) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? id = prefs.getString('id');
+    if (id != null) {
+      await _firestore.collection('users').doc(id).update({'score': score});
+    }
+  }
 }

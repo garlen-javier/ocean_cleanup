@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
 import 'package:ocean_cleanup/components/auth/custom_text_field.dart';
 import 'package:ocean_cleanup/components/auth/error_dialog.dart';
+import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
 void showAuth(
@@ -48,7 +49,14 @@ void showAuth(
                     ),
                   );
                 } else if (state.status == AuthStatus.success) {
-                  Navigator.popUntil(context, ModalRoute.withName('/'));
+                  Navigator.pop(context);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LevelsScreen(),
+                    ),
+                    (route) => false,
+                  );
                 } else if (state.status == AuthStatus.failure) {
                   Navigator.of(context).pop();
                   showErrorDialog(context, state.error ?? 'Unknown error');

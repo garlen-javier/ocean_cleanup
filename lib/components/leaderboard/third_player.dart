@@ -39,6 +39,7 @@ Column thirdPlayer(UserModel user) {
                       fontSize: 20,
                       color: Color(0xff8B5731),
                       fontWeight: FontWeight.bold,
+                      fontFamily: "wendyOne",
                     ),
                   ),
                 ),
@@ -50,17 +51,19 @@ Column thirdPlayer(UserModel user) {
       Text(
         user.username,
         style: const TextStyle(
-          color: Color(0xffE8E8E8),
+          color: Colors.black,
           fontWeight: FontWeight.w700,
           fontSize: 20,
+          fontFamily: "wendyOne",
         ),
       ),
       Text(
         user.score.toString(),
         style: const TextStyle(
-          color: Color(0xffE8E8E8),
+          color: Colors.black,
           fontWeight: FontWeight.w700,
           fontSize: 20,
+          fontFamily: "wendyOne",
         ),
       ),
     ],

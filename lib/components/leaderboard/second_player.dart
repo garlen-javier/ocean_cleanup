@@ -36,9 +36,11 @@ Column secondPlayer(UserModel user) {
                   child: Text(
                     "2",
                     style: TextStyle(
-                        fontSize: 20,
-                        color: Color(0xffB3BAC3),
-                        fontWeight: FontWeight.bold),
+                      fontSize: 20,
+                      color: Color(0xffB3BAC3),
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "wendyOne",
+                    ),
                   ),
                 ),
               ),
@@ -49,17 +51,19 @@ Column secondPlayer(UserModel user) {
       Text(
         user.username,
         style: const TextStyle(
-          color: Color(0xffE8E8E8),
+          color: Colors.black,
           fontWeight: FontWeight.w700,
           fontSize: 20,
+          fontFamily: "wendyOne",
         ),
       ),
       Text(
         user.score.toString(),
         style: const TextStyle(
-          color: Color(0xffE8E8E8),
+          color: Colors.black,
           fontWeight: FontWeight.w700,
           fontSize: 20,
+          fontFamily: "wendyOne",
         ),
       ),
     ],
