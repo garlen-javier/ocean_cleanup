@@ -42,9 +42,9 @@ class Octopus extends SpriteAnimationGroupComponent with UpdateMixin, HasGameRef
         srcSize: Vector2(image.size.x/4,image.size.y/3)
     );
 
-    final normal = spritesheet.createAnimation(row:0,stepTime: 0.25);
-    final transform = spritesheet.createAnimation(row:1,stepTime: 0.25,loop: false);
-    final angry = spritesheet.createAnimation(row:2,stepTime: 0.25);
+    final angry = spritesheet.createAnimation(row:0,stepTime: 0.25);
+    final normal = spritesheet.createAnimation(row:1,stepTime: 0.25);
+    final transform = spritesheet.createAnimation(row:2,stepTime: 0.25,loop: false);
 
     animations = {
       OctopusAnimationState.normal: normal,
