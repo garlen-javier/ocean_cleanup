@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
 import 'package:ocean_cleanup/bloc/game_stats/sound_state.dart';
 import 'package:ocean_cleanup/components/popups/account_popup.dart';
+import 'package:ocean_cleanup/components/popups/gameover_popup.dart';
 import 'package:ocean_cleanup/components/popups/tutorials/introduction_one_popup.dart';
+import 'package:ocean_cleanup/components/popups/victory_popup.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 import 'package:ocean_cleanup/utils/save_utils.dart';
@@ -100,7 +102,6 @@ class _IntroGameScreenState extends State<IntroGameScreen> {
                     if (!tuto1) {
                       Future.delayed(const Duration(seconds: 1), () {
                         showIntroOnePopup(context);
-                        
                       });
                     }
                   },
