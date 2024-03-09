@@ -68,7 +68,8 @@ class _LevelsScreenState extends State<LevelsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: List.generate(3, (index) {
-                      if (index + 1 <= SaveUtils.instance.getUnlockedLevel) {
+                      
+                      if (index <= SaveUtils.instance.getUnlockedLevel) {
                         return GestureDetector(
                             child: Image.asset(
                                 'assets/images/levels/Level${index + 1}.png'),
@@ -93,7 +94,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
                     children: List.generate(
                       2,
                       (index) {
-                        if (index + 4 <= SaveUtils.instance.getUnlockedLevel) {
+                        if (index + 3 <= SaveUtils.instance.getUnlockedLevel) {
                           return GestureDetector(
                             child: Image.asset(
                                 'assets/images/levels/Level${index + 4}.png'),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
+import 'package:ocean_cleanup/utils/save_utils.dart';
 
 void showIntroOnePopup(BuildContext context) {
   showDialog(
@@ -46,7 +47,7 @@ void showIntroOnePopup(BuildContext context) {
                       ),
                       const Spacer(),
                       Image.asset(
-                        'assets/images/tutorials/introduction.png',
+                        'assets/images/tutorials/Instructions title.png',
                         width: SizeConfig.screenWidth / 2.5,
                       ),
                       const Spacer(),
@@ -126,9 +127,12 @@ void showIntroOnePopup(BuildContext context) {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    SaveUtils.instance.saveTutorialStatus("tuto1", true);
+                  } ,
                   child: Image.asset(
-                    'assets/images/tutorials/ready.png',
+                    'assets/images/tutorials/Ready button.png',
                     width: SizeConfig.screenWidth / 2.5,
                   ),
                 )

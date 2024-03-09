@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:ocean_cleanup/components/popups/tutorials/intoduction_two_popup.dart';
 import 'package:ocean_cleanup/levels/levels.dart';
 import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
+import 'package:ocean_cleanup/utils/save_utils.dart';
 
-class StartPopup extends StatelessWidget {
+class StartPopup extends StatefulWidget {
   final int levelIndex;
   const StartPopup({super.key, required this.levelIndex});
 
+  @override
+  State<StartPopup> createState() => _StartPopupState();
+}
+
+class _StartPopupState extends State<StartPopup> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -23,7 +30,7 @@ class StartPopup extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Level $levelIndex',
+                'Level ${widget.levelIndex}',
                 style: TextStyle(
                   fontSize: SizeConfig.mediumText1,
                   color: Colors.orange,
@@ -52,7 +59,7 @@ class StartPopup extends StatelessWidget {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        Levels.instance.params[levelIndex - 1]
+                        Levels.instance.params[widget.levelIndex - 1]
                             .trashObjectives[0].goal
                             .toString(),
                         style: TextStyle(
@@ -73,7 +80,7 @@ class StartPopup extends StatelessWidget {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        Levels.instance.params[levelIndex - 1]
+                        Levels.instance.params[widget.levelIndex - 1]
                             .trashObjectives[0].timeLimit
                             .toString(),
                         style: TextStyle(
@@ -87,10 +94,10 @@ class StartPopup extends StatelessWidget {
                   ),
                 ],
               ),
-              Levels.instance.params[levelIndex - 1].trappedAnimals
+              Levels.instance.params[widget.levelIndex - 1].trappedAnimals
                           ?.isNotEmpty ??
                       false
-                  ? levelIndex  != 4
+                  ? widget.levelIndex != 4
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -107,7 +114,7 @@ class StartPopup extends StatelessWidget {
                             Image.asset(
                               Levels
                                           .instance
-                                          .params[levelIndex - 1]
+                                          .params[widget.levelIndex - 1]
                                           .trappedAnimals!
                                           .entries
                                           .first
@@ -117,7 +124,7 @@ class StartPopup extends StatelessWidget {
                                   ? "assets/images/Sad_Turtle_01_1.png"
                                   : Levels
                                               .instance
-                                              .params[levelIndex - 1]
+                                              .params[widget.levelIndex - 1]
                                               .trappedAnimals!
                                               .entries
                                               .first
@@ -127,7 +134,7 @@ class StartPopup extends StatelessWidget {
                                       ? "assets/images/Sad_Crab_01_6.png"
                                       : Levels
                                                   .instance
-                                                  .params[levelIndex - 1]
+                                                  .params[widget.levelIndex - 1]
                                                   .trappedAnimals!
                                                   .entries
                                                   .first
@@ -157,7 +164,7 @@ class StartPopup extends StatelessWidget {
                             Image.asset(
                               Levels
                                           .instance
-                                          .params[levelIndex - 1]
+                                          .params[widget.levelIndex - 1]
                                           .trappedAnimals!
                                           .entries
                                           .first
@@ -167,7 +174,7 @@ class StartPopup extends StatelessWidget {
                                   ? "assets/images/Sad_Turtle_01_1.png"
                                   : Levels
                                               .instance
-                                              .params[levelIndex - 1]
+                                              .params[widget.levelIndex - 1]
                                               .trappedAnimals!
                                               .entries
                                               .first
@@ -177,7 +184,7 @@ class StartPopup extends StatelessWidget {
                                       ? "assets/images/Sad_Crab_01_6.png"
                                       : Levels
                                                   .instance
-                                                  .params[levelIndex - 1]
+                                                  .params[widget.levelIndex - 1]
                                                   .trappedAnimals!
                                                   .entries
                                                   .first
@@ -189,7 +196,7 @@ class StartPopup extends StatelessWidget {
                               width: 50,
                               height: 50,
                             ),
-                             Text(
+                            Text(
                               "and",
                               style: TextStyle(
                                 fontSize: SizeConfig.mediumText1,
@@ -201,7 +208,7 @@ class StartPopup extends StatelessWidget {
                             Image.asset(
                               Levels
                                           .instance
-                                          .params[levelIndex - 1]
+                                          .params[widget.levelIndex - 1]
                                           .trappedAnimals!
                                           .entries
                                           .last
@@ -211,7 +218,7 @@ class StartPopup extends StatelessWidget {
                                   ? "assets/images/Sad_Turtle_01_1.png"
                                   : Levels
                                               .instance
-                                              .params[levelIndex - 1]
+                                              .params[widget.levelIndex - 1]
                                               .trappedAnimals!
                                               .entries
                                               .last
@@ -221,7 +228,7 @@ class StartPopup extends StatelessWidget {
                                       ? "assets/images/Sad_Crab_01_6.png"
                                       : Levels
                                                   .instance
-                                                  .params[levelIndex - 1]
+                                                  .params[widget.levelIndex - 1]
                                                   .trappedAnimals!
                                                   .entries
                                                   .last
@@ -263,16 +270,28 @@ class StartPopup extends StatelessWidget {
                         backgroundColor:
                             MaterialStateProperty.all(Colors.orange),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         Navigator.of(context).pop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => GameViewScreen(
-                              levelIndex: levelIndex - 1,
-                            ),
-                          ),
-                        );
+                        bool tuto2 =
+                            await SaveUtils.instance.getTutorialStatus("tuto2");
+                        if (!tuto2) {
+                          if (mounted) {
+                            showIntroTwoPopup(context, widget.levelIndex);
+                          }
+
+                          SaveUtils.instance.saveTutorialStatus("tuto2", true);
+                        } else {
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => GameViewScreen(
+                                  levelIndex: widget.levelIndex - 1,
+                                ),
+                              ),
+                            );
+                          }
+                        }
                       },
                       child: const Text(
                         'Play',
@@ -290,29 +309,6 @@ class StartPopup extends StatelessWidget {
           ),
         ),
       ),
-      // content: const Text('Are you sure you want to start the game?'),
-      // actions: <Widget>[
-      //   TextButton(
-      //     onPressed: () {
-      //       Navigator.of(context).pop();
-      //     },
-      //     child: const Text('No'),
-      //   ),
-      //   TextButton(
-      //     onPressed: () {
-      //       Navigator.of(context).pop();
-      //       Navigator.push(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (context) => const GameViewScreen(
-      //             levelIndex: 1,
-      //           ),
-      //         ),
-      //       );
-      //     },
-      //     child: const Text('Yes'),
-      //   ),
-      // ],
     );
   }
 }
