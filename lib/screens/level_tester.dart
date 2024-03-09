@@ -1,10 +1,16 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
+import 'package:ocean_cleanup/bloc/game/game_barrel.dart';
+import 'package:ocean_cleanup/bloc/game_stats/game_stats_barrel.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
-import 'levels/level_parameters.dart';
-import 'levels/levels.dart';
-import 'main.dart';
+import '../levels/level_parameters.dart';
+import '../levels/levels.dart';
+import '../main.dart';
+import '../utils/config_size.dart';
+import 'game/game_view_screen.dart';
 
 class LevelTester extends StatelessWidget {
   const LevelTester({super.key});
@@ -37,6 +43,8 @@ class TesterPage extends StatelessWidget {
   final GlobalKey<FormFieldState> _sharkSpeedKey = GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> _animalTrashGoalKey = GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> _animalTimeLimitKey = GlobalKey<FormFieldState>();
+
+   final GlobalKey<FormFieldState> _levelIndexKey = GlobalKey<FormFieldState>();
 
   static const double DEFAULT_FONT_SIZE = 15;
 
@@ -73,7 +81,6 @@ class TesterPage extends StatelessWidget {
                         child: CupertinoButton(
                             padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
                             onPressed: () {
-
                                _runTestLevel(context);
                             },
                             child: const Text(
@@ -86,11 +93,10 @@ class TesterPage extends StatelessWidget {
                         child: CupertinoButton(
                             padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
                             onPressed: () {
-
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const MyApp()));
+                                      builder: (context) => const TesterApp()));
                             },
                             child: const Text(
                               "Normal Run",
@@ -99,6 +105,27 @@ class TesterPage extends StatelessWidget {
                       )
                     ],
                   ),
+                  const SizedBox(height: 20,),
+                  _textField(context,_levelIndexKey,"Level Index(starts with 0, 0-4 for 5 levels) :","0"),
+                  Row(
+                    children: [
+                      Card(
+                        child: CupertinoButton(
+                            padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                            onPressed: () {
+                              int levelIndex = int.parse(_levelIndexKey.currentState!.value);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TesterApp(levelIndex: levelIndex,)));
+                            },
+                            child: const Text(
+                              "Starts with Level Index",
+                              style:  TextStyle(fontSize: 14),
+                            )),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ],
@@ -132,7 +159,7 @@ class TesterPage extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const MyApp()));
+            builder: (context) => const TesterApp()));
   }
 
   Widget _textField(BuildContext context,GlobalKey<FormFieldState> key,String label,String defaultValue) {
@@ -167,5 +194,27 @@ class TesterPage extends StatelessWidget {
     );
   }
 
+}
+
+class TesterApp extends StatelessWidget {
+  final int levelIndex;
+  const TesterApp({this.levelIndex = 0,super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<GameBloc>(create: (_) => GameBloc()),
+        BlocProvider<GameStatsBloc>(create: (_) => GameStatsBloc()),
+        BlocProvider<AuthBloc>(create: (_) => AuthBloc(),),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        // home: IntroGameScreen(),
+        home: GameViewScreen(levelIndex: levelIndex),
+      ),
+    );
+  }
 }
 

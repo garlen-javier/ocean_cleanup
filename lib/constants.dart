@@ -1,7 +1,6 @@
 
 
 import 'package:flame/extensions.dart';
-
 import 'levels/level_parameters.dart';
 
 const bool isTesterMode = false;

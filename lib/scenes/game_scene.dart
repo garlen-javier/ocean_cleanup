@@ -43,10 +43,10 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     //TODO: testing
     if(!isTesterMode) {
       blocParameters.gameBloc.add(GameStart(levelIndex:levelIndex));
-      //blocParameters.gameBloc.add(GameStart(levelIndex: 4));
+      //blocParameters.gameBloc.add(GameStart(levelIndex: 5));
     }
     else
-      blocParameters.gameBloc.add(GameStart(levelIndex: 0));
+      blocParameters.gameBloc.add(GameStart(levelIndex:levelIndex));
     return super.onLoad();
   }
 
@@ -101,8 +101,8 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   Future<void> _loadCameras() async {
     gameCamera = CameraComponent.withFixedResolution(
-      width: GameWorld.worldSize.width ,
-      height: GameWorld.worldSize.height ,
+      width: GameWorld.worldSize.width,
+      height: GameWorld.worldSize.height,
     );
 
     gameCamera.viewfinder
@@ -189,7 +189,8 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
           debugPrint("pressed P: testing");
           if(!isPress) {
             //_gameManager.nextStage();
-            _gameManager.blocParameters.gameBloc.add(GamePause());
+            _gameManager.blocParameters.gameBloc.add(const GamePause());
+            //_gameManager.blocParameters.gameBloc.add(GameStartNext());
             isPress = true;
           }
         }
@@ -202,7 +203,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
           debugPrint("pressed O: testing");
           if(!isPressO) {
            // blocParameters.gameBloc.add(GameStart(levelIndex: 4));
-            _gameManager.blocParameters.gameBloc.add(GameResume());
+            _gameManager.blocParameters.gameBloc.add(const GameResume());
             isPressO = true;
           }
         }

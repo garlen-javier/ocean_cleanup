@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:ocean_cleanup/components/loading_game.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import 'package:ocean_cleanup/worlds/hud_world.dart';
@@ -17,7 +18,6 @@ import '../levels/levels.dart';
 import '../scenes/game_scene.dart';
 import '../utils/save_utils.dart';
 import '../worlds/game_world.dart';
-import '../worlds/level_factory.dart';
 import 'game_result.dart';
 
 class GameManager extends Component
@@ -26,12 +26,12 @@ class GameManager extends Component
   final GameBlocParameters blocParameters;
   GameManager({required this.gameScene,required this.blocParameters});
 
-  final LevelFactory _levelFactory = LevelFactory();
   final Levels _levels = Levels.instance;
   final List<AnimalType> _trappedAnimals = [];
   final List<AnimalType> _freedAnimals = [];
   final Map<AnimalType,TrashObjective> _trappedAnimalsMap = {};
 
+  late LoadingGame? _loadingGame;
   Random rand = Random();
   GameWorld? _currentLevel;
   HudWorld? _hud;
@@ -55,8 +55,18 @@ class GameManager extends Component
 
   @override
   FutureOr<void> onLoad() async {
+    await add(_loadingGame = LoadingGame());
     _initBlocListener();
     return super.onLoad();
+  }
+
+  void _removeLoadingScene()
+  {
+    if(_loadingGame != null)
+    {
+      _loadingGame?.removeFromParent();
+      _loadingGame = null;
+    }
   }
 
   Future<void> _initBlocListener() async {
@@ -72,6 +82,7 @@ class GameManager extends Component
           switch(state.phase)
           {
             case GamePhase.start:
+              _removeLoadingScene();
               blocParameters.gameStatsBloc.defaultState();
               loadLevel(levelIndex: state.levelIndex,stageIndex: state.stageIndex);
               break;
@@ -130,8 +141,7 @@ class GameManager extends Component
   {
     if(!Utils.isLevelIndexValid(levelIndex))
     {
-      print("Level Index $levelIndex out of range");
-      return;
+      throw RangeError.range(levelIndex, 0,maxStageLevel-1,"","Level Index $levelIndex is out of range");
     }
 
     debugPrint("Load Level Index: $levelIndex");
@@ -163,7 +173,7 @@ class GameManager extends Component
       gameScene.remove(_currentLevel!);
     }
 
-    _currentLevel = _levelFactory.createLevel(this,levelIndex,blocParameters);
+    _currentLevel = GameWorld(gameManager: this, blocParameters: blocParameters);
     gameScene.gameCamera.world = _currentLevel;
     await gameScene.add(_currentLevel!);
   }
@@ -271,12 +281,12 @@ class GameManager extends Component
       int trashCount = blocParameters.gameStatsBloc.totalTrashCount();
       if(goal == trashCount)
       {
-        GameResult result = _encodeGameResult(state.health, params.levelType);
+        GameResult result = _encodeGameResult(state.health,_hud!.remainingTime,params.levelType);
         blocParameters.gameBloc.add(GameWin(result));
       }
       else if(state.timerFinish || state.health == 0)
       {
-        GameResult result = _encodeGameResult(state.health, params.levelType);
+        GameResult result = _encodeGameResult(state.health,_hud!.remainingTime,params.levelType);
         blocParameters.gameBloc.add(GameOver(result));
       }
     }
@@ -289,12 +299,13 @@ class GameManager extends Component
       if(isGoal && _currentStageIndex == params.trashObjectives.length - 1)
       {
         _hud?.updateOctopusMeterValue(0);
-        GameResult result = _encodeGameResult(state.health, params.levelType);
+        _totalStageRemainingTime+=_hud!.remainingTime;
+        GameResult result = _encodeGameResult(state.health,_totalStageRemainingTime,params.levelType);
         blocParameters.gameBloc.add(GameWin(result));
       }
       else if(state.health == 0)
       {
-        GameResult result = _encodeGameResult(state.health, params.levelType);
+        GameResult result = _encodeGameResult(state.health,_hud!.remainingTime,params.levelType);
         blocParameters.gameBloc.add(GameOver(result));
       }
       else if(isGoal)
@@ -308,21 +319,21 @@ class GameManager extends Component
     }
   }
 
-  GameResult _encodeGameResult(int health,LevelType levelType) {
+  GameResult _encodeGameResult(int health,double remainingTime,LevelType levelType) {
     return GameResult(
       levelIndex: currentLevelIndex,
       health: health,
       totalTrashCount: blocParameters.gameStatsBloc.totalTrashCount(),
-      score: _getScore(),
-      remainingTime: _hud!.remainingTime,
+      score: _getScore(remainingTime),
+      remainingTime: remainingTime,
       levelType: levelType,
       freedAnimal: (_freedAnimals.isNotEmpty) ? _freedAnimals : null,
     );
   }
 
-  int _getScore()
+  int _getScore(double remainingTime)
   {
-    int timeScore = _hud!.remainingTime.floor() * 5;
+    int timeScore =  _hud!.remainingTime.floor() * 5;
     int animalScore = _freedAnimals.length * 100;
     return timeScore + animalScore;
   }
