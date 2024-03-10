@@ -341,11 +341,9 @@ class GameManager extends Component
     try {
       //This could error on hot restart/reload when bgm stop
       if(currentLevelParams.levelType == LevelType.normal) {
-        if(!_audio.isBgmSourcePlayed(pathBgmGame))
           await _audio.playBgm(pathBgmGame);
       }
       else {
-        if(!_audio.isBgmSourcePlayed(pathBgmOctopus))
           await _audio.playBgm(pathBgmOctopus);
       }
     }catch(err)
