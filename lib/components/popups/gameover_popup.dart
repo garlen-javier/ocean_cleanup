@@ -1,16 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ocean_cleanup/bloc/game/game_bloc.dart';
-import 'package:ocean_cleanup/bloc/game/game_event.dart';
-import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
-import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
-void showGameOverPopup(
-    BuildContext context, int level, int score, GameBloc gameBloc) {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
+Dialog showGameOverPopup(BuildContext context, int level, int score,{VoidCallback? onPressBack,VoidCallback? onPressRestart}) {
       return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
@@ -118,12 +109,7 @@ void showGameOverPopup(
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LevelsScreen(),
-                            ),
-                          );
+                          onPressBack?.call();
                         },
                         child: Column(
                           children: [
@@ -157,16 +143,7 @@ void showGameOverPopup(
                       ),
                       GestureDetector(
                         onTap: () {
-                          gameBloc.add(const GameQuit());
-                          gameBloc.add(GameStart(levelIndex: level));
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => GameViewScreen(
-                                levelIndex: level,
-                              ),
-                            ),
-                          );
+                          onPressRestart?.call();
                         },
                         child: Column(
                           children: [
@@ -206,6 +183,4 @@ void showGameOverPopup(
           ),
         ),
       );
-    },
-  );
 }

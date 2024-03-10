@@ -185,15 +185,18 @@ void showIntroTwoPopup(BuildContext context, int levelIndex) {
                       ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => GameViewScreen(
-                          levelIndex: levelIndex - 1,
+                        builder: (BuildContext context) =>  const GameViewScreen(
+                        ),
+                        settings: RouteSettings(
+                          arguments: levelIndex - 1,
                         ),
                       ),
+                      ModalRoute.withName('/home'),
                     );
+
                   },
                   child: Image.asset(
                     'assets/images/tutorials/Ready button.png',

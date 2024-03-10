@@ -4,11 +4,7 @@ import 'package:ocean_cleanup/bloc/game/game_event.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
-void showPausePopup(BuildContext context, GameBloc gameBloc, int levelIndex) {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
+Dialog showPausePopup(BuildContext context,{VoidCallback? onPressContinue,VoidCallback? onPressRestart,VoidCallback? onPressQuit}) {
       return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
@@ -37,8 +33,7 @@ void showPausePopup(BuildContext context, GameBloc gameBloc, int levelIndex) {
                     backgroundColor: MaterialStateProperty.all(Colors.green),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop();
-                    gameBloc.add(const GameResume());
+                    onPressContinue?.call();
                   },
                   child: const Text(
                     'Continue',
@@ -55,9 +50,7 @@ void showPausePopup(BuildContext context, GameBloc gameBloc, int levelIndex) {
                     backgroundColor: MaterialStateProperty.all(Colors.orange),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop();
-                    gameBloc.add(const GameQuit());
-                    gameBloc.add(GameStart(levelIndex: levelIndex));
+                    onPressRestart?.call();
                   },
                   child: const Text(
                     'Restart',
@@ -73,14 +66,7 @@ void showPausePopup(BuildContext context, GameBloc gameBloc, int levelIndex) {
                     backgroundColor: MaterialStateProperty.all(Colors.red),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop();
-                    gameBloc.add(const GameQuit());
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LevelsScreen(),
-                      ),
-                    );
+                    onPressQuit?.call();
                   },
                   child: const Text(
                     'Quit',
@@ -95,6 +81,4 @@ void showPausePopup(BuildContext context, GameBloc gameBloc, int levelIndex) {
           ),
         ),
       );
-    },
-  );
 }

@@ -284,11 +284,15 @@ class _StartPopupState extends State<StartPopup> {
                         } else {
                           if (mounted) {
                             Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (BuildContext context) => GameViewScreen(
-                                  levelIndex: widget.levelIndex - 1,
-                                )),
-                                ModalRoute.withName('/home')
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>  const GameViewScreen(
+                                ),
+                                settings: RouteSettings(
+                                  arguments: widget.levelIndex - 1,
+                                ),
+                              ),
+                              ModalRoute.withName('/home'),
                             );
                           }
                         }

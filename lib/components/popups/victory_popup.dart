@@ -2,18 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
-import 'package:ocean_cleanup/bloc/game/game_bloc.dart';
-import 'package:ocean_cleanup/bloc/game/game_event.dart';
-import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
-import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
-void showVictoryPopup(
-    BuildContext context, int level, int score, GameBloc gameBloc) {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
+Dialog showVictoryPopup(BuildContext context, int level, int score, {VoidCallback? onPressRetry,VoidCallback? onPressNext}) {
       final authBloc = BlocProvider.of<AuthBloc>(context);
       return Dialog(
         shape: RoundedRectangleBorder(
@@ -123,16 +114,7 @@ void showVictoryPopup(
                         children: [
                           GestureDetector(
                             onTap: () {
-                              gameBloc.add(const GameQuit());
-                              gameBloc.add(GameStart(levelIndex: level));
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => GameViewScreen(
-                                    levelIndex: level,
-                                  ),
-                                ),
-                              );
+                              onPressRetry?.call();
                             },
                             child: Column(
                               children: [
@@ -167,14 +149,11 @@ void showVictoryPopup(
                           GestureDetector(
                             onTap: () {
                               if (authBloc.isLoggedIn) {
-                                authBloc.updateScore(score);
+                                authBloc.updateScore(score).then((value) =>  onPressNext?.call());
                               }
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LevelsScreen(),
-                                ),
-                              );
+                              else {
+                                onPressNext?.call();
+                              }
                             },
                             child: Column(
                               children: [
@@ -224,6 +203,4 @@ void showVictoryPopup(
           ),
         ),
       );
-    },
-  );
 }

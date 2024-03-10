@@ -93,9 +93,14 @@ class TesterPage extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
                             onPressed: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const TesterApp()));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const GameViewScreen(),
+                                  settings: RouteSettings(
+                                    arguments: 0,
+                                  ),
+                                ),
+                              );
                             },
                             child: const Text(
                               "Normal Run",
@@ -114,9 +119,14 @@ class TesterPage extends StatelessWidget {
                             onPressed: () {
                               int levelIndex = int.parse(_levelIndexKey.currentState!.value);
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => TesterApp(levelIndex: levelIndex,)));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const GameViewScreen(),
+                                  settings: RouteSettings(
+                                    arguments: levelIndex,
+                                  ),
+                                ),
+                              );
                             },
                             child: const Text(
                               "Starts with Level Index",
@@ -156,9 +166,14 @@ class TesterPage extends StatelessWidget {
 
     Levels.instance.createTestLevel(playerSpeed, trashSpeed, animalTrashChance, trashSpawnMin, trashSpawnMax, sharkSpeed, sharkCount, mainMission, animalMission);
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const TesterApp()));
+      context,
+      MaterialPageRoute(
+        builder: (context) => const GameViewScreen(),
+        settings: const RouteSettings(
+          arguments: 0,
+        ),
+      ),
+    );
   }
 
   Widget _textField(BuildContext context,GlobalKey<FormFieldState> key,String label,String defaultValue) {
@@ -195,25 +210,5 @@ class TesterPage extends StatelessWidget {
 
 }
 
-class TesterApp extends StatelessWidget {
-  final int levelIndex;
-  const TesterApp({this.levelIndex = 0,super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<GameBloc>(create: (_) => GameBloc()),
-        BlocProvider<GameStatsBloc>(create: (_) => GameStatsBloc()),
-        BlocProvider<AuthBloc>(create: (_) => AuthBloc(),),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        // home: IntroGameScreen(),
-        home: GameViewScreen(levelIndex: levelIndex),
-      ),
-    );
-  }
-}
 

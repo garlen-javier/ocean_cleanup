@@ -1,19 +1,21 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/game/game_barrel.dart';
 import 'package:ocean_cleanup/components/popups/gameover_popup.dart';
 import 'package:ocean_cleanup/components/popups/pause_popup.dart';
 import 'package:ocean_cleanup/components/popups/victory_popup.dart';
+import 'package:ocean_cleanup/core/game_result.dart';
+import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
-import 'package:ocean_cleanup/utils/config_size.dart';
 import '../../bloc/game_bloc_parameters.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
 import '../../scenes/game_scene.dart';
+import '../../utils/config_size.dart';
 
 class GameViewScreen extends StatefulWidget {
-  final int levelIndex;
-  const GameViewScreen({required this.levelIndex, super.key});
+  const GameViewScreen({super.key});
 
   @override
   State<GameViewScreen> createState() => _GameViewScreenState();
@@ -21,12 +23,11 @@ class GameViewScreen extends StatefulWidget {
 
 class _GameViewScreenState extends State<GameViewScreen> {
   late GameBloc _gameBloc;
-  late GameStatsBloc _gameStatsBloc;
+  GameScene? _game;
 
   @override
   void initState() {
     _gameBloc = BlocProvider.of<GameBloc>(context);
-    _gameStatsBloc = BlocProvider.of<GameStatsBloc>(context);
     super.initState();
   }
 
@@ -39,27 +40,36 @@ class _GameViewScreenState extends State<GameViewScreen> {
       listener: (BuildContext context, GameState state) {
         debugPrint("GameViewScreen GameBloc : $state");
         switch (state.phase) {
+          case GamePhase.none:
+            _game?.overlays.removeAll([
+              "PausePopup",
+              "VictoryPopup",
+              "GameoverPopup",
+              "AnimalPopup",
+            ]);
+            break;
           case GamePhase.start:
+            _game?.overlays.removeAll([
+              "PausePopup",
+              "VictoryPopup",
+              "GameoverPopup",
+              "AnimalPopup",
+            ]);
             break;
           case GamePhase.playing:
+            _game?.overlays.remove("PausePopup");
             break;
           case GamePhase.pause:
-            //Just sample usage to call event : _gameBloc.add(const GameResume());
-            showPausePopup(context, _gameBloc, widget.levelIndex);
-
+            _game?.overlays.add("PausePopup");
             break;
           case GamePhase.win:
-            debugPrint("GameViewScreen Win! " + state!.result.toString());
-            showVictoryPopup(
-                context, widget.levelIndex, state.result!.score, _gameBloc);
-
+            _game?.overlays.add("VictoryPopup");
+            if(state.result?.freedAnimal != null)
+              _game?.overlays.add("AnimalPopup");
             break;
           case GamePhase.gameOver:
-            debugPrint("GameViewScreen GameOver!" + state!.result.toString());
-            showGameOverPopup(
-                context, widget.levelIndex, state.result!.score, _gameBloc);
+           _game?.overlays.add("GameoverPopup");
             break;
-
           default:
             break;
         }
@@ -67,74 +77,138 @@ class _GameViewScreenState extends State<GameViewScreen> {
     );
   }
 
-  BlocListener<GameStatsBloc, GameStatsState> _gameStatListener() {
-    return BlocListener<GameStatsBloc, GameStatsState>(
-      bloc: _gameStatsBloc,
-      listenWhen: (previousState, newState) {
-        return previousState.freedAnimal != newState.freedAnimal;
-      },
-      listener: (BuildContext context, GameStatsState state) {
-        if (state.freedAnimal != null && !state.rescueFailed) {
-          _gameBloc.add(const GameSuspend());
-          debugPrint("GameViewScreen freedAnimal: ${state.freedAnimal}");
-          print('>>>>>>${state.freedAnimal!.index}');
-          //TODO: an Animal is free
-          //call _gameBloc.add(const GameResume()); to unsuspend
-
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Dialog(
-                child: Container(
-                  width: SizeConfig.screenWidth / 2,
-                  height: SizeConfig.screenHeight / 2,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                        state.freedAnimal!.index == 0
-                            ? 'assets/images/freed_animals/Crab.png'
-                            : state.freedAnimal!.index == 1
-                                ? 'assets/images/freed_animals/Turtle.png'
-                                : 'assets/images/freed_animals/Whale.png',
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        }
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    Object? obj = ModalRoute.of(context)?.settings.arguments;
+    int levelIndex = (obj != null) ? obj as int : 0;
+
     return MultiBlocListener(
       listeners: [
         _gameListener(),
-        _gameStatListener(),
       ],
       child: PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
           if (!didPop) {
-            //TODO: add your Pause or Exit popup here.
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const LevelsScreen()));
+            _gameBloc.add(const GamePause());
           }
         },
         child: GameWidget(
           focusNode: FocusNode(),
-          game: GameScene(
-              levelIndex: widget.levelIndex,
+          game: _game = GameScene(
+              levelIndex: levelIndex,
               blocParameters: GameBlocParameters(
                 gameBloc: context.read<GameBloc>(),
                 gameStatsBloc: context.read<GameStatsBloc>(),
               )),
+          overlayBuilderMap: {
+            'PausePopup': _pauseOverlay(),
+            'VictoryPopup': _victoryOverlay(),
+            'GameoverPopup' : _gameoverOverlay(),
+            'AnimalPopup' : _animalOverlay(),
+          },
         ),
       ),
     );
   }
+
+  //#region Overlay Popups
+
+  Widget Function(BuildContext, GameScene) _pauseOverlay() {
+    return (context, game) {
+      return showPausePopup(context,onPressContinue: (){
+        _game?.overlays.remove("PausePopup");
+        _gameBloc.add(const GameResume());
+      },onPressRestart: (){
+        _game?.overlays.remove("PausePopup");
+        _gameBloc.add(const GameRestart());
+      },onPressQuit: (){
+        _game?.overlays.remove("PausePopup");
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const LevelsScreen()));
+      });
+    };
+  }
+
+  Widget Function(BuildContext, GameScene) _victoryOverlay() {
+    return (context, game) {
+      return BlocBuilder<GameBloc, GameState>(
+          buildWhen: (previousState, state) {
+            return previousState != state;
+          }, builder: (context, state) {
+            debugPrint("showGameoverPopup: ${state!.result}");
+            GameResult? result = state.result;
+            return (result != null) ? showVictoryPopup(context, result!.levelIndex, result.score,
+                onPressNext: (){
+                  _game?.overlays.remove("VictoryPopup");
+                  _gameBloc.add(const GameStartNext());
+            },
+              onPressRetry: (){
+                _game?.overlays.remove("VictoryPopup");
+                _gameBloc.add(const GameRestart());
+              }
+            ) : Container();
+      });
+    };
+  }
+
+  Widget Function(BuildContext, GameScene) _gameoverOverlay() {
+    return (context, game) {
+      return BlocBuilder<GameBloc, GameState>(
+          buildWhen: (previousState, state) {
+            return previousState != state;
+          }, builder: (context, state) {
+        debugPrint("showGameOverPopup: ${state!.result}");
+        GameResult? result = state.result;
+        return (result != null) ? showGameOverPopup(context, result!.levelIndex, result.score,
+          onPressRestart: (){
+            _game?.overlays.remove("GameoverPopup");
+            _gameBloc.add(const GameRestart());
+          },
+          onPressBack: (){
+            _game?.overlays.remove("GameoverPopup");
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const LevelsScreen()));
+          },
+        ) : Container();
+      });
+    };
+  }
+
+  Widget Function(BuildContext, GameScene) _animalOverlay() {
+    return (context, game) {
+      return BlocBuilder<GameBloc, GameState>(
+          buildWhen: (previousState, state) {
+            return previousState != state;
+          }, builder: (context, state) {
+        debugPrint("showAnimalPopup: ${state!.result}");
+        GameResult? result = state.result;
+        return (result != null) ? _animalPopup(freedAnimals: result!.freedAnimal) : Container();
+      });
+    };
+  }
+
+  Dialog _animalPopup({List<AnimalType>? freedAnimals = const[]}){
+    return Dialog(
+      child: Container(
+        width: SizeConfig.screenWidth / 2,
+        height: SizeConfig.screenHeight / 2,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              freedAnimals!.contains(AnimalType.crab)
+                  ? 'assets/images/freed_animals/Crab.png'
+                  : freedAnimals!.contains(AnimalType.seaTurtle)
+                  ? 'assets/images/freed_animals/Turtle.png'
+                  : 'assets/images/freed_animals/Whale.png',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    );
+  }
+
+  //#endregion
+
 }

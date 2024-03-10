@@ -18,6 +18,13 @@ class GameStart extends GameEvent {
   List<Object?> get props => [];
 }
 
+class GameRestart extends GameEvent {
+  const GameRestart();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class GameStartNext extends GameEvent {
   const GameStartNext();
 
