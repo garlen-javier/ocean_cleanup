@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/lightning.dart';
 import 'package:ocean_cleanup/components/octopus/octopus.dart';
 import 'package:ocean_cleanup/constants.dart';
+import 'package:ocean_cleanup/core/audio_manager.dart';
 import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import 'package:ocean_cleanup/utils/math_utils.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
@@ -138,7 +139,7 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
   void _reduceHealth()
   {
     statsBloc.reduceHealth(1);
-    FlameAudio.play(pathSfxReduceHealth);
+    AudioManager.instance.playSfx(pathSfxReduceHealth);
   }
 
   void tryRemoveTrash()
@@ -149,10 +150,10 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
       statsBloc.addTrash(trash.type!);
       trash.delete();
       trashCache.removeLast();
-      FlameAudio.play(pathSfxCatchTrash);
+      AudioManager.instance.playSfx(pathSfxCatchTrash);
     }
     else{
-      FlameAudio.play(pathSfxSwingNet);
+      AudioManager.instance.playSfx(pathSfxSwingNet);
     }
   }
 

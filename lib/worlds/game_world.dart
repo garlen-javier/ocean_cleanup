@@ -24,6 +24,7 @@ import '../components/bubble_particle.dart';
 import '../components/player/player.dart';
 import 'package:flame/src/camera/world.dart' as camWorld;
 import '../components/trash/trash.dart';
+import '../core/audio_manager.dart';
 import '../core/game_manager.dart';
 import '../mixins/update_mixin.dart';
 import '../scenes/game_scene.dart';
@@ -294,7 +295,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
         onAngry: () async {
           stopTrashSpawn();
           await _spawnLightning();
-          await FlameAudio.play(pathSfxLightning);
+          await AudioManager.instance.playSfx(pathSfxLightning);
         }, onStopAttack: () {
         //Reset stage
          octopus!.notifyListeners();

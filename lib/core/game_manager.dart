@@ -2,11 +2,10 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flame/components.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ocean_cleanup/components/loading_game.dart';
-import 'package:ocean_cleanup/extensions/bgm_filename.dart';
+import 'package:ocean_cleanup/core/audio_manager.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import 'package:ocean_cleanup/worlds/hud_world.dart';
@@ -28,6 +27,7 @@ class GameManager extends Component
   GameManager({required this.gameScene,required this.blocParameters});
 
   final Levels _levels = Levels.instance;
+  final AudioManager _audio = AudioManager.instance;
   final List<AnimalType> _trappedAnimals = [];
   final List<AnimalType> _freedAnimals = [];
   final Map<AnimalType,TrashObjective> _trappedAnimalsMap = {};
@@ -88,21 +88,18 @@ class GameManager extends Component
               loadLevel(levelIndex: state.levelIndex,stageIndex: state.stageIndex);
               break;
             case GamePhase.playing:
-              if(FlameAudio.bgm.audioPlayer.state == PlayerState.paused)
-                 FlameAudio.bgm.resume();
+              _audio.resumeBgm();
               _currentLevel?.playerController?.enable = true;
               _currentLevel?.resumeTrashSpawn();
               break;
             case GamePhase.pause || GamePhase.suspended:
-              if(FlameAudio.bgm.audioPlayer.state == PlayerState.playing)
-                FlameAudio.bgm.pause();
+              _audio.pauseBgm();
               _currentLevel?.playerController?.enable = false;
               _currentLevel?.pauseTrashSpawn();
               break;
             case GamePhase.win:
-              if(FlameAudio.bgm.isPlaying)
-                FlameAudio.bgm.stop();
-              FlameAudio.play(pathSfxLevelWin);
+              _audio.stopBgm();
+              _audio.playSfx(pathSfxLevelWin);
               _saveFreeAnimalsIndex();
               _currentLevel?.playerController?.enable = false;
               _currentLevel?.pauseTrashSpawn();
@@ -111,16 +108,14 @@ class GameManager extends Component
               debugPrint("Win! " + state!.result.toString() );
               break;
             case GamePhase.gameOver:
-              if(FlameAudio.bgm.isPlaying)
-                FlameAudio.bgm.stop();
-               FlameAudio.play(pathSfxGameOver);
+              _audio.stopBgm();
+              _audio.playSfx(pathSfxGameOver);
                _currentLevel?.playerController?.enable = false;
               _currentLevel?.pauseTrashSpawn();
               debugPrint("GameOver!" + state!.result.toString() );
               break;
             case GamePhase.quit:
-              if(FlameAudio.bgm.isPlaying)
-                  FlameAudio.bgm.stop();
+              _audio.stopBgm();
               break;
             default:
               break;
@@ -272,7 +267,7 @@ class GameManager extends Component
           _freedAnimals.add(animal);
           _trappedAnimals.remove(animal); //remove type for randomize trash
           blocParameters.gameStatsBloc.freeAnimalWithBonus(animal, 1);
-          FlameAudio.play(pathSfxAnimalRescued);
+          _audio.playSfx(pathSfxAnimalRescued);
         }
       });
     }
@@ -340,27 +335,18 @@ class GameManager extends Component
     return timeScore + animalScore;
   }
 
-  Future<void> _preloadSfx() async {
-    await FlameAudio.play(pathSfxLevelWin,volume: 0);
-    await FlameAudio.play(pathSfxGameOver,volume: 0);
-    await FlameAudio.play(pathSfxCatchTrash,volume: 0);
-    await FlameAudio.play(pathSfxSwingNet,volume: 0);
-    await FlameAudio.play(pathSfxReduceHealth,volume: 0);
-    await FlameAudio.play(pathSfxAnimalRescued,volume: 0);
-  }
 
   Future<void> _loadAudio() async {
-    await _preloadSfx();
+    await AudioManager.instance.preloadSfx();
     try {
       //This could error on hot restart/reload when bgm stop
       if(currentLevelParams.levelType == LevelType.normal) {
-        if(FlameAudio.bgm.currentSourcePath != pathBgmGame)
-          await FlameAudio.bgm.play(pathBgmGame);
+        if(!_audio.isBgmSourcePlayed(pathBgmGame))
+          await _audio.playBgm(pathBgmGame);
       }
       else {
-        if(FlameAudio.bgm.currentSourcePath != pathBgmOctopus) {
-          await FlameAudio.bgm.play(pathBgmOctopus);
-        }
+        if(!_audio.isBgmSourcePlayed(pathBgmOctopus))
+          await _audio.playBgm(pathBgmOctopus);
       }
     }catch(err)
     {
