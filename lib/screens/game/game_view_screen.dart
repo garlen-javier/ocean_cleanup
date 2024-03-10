@@ -2,6 +2,9 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/game/game_barrel.dart';
+import 'package:ocean_cleanup/components/popups/gameover_popup.dart';
+import 'package:ocean_cleanup/components/popups/pause_popup.dart';
+import 'package:ocean_cleanup/components/popups/victory_popup.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import '../../bloc/game_bloc_parameters.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
@@ -26,8 +29,7 @@ class _GameViewScreenState extends State<GameViewScreen> {
     super.initState();
   }
 
-  BlocListener<GameBloc, GameState> _gameListener()
-  {
+  BlocListener<GameBloc, GameState> _gameListener() {
     return BlocListener<GameBloc, GameState>(
       bloc: _gameBloc,
       listenWhen: (previousState, newState) {
@@ -41,16 +43,20 @@ class _GameViewScreenState extends State<GameViewScreen> {
           case GamePhase.playing:
             break;
           case GamePhase.pause:
-          //Just sample usage to call event : _gameBloc.add(const GameResume());
+            //Just sample usage to call event : _gameBloc.add(const GameResume());
+            showPausePopup(context, _gameBloc);
 
             break;
           case GamePhase.win:
             debugPrint("GameViewScreen Win! " + state!.result.toString());
+            showVictoryPopup(context, widget.levelIndex, state.result!.score);
+
             break;
           case GamePhase.gameOver:
-            debugPrint(
-                "GameViewScreen GameOver!" + state!.result.toString());
+            debugPrint("GameViewScreen GameOver!" + state!.result.toString());
+            showGameOverPopup(context, widget.levelIndex, state.result!.score);
             break;
+
           default:
             break;
         }
@@ -58,16 +64,14 @@ class _GameViewScreenState extends State<GameViewScreen> {
     );
   }
 
-  BlocListener<GameStatsBloc, GameStatsState> _gameStatListener()
-  {
+  BlocListener<GameStatsBloc, GameStatsState> _gameStatListener() {
     return BlocListener<GameStatsBloc, GameStatsState>(
       bloc: _gameStatsBloc,
       listenWhen: (previousState, newState) {
         return previousState.freedAnimal != newState.freedAnimal;
       },
       listener: (BuildContext context, GameStatsState state) {
-        if(state.freedAnimal != null && !state.rescueFailed)
-        {
+        if (state.freedAnimal != null && !state.rescueFailed) {
           _gameBloc.add(const GameSuspend());
           debugPrint("GameViewScreen freedAnimal: ${state.freedAnimal}");
           //TODO: an Animal is free

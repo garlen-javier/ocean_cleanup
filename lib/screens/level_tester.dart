@@ -8,7 +8,6 @@ import 'package:ocean_cleanup/bloc/game_stats/game_stats_barrel.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import '../levels/level_parameters.dart';
 import '../levels/levels.dart';
-import '../main.dart';
 import '../utils/config_size.dart';
 import 'game/game_view_screen.dart';
 
