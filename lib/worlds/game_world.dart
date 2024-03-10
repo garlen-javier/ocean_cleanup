@@ -7,8 +7,10 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
+import 'package:ocean_cleanup/bloc/game_stats/game_stats_barrel.dart';
 import 'package:ocean_cleanup/components/lightning.dart';
 import 'package:ocean_cleanup/components/octopus/octopus.dart';
 import 'package:ocean_cleanup/components/player/player_controller.dart';
@@ -16,7 +18,6 @@ import 'package:ocean_cleanup/components/shark/shark.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/framework/object_pool.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
-import '../bloc/game/game_event.dart';
 import '../bloc/game_bloc_parameters.dart';
 import '../components/brick/catcher_body.dart';
 import '../components/bubble_particle.dart';
@@ -80,6 +81,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
     await add(player);
     await _addPlayerController(player);
   }
+
 
   void _displayCorals()
   {
@@ -298,9 +300,21 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
          octopus!.notifyListeners();
          gameManager.resetStage();
          startTrashSpawn();
-      },
+      },);
+
+      await add(
+        FlameMultiBlocProvider(
+          providers: [
+            FlameBlocProvider<GameStatsBloc, GameStatsState>.value(
+              value: blocParameters.gameStatsBloc,
+            ),
+          ],
+          children: [
+            octopus!,
+          ],
+        ),
       );
-      await add(octopus!);
+
     }
   }
   //#region Bubbles
@@ -370,6 +384,7 @@ class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameR
           (child as dynamic)?.runUpdate(dt);
         }
       }
+      octopus?.runUpdate(dt);
     }
   }
 

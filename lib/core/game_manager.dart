@@ -270,8 +270,7 @@ class GameManager extends Component
           debugPrint("Free Animal:$animal");
           _freedAnimals.add(animal);
           _trappedAnimals.remove(animal); //remove type for randomize trash
-          blocParameters.gameStatsBloc.freeAnimal(animal);
-          blocParameters.gameStatsBloc.addHealth(1);
+          blocParameters.gameStatsBloc.freeAnimalWithBonus(animal, 1);
           FlameAudio.play(pathSfxAnimalRescued);
         }
       });
@@ -317,10 +316,6 @@ class GameManager extends Component
       else if(isGoal)
       {
         nextStage(lastHealth: state.health);
-      }
-      else if(state.timerFinish)
-      {
-        _currentLevel?.octopus?.irritated = true;
       }
     }
   }
@@ -398,9 +393,7 @@ class GameManager extends Component
       _hud?.startNewTrashGoal(currentTrashObjective.trashType, currentTrashObjective.goal);
       _hud?.updateOctopusMeterWithStage(_currentStageIndex, currentTrashObjective.timeLimit);
       _lastStageHealth = lastHealth + 2;
-      blocParameters.gameStatsBloc.setHealth(_lastStageHealth);
-      blocParameters.gameStatsBloc.timerReset();
-      blocParameters.gameStatsBloc.resetTrashCount();
+       blocParameters.gameStatsBloc.resetStageValue(hp: _lastStageHealth);
     }
   }
 
@@ -409,9 +402,7 @@ class GameManager extends Component
     _hud?.startNewTimeLimit(currentTrashObjective.timeLimit);
     _hud?.startNewTrashGoal(currentTrashObjective.trashType, currentTrashObjective.goal);
     _hud?.updateOctopusMeterWithStage(_currentStageIndex, currentTrashObjective.timeLimit);
-    blocParameters.gameStatsBloc.setHealth(_lastStageHealth);
-    blocParameters.gameStatsBloc.timerReset();
-    blocParameters.gameStatsBloc.resetTrashCount();
+    blocParameters.gameStatsBloc.resetStageValue(hp: _lastStageHealth);
   }
 
   //Currently clear the save game data such as freed animals

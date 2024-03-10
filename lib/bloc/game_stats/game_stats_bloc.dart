@@ -39,6 +39,7 @@ class GameStatsBloc extends Cubit<GameStatsState> {
     }
   }
 
+  //Not tested, may cause bug if emitted many times
    void resetTrashCount()
    {
      _trashCountMap.forEach((type, count) {
@@ -46,6 +47,14 @@ class GameStatsBloc extends Cubit<GameStatsState> {
      });
      _trashCountMap.clear();
      _trashCountMap.putIfAbsent(TrashType.any, () => 0);
+   }
+
+   void resetStageValue({required int hp})
+   {
+     health = hp;
+     _trashCountMap.clear();
+     _trashCountMap.putIfAbsent(TrashType.any, () => 0);
+     emit(state.copyWith(health: health, timerFinish:false,trashType: null,trashCount: 0));
    }
 
    int totalTrashCount()
@@ -89,6 +98,13 @@ class GameStatsBloc extends Cubit<GameStatsState> {
   void freeAnimal(AnimalType animal)
   {
     emit(state.copyWith(freedAnimal: animal));
+  }
+
+  void freeAnimalWithBonus(AnimalType animal,int hp)
+  {
+    health += hp;
+    health = health > maxHealth ? maxHealth : health;
+    emit(state.copyWith(freedAnimal: animal,health: health));
   }
 
   //#region Condition

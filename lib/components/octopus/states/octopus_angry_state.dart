@@ -4,7 +4,7 @@
 import 'package:flame/components.dart';
 import '../octopus.dart';
 import '../octopus_state_controller.dart';
-import 'octopus_normal_state.dart';
+import 'octopus_transform_state.dart';
 
 class OctopusAngryState extends OctopusState {
   OctopusAngryState(super.controller);
@@ -27,9 +27,9 @@ class OctopusAngryState extends OctopusState {
     _countdown?.update(dt);
     if(_countdown!.finished)
     {
-      controller.octopus.onStopAttack?.call();
       controller.octopus.irritated = false;
-      controller.changeState<OctopusNormalState>();
+      controller.changeState<OctopusTransformState>();
+      controller.octopus.onStopAttack?.call();
       _countdown!.stop();
     }
   }

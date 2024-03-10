@@ -5,7 +5,10 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
+import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/foundation.dart';
+import 'package:ocean_cleanup/bloc/game_stats/game_stats_barrel.dart';
 import 'package:ocean_cleanup/components/lightning.dart';
 import 'package:ocean_cleanup/extensions/random_range.dart';
 import 'package:ocean_cleanup/worlds/game_world.dart';
@@ -15,6 +18,7 @@ import '../../mixins/update_mixin.dart';
 import '../../scenes/game_scene.dart';
 import '../../utils/math_utils.dart';
 import 'octopus_state_controller.dart';
+import 'states/octopus_normal_state.dart';
 
 enum OctopusAnimationState {
   normal,
@@ -36,6 +40,7 @@ class Octopus extends SpriteAnimationGroupComponent with Notifier,UpdateMixin, H
   bool irritated = false;
   bool _canMove = false;
   OctopusStateController? _stateController;
+  OctopusState get state => _stateController?.state as OctopusState;
 
   @override
   Future<void> onLoad() async {
@@ -61,14 +66,29 @@ class Octopus extends SpriteAnimationGroupComponent with Notifier,UpdateMixin, H
     anchor = Anchor.center;
 
     await add(_stateController = OctopusStateController(this));
-    RectangleHitbox hitbox = RectangleHitbox(size:Vector2(width * 0.5,height * 0.7),position: Vector2(width * 0.25,height * 0.1) );
+    RectangleHitbox hitbox = RectangleHitbox(size:Vector2(width * 0.5,height * 0.45),position: Vector2(width * 0.25,height * 0.25) );
     add(hitbox);
     position = Vector2(GameWorld.bounds.width - width * 0.5, height );
     //_spawnAtRandom();
     _addMoveDelay();
     _initRandomMove();
+    _initBlocListener();
     //debugMode = true;
     return super.onLoad();
+  }
+
+  Future<void> _initBlocListener() async {
+    await add(
+      FlameBlocListener<GameStatsBloc, GameStatsState>(
+        listenWhen: (previousState, newState) {
+          return previousState.timerFinish != newState.timerFinish;
+        },
+        onNewState: (state) {
+          if(state.timerFinish)
+            irritated = true;
+        },
+      ),
+    );
   }
 
   void _addMoveDelay()
@@ -144,7 +164,6 @@ class Octopus extends SpriteAnimationGroupComponent with Notifier,UpdateMixin, H
     _velocityDir.y*=-1;
     _isReverse = true;
   }
-
 
   bool get _isPositionXOut => position.x < width * 0.5 || position.x > GameWorld.bounds.width - width * 0.5;
   bool get _isPositionYOut => position.y < height * 0.5 || position.y > GameWorld.bounds.height - height  * 0.5;
