@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 void showIntroTwoPopup(BuildContext context, int levelIndex) {
   showDialog(
@@ -53,96 +54,135 @@ void showIntroTwoPopup(BuildContext context, int levelIndex) {
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      children: [
-                        Image.asset(
-                          'assets/images/tutorials/Joystick.png',
-                        ),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            style: TextStyle(
-                              fontSize: SizeConfig.smallText1,
-                              letterSpacing: 1.8,
-                            ),
-                            children: const [
-                              TextSpan(
-                                text: 'Use your finger to ',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                  fontFamily: 'comicNeue',
-                                ),
+                !kIsWeb
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/tutorials/Joystick.png',
                               ),
-                              TextSpan(
-                                text: 'move \n',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'comicNeue',
-                                  color: Colors.black,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'around with the joystick.',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                  fontFamily: 'comicNeue',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Image.asset(
-                          'assets/images/tutorials/Knob.png',
-                        ),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            style: TextStyle(
-                              fontSize: SizeConfig.smallText1,
-                              letterSpacing: 1.8,
-                            ),
-                            children: const [
-                              TextSpan(
-                                text: 'To ',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                  fontFamily: 'comicNeue',
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'collect ',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'comicNeue',
-                                  color: Colors.black,
-                                ),
-                              ),
-                              TextSpan(
-                                text:
-                                    'waste, press \n the knob located on the left \n corner of the screen.',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                  fontFamily: 'comicNeue',
+                              RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  style: TextStyle(
+                                    fontSize: SizeConfig.smallText1,
+                                    letterSpacing: 1.8,
+                                  ),
+                                  children: const [
+                                    TextSpan(
+                                      text: 'Use your finger to ',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                        fontFamily: 'comicNeue',
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'move \n',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'comicNeue',
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'around with the joystick.',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                        fontFamily: 'comicNeue',
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                          Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/tutorials/Knob.png',
+                              ),
+                              RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  style: TextStyle(
+                                    fontSize: SizeConfig.smallText1,
+                                    letterSpacing: 1.8,
+                                  ),
+                                  children: const [
+                                    TextSpan(
+                                      text: 'To ',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                        fontFamily: 'comicNeue',
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'collect ',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'comicNeue',
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          'waste, press \n the knob located on the left \n corner of the screen.',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                        fontFamily: 'comicNeue',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Image.asset(
+                            'assets/images/tutorials/Keyboard buttons.png',
+                          ),
+                          RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontSize: SizeConfig.smallText1,
+                                letterSpacing: 1.8,
+                              ),
+                              children: [
+                                const TextSpan(
+                                  text:
+                                      'Use the keyboard to move \n (W, A, S, D) around in \n the ocean. When you come near \n any waste click the space bar to collect it.',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black,
+                                    fontFamily: 'comicNeue',
+                                  ),
+                                ),
+                                WidgetSpan(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 2.0),
+                                    child: Image.asset(
+                                      'assets/images/fish_net.png',
+                                      height: SizeConfig.mediumText1,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop();

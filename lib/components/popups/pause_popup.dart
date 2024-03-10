@@ -4,7 +4,7 @@ import 'package:ocean_cleanup/bloc/game/game_event.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
-void showPausePopup(BuildContext context, GameBloc gameBloc) {
+void showPausePopup(BuildContext context, GameBloc gameBloc, int levelIndex) {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -52,6 +52,24 @@ void showPausePopup(BuildContext context, GameBloc gameBloc) {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.orange),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    gameBloc.add(const GameQuit());
+                    gameBloc.add(GameStart(levelIndex: levelIndex));
+                  },
+                  child: const Text(
+                    'Restart',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "wendyOne"),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.red),
                   ),
                   onPressed: () {
@@ -67,10 +85,9 @@ void showPausePopup(BuildContext context, GameBloc gameBloc) {
                   child: const Text(
                     'Quit',
                     style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "wendyOne",
-                    ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "wendyOne"),
                   ),
                 ),
               ],

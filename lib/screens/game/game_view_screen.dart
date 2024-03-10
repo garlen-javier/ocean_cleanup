@@ -44,7 +44,7 @@ class _GameViewScreenState extends State<GameViewScreen> {
             break;
           case GamePhase.pause:
             //Just sample usage to call event : _gameBloc.add(const GameResume());
-            showPausePopup(context, _gameBloc);
+            showPausePopup(context, _gameBloc , widget.levelIndex);
 
             break;
           case GamePhase.win:
