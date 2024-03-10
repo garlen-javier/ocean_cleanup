@@ -7,6 +7,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/lightning.dart';
+import 'package:ocean_cleanup/components/octopus/octopus.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import 'package:ocean_cleanup/utils/math_utils.dart';
@@ -113,7 +114,7 @@ class Player extends SpriteAnimationGroupComponent with UpdateMixin,CollisionCal
       Trash trash = other;
       trashCache.add(trash);
     }
-    if (other is Shark) {
+    if (other is Shark || other is Octopus) {
       _reduceHealth();
     }
     if (other is Lightning) {

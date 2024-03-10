@@ -26,9 +26,9 @@ abstract class StateController extends Component {
     _currentState?.onRunUpdate(dt);
   }
 
-  Type? get state => _currentState?.runtimeType;
+  Type? get stateHandler => _currentState?.runtimeType;
 
-  State? get stateHandler => _currentState;
+  State? get state => _currentState;
 
   void registerStateHandler<T extends State>(T Function() constructor) {
     _stateConstructors[T] = constructor;

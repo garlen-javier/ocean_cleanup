@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:ocean_cleanup/components/octopus/octopus.dart';
 import 'package:ocean_cleanup/extensions/random_range.dart';
 import '../../constants.dart';
 import '../../mixins/update_mixin.dart';
@@ -24,15 +26,14 @@ class Lightning extends SpriteComponent with UpdateMixin,CollisionCallbacks,HasG
   LightningDirection direction;
   double speed = 100;
 
-  Lightning({ required this.from,
-    required this.to,
+  Lightning({ required this.from, required this.to,
     required this.upperDir,
     required this.lowerDir,
     required this.direction,
     this.speed = 100,
     });
 
-
+  late CircleHitbox hitbox;
   final double _rotSpeed = 8.0;
   Vector2 _velocityDir = Vector2.zero();
   Random _random  = Random();
@@ -45,7 +46,8 @@ class Lightning extends SpriteComponent with UpdateMixin,CollisionCallbacks,HasG
 
     _setVelocityDir(from, to);
     _addMoveDelay();
-    await add(CircleHitbox(radius: size.x * 0.4,position: Vector2(size.x * 0.1, size.y * 0.1)));
+    _listenRemoveByOctopus();
+    await add(hitbox = CircleHitbox(radius: size.x * 0.4,position: Vector2(size.x * 0.1, size.y * 0.1)));
     // debugMode = true;
     return super.onLoad();
   }
@@ -71,7 +73,6 @@ class Lightning extends SpriteComponent with UpdateMixin,CollisionCallbacks,HasG
     Vector2 dir = toOffset - fromOffset ;
     _velocityDir = dir.normalized();
   }
-
 
   @override
   void runUpdate(double dt) {
@@ -112,6 +113,22 @@ class Lightning extends SpriteComponent with UpdateMixin,CollisionCallbacks,HasG
     Vector2 to =  pToList[rng];
     _setVelocityDir(from, to);
     _canMove = false;
+  }
+
+  void _listenRemoveByOctopus()
+  {
+    gameRef.componentsNotifier<Octopus>().addListener(() async {
+      hitbox.removeFromParent();
+      await add(
+        OpacityEffect.fadeOut(
+          EffectController(
+            duration: 0.5,
+          ),
+        )..onComplete = () {
+          removeFromParent();
+        },
+      );
+    });
   }
 
 

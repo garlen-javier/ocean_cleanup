@@ -151,7 +151,7 @@ class Levels
         timeLimit:  30);
 
     List<TrashObjective> objectives = [stage1,stage2,stage3,stage4,stage5];
-    SharkConfig sharkConfig = const SharkConfig(count: 4,speed: 120);
+    SharkConfig sharkConfig = const SharkConfig(count: 0,speed: 120);
     return LevelParameters(
         mainTrashChance: 0.3,
         trashObjectives: objectives,

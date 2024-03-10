@@ -6,6 +6,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ocean_cleanup/components/loading_game.dart';
+import 'package:ocean_cleanup/extensions/bgm_filename.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import 'package:ocean_cleanup/worlds/hud_world.dart';
@@ -99,7 +100,8 @@ class GameManager extends Component
               _currentLevel?.pauseTrashSpawn();
               break;
             case GamePhase.win:
-              FlameAudio.bgm.stop();
+              if(FlameAudio.bgm.isPlaying)
+                FlameAudio.bgm.stop();
               FlameAudio.play(pathSfxLevelWin);
               _saveFreeAnimalsIndex();
               _currentLevel?.playerController?.enable = false;
@@ -109,11 +111,16 @@ class GameManager extends Component
               debugPrint("Win! " + state!.result.toString() );
               break;
             case GamePhase.gameOver:
-               FlameAudio.bgm.stop();
+              if(FlameAudio.bgm.isPlaying)
+                FlameAudio.bgm.stop();
                FlameAudio.play(pathSfxGameOver);
                _currentLevel?.playerController?.enable = false;
               _currentLevel?.pauseTrashSpawn();
               debugPrint("GameOver!" + state!.result.toString() );
+              break;
+            case GamePhase.quit:
+              if(FlameAudio.bgm.isPlaying)
+                  FlameAudio.bgm.stop();
               break;
             default:
               break;
@@ -222,6 +229,7 @@ class GameManager extends Component
         defHealth+=freedAnimalIndex.length;
         blocParameters.gameStatsBloc.setHealth(defHealth);
       }
+      _lastStageHealth = defHealth;
     }
     return defHealth;
   }
@@ -263,15 +271,13 @@ class GameManager extends Component
           debugPrint("Free Animal:$animal");
           _freedAnimals.add(animal);
           _trappedAnimals.remove(animal); //remove type for randomize trash
-          blocParameters.gameStatsBloc.freeAnimal(animal);
-          blocParameters.gameStatsBloc.addHealth(1);
+          blocParameters.gameStatsBloc.freeAnimalWithBonus(animal, 1);
           FlameAudio.play(pathSfxAnimalRescued);
         }
       });
     }
   }
 
-  bool isCalled = false;
   void _updateResultWithState(GameStatsState state)
   {
     LevelParameters params = currentLevelParams;
@@ -312,10 +318,6 @@ class GameManager extends Component
       {
         nextStage(lastHealth: state.health);
       }
-      else if(state.timerFinish)
-      {
-        _currentLevel?.octopus?.irritated = true;
-      }
     }
   }
 
@@ -349,13 +351,20 @@ class GameManager extends Component
 
   Future<void> _loadAudio() async {
     await _preloadSfx();
-    if(!FlameAudio.bgm.isPlaying) {
-      try {
-        await FlameAudio.bgm.play(pathBgmGame);//This could error on hot restart/reload when bgm stop
-      }catch(err)
-      {
-        debugPrint("BGM error $err");
+    try {
+      //This could error on hot restart/reload when bgm stop
+      if(currentLevelParams.levelType == LevelType.normal) {
+        if(FlameAudio.bgm.currentSourcePath != pathBgmGame)
+          await FlameAudio.bgm.play(pathBgmGame);
       }
+      else {
+        if(FlameAudio.bgm.currentSourcePath != pathBgmOctopus) {
+          await FlameAudio.bgm.play(pathBgmOctopus);
+        }
+      }
+    }catch(err)
+    {
+      debugPrint("BGM ERROR: $err");
     }
   }
 
@@ -378,6 +387,7 @@ class GameManager extends Component
     return levelIndex;
   }
 
+
   void nextStage({int lastHealth = 0})
   {
     LevelParameters params = currentLevelParams;
@@ -389,10 +399,16 @@ class GameManager extends Component
       _hud?.startNewTrashGoal(currentTrashObjective.trashType, currentTrashObjective.goal);
       _hud?.updateOctopusMeterWithStage(_currentStageIndex, currentTrashObjective.timeLimit);
       _lastStageHealth = lastHealth + 2;
-      blocParameters.gameStatsBloc.setHealth(_lastStageHealth);
-      blocParameters.gameStatsBloc.timerReset();
-      blocParameters.gameStatsBloc.resetTrashCount();
+       blocParameters.gameStatsBloc.nextStageValue(hp: _lastStageHealth);
     }
+  }
+
+  void resetStage()
+  {
+    _hud?.startNewTimeLimit(currentTrashObjective.timeLimit);
+    _hud?.startNewTrashGoal(currentTrashObjective.trashType, currentTrashObjective.goal);
+    _hud?.updateOctopusMeterWithStage(_currentStageIndex, currentTrashObjective.timeLimit);
+    blocParameters.gameStatsBloc.resetStageValue();
   }
 
   //Currently clear the save game data such as freed animals
