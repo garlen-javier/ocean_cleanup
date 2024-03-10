@@ -2,9 +2,9 @@
 
 
 import 'package:flame/components.dart';
-
 import '../octopus.dart';
 import '../octopus_state_controller.dart';
+import 'octopus_normal_state.dart';
 
 class OctopusAngryState extends OctopusState {
   OctopusAngryState(super.controller);
@@ -28,6 +28,8 @@ class OctopusAngryState extends OctopusState {
     if(_countdown!.finished)
     {
       controller.octopus.onStopAttack?.call();
+      controller.octopus.irritated = false;
+      controller.changeState<OctopusNormalState>();
       _countdown!.stop();
     }
   }

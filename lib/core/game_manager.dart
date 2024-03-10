@@ -99,7 +99,8 @@ class GameManager extends Component
               _currentLevel?.pauseTrashSpawn();
               break;
             case GamePhase.win:
-              FlameAudio.bgm.stop();
+              if(FlameAudio.bgm.isPlaying)
+                FlameAudio.bgm.stop();
               FlameAudio.play(pathSfxLevelWin);
               _saveFreeAnimalsIndex();
               _currentLevel?.playerController?.enable = false;
@@ -109,11 +110,16 @@ class GameManager extends Component
               debugPrint("Win! " + state!.result.toString() );
               break;
             case GamePhase.gameOver:
-               FlameAudio.bgm.stop();
+              if(FlameAudio.bgm.isPlaying)
+                FlameAudio.bgm.stop();
                FlameAudio.play(pathSfxGameOver);
                _currentLevel?.playerController?.enable = false;
               _currentLevel?.pauseTrashSpawn();
               debugPrint("GameOver!" + state!.result.toString() );
+              break;
+            case GamePhase.quit:
+              if(FlameAudio.bgm.isPlaying)
+                  FlameAudio.bgm.stop();
               break;
             default:
               break;
@@ -222,6 +228,7 @@ class GameManager extends Component
         defHealth+=freedAnimalIndex.length;
         blocParameters.gameStatsBloc.setHealth(defHealth);
       }
+      _lastStageHealth = defHealth;
     }
     return defHealth;
   }
@@ -271,7 +278,6 @@ class GameManager extends Component
     }
   }
 
-  bool isCalled = false;
   void _updateResultWithState(GameStatsState state)
   {
     LevelParameters params = currentLevelParams;
@@ -349,13 +355,15 @@ class GameManager extends Component
 
   Future<void> _loadAudio() async {
     await _preloadSfx();
-    if(!FlameAudio.bgm.isPlaying) {
-      try {
-        await FlameAudio.bgm.play(pathBgmGame);//This could error on hot restart/reload when bgm stop
-      }catch(err)
-      {
-        debugPrint("BGM error $err");
-      }
+    try {
+      //This could error on hot restart/reload when bgm stop
+      if(currentLevelParams.levelType == LevelType.normal)
+        await FlameAudio.bgm.play(pathBgmGame);
+      else
+        await FlameAudio.bgm.play(pathBgmOctopus);
+    }catch(err)
+    {
+      debugPrint("BGM ERROR: $err");
     }
   }
 
@@ -378,6 +386,7 @@ class GameManager extends Component
     return levelIndex;
   }
 
+
   void nextStage({int lastHealth = 0})
   {
     LevelParameters params = currentLevelParams;
@@ -393,6 +402,16 @@ class GameManager extends Component
       blocParameters.gameStatsBloc.timerReset();
       blocParameters.gameStatsBloc.resetTrashCount();
     }
+  }
+
+  void resetStage()
+  {
+    _hud?.startNewTimeLimit(currentTrashObjective.timeLimit);
+    _hud?.startNewTrashGoal(currentTrashObjective.trashType, currentTrashObjective.goal);
+    _hud?.updateOctopusMeterWithStage(_currentStageIndex, currentTrashObjective.timeLimit);
+    blocParameters.gameStatsBloc.setHealth(_lastStageHealth);
+    blocParameters.gameStatsBloc.timerReset();
+    blocParameters.gameStatsBloc.resetTrashCount();
   }
 
   //Currently clear the save game data such as freed animals

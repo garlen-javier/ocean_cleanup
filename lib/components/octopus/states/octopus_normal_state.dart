@@ -17,7 +17,7 @@ class OctopusNormalState extends OctopusState {
     controller.octopus.makeMovement(dt);
     if(controller.octopus.irritated)
     {
-        controller.changeState<OctopusTransformState>();
+      controller.changeState<OctopusTransformState>();
     }
   }
 
