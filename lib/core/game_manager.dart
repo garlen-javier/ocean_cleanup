@@ -6,6 +6,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ocean_cleanup/components/loading_game.dart';
+import 'package:ocean_cleanup/extensions/bgm_filename.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import 'package:ocean_cleanup/worlds/hud_world.dart';
@@ -352,10 +353,15 @@ class GameManager extends Component
     await _preloadSfx();
     try {
       //This could error on hot restart/reload when bgm stop
-      if(currentLevelParams.levelType == LevelType.normal)
-        await FlameAudio.bgm.play(pathBgmGame);
-      else
-        await FlameAudio.bgm.play(pathBgmOctopus);
+      if(currentLevelParams.levelType == LevelType.normal) {
+        if(FlameAudio.bgm.currentSourcePath != pathBgmGame)
+          await FlameAudio.bgm.play(pathBgmGame);
+      }
+      else {
+        if(FlameAudio.bgm.currentSourcePath != pathBgmOctopus) {
+          await FlameAudio.bgm.play(pathBgmOctopus);
+        }
+      }
     }catch(err)
     {
       debugPrint("BGM ERROR: $err");
