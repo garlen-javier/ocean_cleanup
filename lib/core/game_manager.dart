@@ -393,7 +393,7 @@ class GameManager extends Component
       _hud?.startNewTrashGoal(currentTrashObjective.trashType, currentTrashObjective.goal);
       _hud?.updateOctopusMeterWithStage(_currentStageIndex, currentTrashObjective.timeLimit);
       _lastStageHealth = lastHealth + 2;
-       blocParameters.gameStatsBloc.resetStageValue(hp: _lastStageHealth);
+       blocParameters.gameStatsBloc.nextStageValue(hp: _lastStageHealth);
     }
   }
 
@@ -402,7 +402,7 @@ class GameManager extends Component
     _hud?.startNewTimeLimit(currentTrashObjective.timeLimit);
     _hud?.startNewTrashGoal(currentTrashObjective.trashType, currentTrashObjective.goal);
     _hud?.updateOctopusMeterWithStage(_currentStageIndex, currentTrashObjective.timeLimit);
-    blocParameters.gameStatsBloc.resetStageValue(hp: _lastStageHealth);
+    blocParameters.gameStatsBloc.resetStageValue();
   }
 
   //Currently clear the save game data such as freed animals
