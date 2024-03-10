@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ocean_cleanup/bloc/game/game_bloc.dart';
+import 'package:ocean_cleanup/bloc/game/game_event.dart';
 import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
-void showGameOverPopup(BuildContext context, int level, int score) {
+void showGameOverPopup(
+    BuildContext context, int level, int score, GameBloc gameBloc) {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -29,6 +32,7 @@ void showGameOverPopup(BuildContext context, int level, int score) {
                         color: Colors.yellow, size: 50.0),
                     Icon(Icons.star_border_rounded,
                         color: Colors.yellow, size: 80.0),
+                        
                     Icon(Icons.star_border_rounded,
                         color: Colors.yellow, size: 50.0),
                   ],
@@ -153,6 +157,8 @@ void showGameOverPopup(BuildContext context, int level, int score) {
                       ),
                       GestureDetector(
                         onTap: () {
+                          gameBloc.add(const GameQuit());
+                          gameBloc.add(GameStart(levelIndex: level));
                           Navigator.push(
                             context,
                             MaterialPageRoute(

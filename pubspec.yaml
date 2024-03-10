@@ -91,11 +91,13 @@ flutter:
     - assets/images/bg_elements/coral_1_flip/
     - assets/images/tutorials/
     - assets/images/levels/
+    - assets/images/freed_animals/
     - assets/tiles/
     - assets/audio/
     - assets/audio/bgm/
     - assets/audio/sfx/
     - assets/animations/
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

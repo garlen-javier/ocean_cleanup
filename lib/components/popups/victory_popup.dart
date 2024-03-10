@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
+import 'package:ocean_cleanup/bloc/game/game_bloc.dart';
+import 'package:ocean_cleanup/bloc/game/game_event.dart';
 import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
-void showVictoryPopup(BuildContext context, int level, int score) {
+void showVictoryPopup(
+    BuildContext context, int level, int score, GameBloc gameBloc) {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -120,6 +123,8 @@ void showVictoryPopup(BuildContext context, int level, int score) {
                         children: [
                           GestureDetector(
                             onTap: () {
+                              gameBloc.add(const GameQuit());
+                              gameBloc.add(GameStart(levelIndex: level));
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -161,7 +166,7 @@ void showVictoryPopup(BuildContext context, int level, int score) {
                           ),
                           GestureDetector(
                             onTap: () {
-                              if(authBloc.isLoggedIn) {
+                              if (authBloc.isLoggedIn) {
                                 authBloc.updateScore(score);
                               }
                               Navigator.push(

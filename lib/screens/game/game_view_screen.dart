@@ -6,6 +6,7 @@ import 'package:ocean_cleanup/components/popups/gameover_popup.dart';
 import 'package:ocean_cleanup/components/popups/pause_popup.dart';
 import 'package:ocean_cleanup/components/popups/victory_popup.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
+import 'package:ocean_cleanup/utils/config_size.dart';
 import '../../bloc/game_bloc_parameters.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
 import '../../scenes/game_scene.dart';
@@ -44,17 +45,19 @@ class _GameViewScreenState extends State<GameViewScreen> {
             break;
           case GamePhase.pause:
             //Just sample usage to call event : _gameBloc.add(const GameResume());
-            showPausePopup(context, _gameBloc , widget.levelIndex);
+            showPausePopup(context, _gameBloc, widget.levelIndex);
 
             break;
           case GamePhase.win:
             debugPrint("GameViewScreen Win! " + state!.result.toString());
-            showVictoryPopup(context, widget.levelIndex, state.result!.score);
+            showVictoryPopup(
+                context, widget.levelIndex, state.result!.score, _gameBloc);
 
             break;
           case GamePhase.gameOver:
             debugPrint("GameViewScreen GameOver!" + state!.result.toString());
-            showGameOverPopup(context, widget.levelIndex, state.result!.score);
+            showGameOverPopup(
+                context, widget.levelIndex, state.result!.score, _gameBloc);
             break;
 
           default:
@@ -74,8 +77,33 @@ class _GameViewScreenState extends State<GameViewScreen> {
         if (state.freedAnimal != null && !state.rescueFailed) {
           _gameBloc.add(const GameSuspend());
           debugPrint("GameViewScreen freedAnimal: ${state.freedAnimal}");
+          print('>>>>>>${state.freedAnimal!.index}');
           //TODO: an Animal is free
           //call _gameBloc.add(const GameResume()); to unsuspend
+
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Dialog(
+                child: Container(
+                  width: SizeConfig.screenWidth / 2,
+                  height: SizeConfig.screenHeight / 2,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                        state.freedAnimal!.index == 0
+                            ? 'assets/images/freed_animals/Crab.png'
+                            : state.freedAnimal!.index == 1
+                                ? 'assets/images/freed_animals/Turtle.png'
+                                : 'assets/images/freed_animals/Whale.png',
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
         }
       },
     );
