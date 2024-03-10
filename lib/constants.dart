@@ -75,10 +75,13 @@ const Map<int,String> coralsPathMap = {
 
 //#region Audio
 const String pathBgmGame = "bgm/bgm_game.mp3";
+const String pathBgmOctopus = "bgm/bgm_octopus.mp3";
+
 const String pathSfxCatchTrash = "sfx/catching_trash.wav";
 const String pathSfxSwingNet = "sfx/swinging_net.mp3";
 const String pathSfxReduceHealth = "sfx/reduced_health.wav";
 const String pathSfxGameOver = "sfx/game_over.mp3";
 const String pathSfxLevelWin = "sfx/level_win.mp3";
 const String pathSfxAnimalRescued = "sfx/animal_rescued.mp3";
+const String pathSfxLightning = "sfx/charging_ball.mp3";
 //#endregion
