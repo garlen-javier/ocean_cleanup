@@ -31,9 +31,9 @@ class AudioManager {
 
   void muteBgm(isMute)
   {
-    
     _isMuteBgm = isMute;
-    print("Mute BGM: $_isMuteBgm");
+    double volume = (!_isMuteBgm) ? 1 : 0;
+    FlameAudio.bgm.audioPlayer.setVolume(volume);
   }
 
   void muteSfx(isMute)

@@ -15,8 +15,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
     on<GameRestart>(
           (event, emit)  {
+            int currentLevel = state.levelIndex;
             emit(const GameState.empty());
-            emit(state.copyWith(levelIndex: state.levelIndex, phase: GamePhase.start));
+            emit(state.copyWith(levelIndex: currentLevel, phase: GamePhase.start));
       },
     );
 

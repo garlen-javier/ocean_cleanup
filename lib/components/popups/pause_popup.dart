@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/bloc/game/game_bloc.dart';
 import 'package:ocean_cleanup/bloc/game/game_event.dart';
 import 'package:ocean_cleanup/bloc/game_stats/sound_state.dart';
+import 'package:ocean_cleanup/core/audio_manager.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
@@ -62,6 +63,7 @@ Dialog showPausePopup(BuildContext context,
                         GestureDetector(
                           onTap: () {
                             bloc.toggleSound();
+                            AudioManager.instance.muteSfx(!bloc.isSoundOn);
                           },
                           child: Container(
                             color: Colors.white,
@@ -110,6 +112,7 @@ Dialog showPausePopup(BuildContext context,
                         GestureDetector(
                           onTap: () {
                             bloc.toggleMusic();
+                            AudioManager.instance.muteBgm(!bloc.isMusicOn);
                           },
                           child: Container(
                             color: Colors.white,

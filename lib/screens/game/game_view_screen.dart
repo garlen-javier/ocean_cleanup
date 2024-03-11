@@ -1,6 +1,5 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/game/game_barrel.dart';
 import 'package:ocean_cleanup/components/popups/gameover_popup.dart';
@@ -12,7 +11,6 @@ import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import '../../bloc/game_bloc_parameters.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
-import '../../utils/config_size.dart';
 
 class GameViewScreen extends StatefulWidget {
   const GameViewScreen({super.key});
@@ -24,6 +22,7 @@ class GameViewScreen extends StatefulWidget {
 class _GameViewScreenState extends State<GameViewScreen> {
   late GameBloc _gameBloc;
   GameScene? _game;
+  bool _isQuit = false;
 
   @override
   void initState() {
@@ -63,13 +62,24 @@ class _GameViewScreenState extends State<GameViewScreen> {
             _game?.overlays.add("PausePopup");
             break;
           case GamePhase.win:
-            _game?.overlays.add("VictoryPopup");
             if (state.result?.freedAnimal != null) {
               _game?.overlays.add("AnimalPopup");
+            }
+            else{
+              _game?.overlays.add("VictoryPopup");
             }
             break;
           case GamePhase.gameOver:
             _game?.overlays.add("GameoverPopup");
+            break;
+          case GamePhase.quit:
+            _isQuit = true;
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LevelsScreen(),
+              ),
+            );
             break;
           default:
             break;
@@ -80,6 +90,10 @@ class _GameViewScreenState extends State<GameViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if(_isQuit) {
+      return Container();
+    }
+
     Object? obj = ModalRoute.of(context)?.settings.arguments;
     int levelIndex = (obj != null) ? obj as int : 0;
 
@@ -125,8 +139,7 @@ class _GameViewScreenState extends State<GameViewScreen> {
         _gameBloc.add(const GameRestart());
       }, onPressQuit: () {
         _game?.overlays.remove("PausePopup");
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const LevelsScreen()));
+        _gameBloc.add(const GameQuit());
       });
     };
   }
@@ -172,12 +185,7 @@ class _GameViewScreenState extends State<GameViewScreen> {
                 },
                 onPressBack: () {
                   _game?.overlays.remove("GameoverPopup");
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LevelsScreen(),
-                    ),
-                  );
+                  _gameBloc.add(const GameQuit());
                 },
               )
             : Container();
@@ -194,13 +202,17 @@ class _GameViewScreenState extends State<GameViewScreen> {
         debugPrint("showAnimalPopup: ${state.result}");
         GameResult? result = state.result;
         return (result != null)
-            ? _animalPopup(freedAnimals: result.freedAnimal)
+            ? _animalPopup(freedAnimals: result.freedAnimal,
+            onPressContinue: (){
+          _game?.overlays.remove("AnimalPopup");
+          _game?.overlays.add("VictoryPopup");
+        })
             : Container();
       });
     };
   }
 
-  Dialog _animalPopup({List<AnimalType>? freedAnimals = const []}) {
+  Dialog _animalPopup({List<AnimalType>? freedAnimals = const [],VoidCallback? onPressContinue}) {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Stack(
@@ -231,7 +243,7 @@ class _GameViewScreenState extends State<GameViewScreen> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  onPressContinue?.call();
                 },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 15),
