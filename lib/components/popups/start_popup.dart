@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/popups/tutorials/intoduction_two_popup.dart';
 import 'package:ocean_cleanup/levels/levels.dart';
 import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
-import 'package:ocean_cleanup/screens/intro%20game/intro_game_screen.dart';
-import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 import 'package:ocean_cleanup/utils/save_utils.dart';
 
@@ -294,6 +292,7 @@ class _StartPopupState extends State<StartPopup> {
                               ),
                               ModalRoute.withName('/home'),
                             );
+                            
                           }
                         }
                       },
