@@ -152,14 +152,17 @@ class _GameViewScreenState extends State<GameViewScreen> {
         debugPrint("showGameoverPopup: ${state.result}");
         GameResult? result = state.result;
         return (result != null)
-            ? showVictoryPopup(context, result.levelIndex, result.score,
+            ? VictoryPopup(
+                level: result.levelIndex,
+                score: result.score,
                 onPressNext: () {
-                _game?.overlays.remove("VictoryPopup");
-                _gameBloc.add(const GameStartNext());
-              }, onPressRetry: () {
-                _game?.overlays.remove("VictoryPopup");
-                _gameBloc.add(const GameRestart());
-              })
+                  _game?.overlays.remove("VictoryPopup");
+                  _gameBloc.add(const GameStartNext());
+                },
+                onPressRetry: () {
+                  _game?.overlays.remove("VictoryPopup");
+                  _gameBloc.add(const GameRestart());
+                })
             : Container();
       });
     };
@@ -174,10 +177,9 @@ class _GameViewScreenState extends State<GameViewScreen> {
         debugPrint("showGameOverPopup: ${state.result}");
         GameResult? result = state.result;
         return (result != null)
-            ? showGameOverPopup(
-                context,
-                result.levelIndex,
-                result.score,
+            ? GameoverPopup(
+                level: result.levelIndex,
+                score: result.score,
                 onPressRestart: () {
                   _game?.overlays.remove("GameoverPopup");
                   _gameBloc.add(const GameRestart());
@@ -217,6 +219,7 @@ class _GameViewScreenState extends State<GameViewScreen> {
       VoidCallback? onPressContinue}) {
     return Dialog(
       backgroundColor: Colors.transparent,
+      elevation: 0,
       child: Stack(
         children: [
           Image.asset(
