@@ -1,6 +1,6 @@
 {
-    "name": "ocean_cleanup",
-    "short_name": "ocean_cleanup",
+    "name": "Ocean CleanUp",
+    "short_name": "Ocean CleanUp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
