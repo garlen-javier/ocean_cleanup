@@ -25,3 +25,7 @@ We were able to create a game based on what we had intially wanted in the game p
 ## What we learned
 
 We have how to work in a mulitdisplinary team and create a space where each of us was able to use the specific skills we had in order to design and develop a game! For majority of us, this was the first time we had created a game . Which is why understanding the logistics of how to create a gameplay and using flutter to develop was a steep learning curve especially with the limited time we had.
+
+## Built With
+
+`adobe-illustrator`, `figma`, `firebase`, `flame engine`,`flutter`,
