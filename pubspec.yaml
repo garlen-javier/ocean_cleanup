@@ -49,7 +49,6 @@ dependencies:
   firebase_auth: ^4.17.5
   cloud_firestore: ^4.15.5
   shared_preferences: ^2.2.2
-  expandable_menu: ^0.0.5
   
 
 dev_dependencies:

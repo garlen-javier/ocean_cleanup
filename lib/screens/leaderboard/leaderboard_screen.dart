@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:ocean_cleanup/components/leaderboard/first_player.dart';
 import 'package:ocean_cleanup/components/leaderboard/second_player.dart';
 import 'package:ocean_cleanup/components/leaderboard/third_player.dart';
@@ -52,12 +51,12 @@ class _LeaderboardState extends State<LeaderboardScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
-          title: const Text(
+          title: Text(
             'Leaderboard',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.orange,
-              fontSize: 30,
+              fontSize: SizeConfig.mediumText1,
               fontFamily: 'wendyOne',
             ),
           ),
@@ -67,11 +66,9 @@ class _LeaderboardState extends State<LeaderboardScreen> {
             future: getListUser(),
             builder: (context, snapshot) {
               return !snapshot.hasData
-                  ? Center(
-                      child: Lottie.asset(
-                        'assets/animations/loading.json',
-                        width: 100,
-                        height: 100,
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.orange,
                       ),
                     )
                   : snapshot.data!.length >= 3
@@ -115,8 +112,8 @@ class _LeaderboardState extends State<LeaderboardScreen> {
                                   decoration: const BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
-                                        Color(0xFFBC52C6),
-                                        Color(0xFF595CFF),
+                                        Color(0xFF6874ca),
+                                        Color.fromARGB(255, 173, 180, 233),
                                       ],
                                       begin: FractionalOffset(0.0, 0.0),
                                       end: FractionalOffset(0.0, 1.0),
@@ -138,6 +135,7 @@ class _LeaderboardState extends State<LeaderboardScreen> {
                                           fontSize: 20,
                                           color: Color(0xffE8E8E8),
                                           fontWeight: FontWeight.bold,
+                                          fontFamily: "wendyOne",
                                         ),
                                       ),
                                       const Spacer(),
@@ -147,6 +145,7 @@ class _LeaderboardState extends State<LeaderboardScreen> {
                                           color: Color(0xffE8E8E8),
                                           fontWeight: FontWeight.w700,
                                           fontSize: 20,
+                                          fontFamily: "wendyOne",
                                         ),
                                       ),
                                       const Spacer(
@@ -160,6 +159,7 @@ class _LeaderboardState extends State<LeaderboardScreen> {
                                             color: Color(0xffE8E8E8),
                                             fontWeight: FontWeight.w700,
                                             fontSize: 20,
+                                            fontFamily: "wendyOne",
                                           ),
                                         ),
                                       ),
@@ -206,6 +206,7 @@ class _LeaderboardState extends State<LeaderboardScreen> {
                                                       color: Color(0xffE8E8E8),
                                                       fontWeight:
                                                           FontWeight.bold,
+                                                      fontFamily: "wendyOne",
                                                     ),
                                                   ),
                                                   const SizedBox(
@@ -219,6 +220,7 @@ class _LeaderboardState extends State<LeaderboardScreen> {
                                                       fontWeight:
                                                           FontWeight.w700,
                                                       fontSize: 20,
+                                                      fontFamily: "wendyOne",
                                                     ),
                                                   ),
                                                 ],
@@ -234,6 +236,7 @@ class _LeaderboardState extends State<LeaderboardScreen> {
                                                     color: Color(0xffE8E8E8),
                                                     fontWeight: FontWeight.w700,
                                                     fontSize: 20,
+                                                    fontFamily: "wendyOne",
                                                   ),
                                                 ),
                                               ),
@@ -254,7 +257,11 @@ class _LeaderboardState extends State<LeaderboardScreen> {
                       : const Center(
                           child: Text(
                             "No Users",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                              fontFamily: "wendyOne",
+                            ),
                           ),
                         );
             }),

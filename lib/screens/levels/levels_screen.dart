@@ -1,11 +1,8 @@
-import 'package:expandable_menu/expandable_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
-import 'package:ocean_cleanup/bloc/game_stats/sound_state.dart';
-import 'package:ocean_cleanup/components/popups/account_popup.dart';
+import 'package:ocean_cleanup/components/popups/settings_popup.dart';
 import 'package:ocean_cleanup/components/popups/start_popup.dart';
 import 'package:ocean_cleanup/screens/leaderboard/leaderboard_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
@@ -17,6 +14,8 @@ class LevelsScreen extends StatefulWidget {
   @override
   State<LevelsScreen> createState() => _LevelsScreenState();
 }
+
+final formKey = GlobalKey<FormState>();
 
 class _LevelsScreenState extends State<LevelsScreen> {
   @override
@@ -32,6 +31,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false,
         floatingActionButton: FloatingActionButton.large(
           elevation: 0,
           onPressed: () {
@@ -64,10 +64,13 @@ class _LevelsScreenState extends State<LevelsScreen> {
           foregroundColor: const Color(0xFF6874ca),
           actions: [
             IconButton(
-              onPressed: () => showAccount(
-                context,
-                authBloc.isLoggedIn,
-              ),
+              onPressed: () => showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SettingsPopup(
+                      isLoggedIn: authBloc.isLoggedIn,
+                    );
+                  }),
               icon: const Icon(
                 Icons.settings,
                 color: Color(0xFF6874ca),
