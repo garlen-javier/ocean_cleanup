@@ -22,7 +22,6 @@ class _LevelsScreenState extends State<LevelsScreen> {
   @override
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    final SoundStateBloc bloc = SoundStateBloc();
     print('Level : ${SaveUtils.instance.getUnlockedLevel}');
     return Container(
       decoration: const BoxDecoration(
@@ -64,44 +63,15 @@ class _LevelsScreenState extends State<LevelsScreen> {
           ),
           foregroundColor: const Color(0xFF6874ca),
           actions: [
-            SizedBox(
-              height: double.infinity,
-              width: SizeConfig.screenWidth / 4,
-              child: ExpandableMenu(
-                backgroundColor: Colors.transparent,
-                height: 70,
-                width: 70,
-                iconColor: const Color(0xFF6874ca),
-                itemContainerColor: Colors.transparent,
-                items: [
-                  IconButton(
-                    onPressed: () => showAccount(
-                      context,
-                      authBloc.isLoggedIn,
-                    ),
-                    icon: const Icon(
-                      Icons.person_2_rounded,
-                      color: Color(0xFF6874ca),
-                      size: 30,
-                    ),
-                  ),
-                  StreamBuilder<bool>(
-                      stream: bloc.soundState,
-                      initialData: bloc.isSoundOn,
-                      builder: (context, snapshot) {
-                        return GestureDetector(
-                          onTap: () {
-                            bloc.toggleSound();
-                          },
-                          child: Image.asset(
-                            snapshot.data!
-                                ? 'assets/images/Sound_On1x.png'
-                                : 'assets/images/Sound_Off1x.png',
-                            width: 50,
-                          ),
-                        );
-                      })
-                ],
+            IconButton(
+              onPressed: () => showAccount(
+                context,
+                authBloc.isLoggedIn,
+              ),
+              icon: const Icon(
+                Icons.settings,
+                color: Color(0xFF6874ca),
+                size: 30,
               ),
             ),
           ],

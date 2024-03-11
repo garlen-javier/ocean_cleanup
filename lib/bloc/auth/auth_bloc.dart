@@ -30,7 +30,6 @@ class AuthBloc extends Cubit<AuthState> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? username = prefs.getString('username');
     final String? id = prefs.getString('id');
-    print('HEllo $username');
     if (username != null) {
       emit(AuthState(status: AuthStatus.success, username: username, id: id));
     } else {

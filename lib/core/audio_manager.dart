@@ -17,6 +17,9 @@ class AudioManager {
   bool get isBgmPaused => FlameAudio.bgm.audioPlayer.state == PlayerState.paused;
   bool get isBgmPlaying => FlameAudio.bgm.audioPlayer.state == PlayerState.playing;
 
+  bool get isMuteBgm => _isMuteBgm;
+  bool get isMuteSfx => _isMuteSfx;
+
   Future<void> preloadSfx() async {
     await FlameAudio.play(pathSfxLevelWin,volume: 0);
     await FlameAudio.play(pathSfxGameOver,volume: 0);
@@ -28,7 +31,9 @@ class AudioManager {
 
   void muteBgm(isMute)
   {
+    
     _isMuteBgm = isMute;
+    print("Mute BGM: $_isMuteBgm");
   }
 
   void muteSfx(isMute)
