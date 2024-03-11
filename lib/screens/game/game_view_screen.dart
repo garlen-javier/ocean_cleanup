@@ -64,8 +64,7 @@ class _GameViewScreenState extends State<GameViewScreen> {
           case GamePhase.win:
             if (state.result?.freedAnimal != null) {
               _game?.overlays.add("AnimalPopup");
-            }
-            else{
+            } else {
               _game?.overlays.add("VictoryPopup");
             }
             break;
@@ -90,7 +89,7 @@ class _GameViewScreenState extends State<GameViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(_isQuit) {
+    if (_isQuit) {
       return Container();
     }
 
@@ -131,7 +130,7 @@ class _GameViewScreenState extends State<GameViewScreen> {
 
   Widget Function(BuildContext, GameScene) _pauseOverlay() {
     return (context, game) {
-      return showPausePopup(context, onPressContinue: () {
+      return PausePopup(onPressContinue: () {
         _game?.overlays.remove("PausePopup");
         _gameBloc.add(const GameResume());
       }, onPressRestart: () {
@@ -202,17 +201,20 @@ class _GameViewScreenState extends State<GameViewScreen> {
         debugPrint("showAnimalPopup: ${state.result}");
         GameResult? result = state.result;
         return (result != null)
-            ? _animalPopup(freedAnimals: result.freedAnimal,
-            onPressContinue: (){
-          _game?.overlays.remove("AnimalPopup");
-          _game?.overlays.add("VictoryPopup");
-        })
+            ? _animalPopup(
+                freedAnimals: result.freedAnimal,
+                onPressContinue: () {
+                  _game?.overlays.remove("AnimalPopup");
+                  _game?.overlays.add("VictoryPopup");
+                })
             : Container();
       });
     };
   }
 
-  Dialog _animalPopup({List<AnimalType>? freedAnimals = const [],VoidCallback? onPressContinue}) {
+  Dialog _animalPopup(
+      {List<AnimalType>? freedAnimals = const [],
+      VoidCallback? onPressContinue}) {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Stack(

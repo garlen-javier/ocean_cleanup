@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
@@ -7,7 +6,6 @@ import 'package:ocean_cleanup/components/popups/auth_popup.dart';
 import 'package:ocean_cleanup/components/popups/reset_popup.dart';
 import 'package:ocean_cleanup/models/user_model.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
-import 'package:ocean_cleanup/utils/save_utils.dart';
 
 class SettingsPopup extends StatelessWidget {
   final bool isLoggedIn;
