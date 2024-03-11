@@ -9,7 +9,6 @@ import '../../bloc/game_bloc_parameters.dart';
 import '../../constants.dart';
 import '../../mixins/update_mixin.dart';
 import '../../core/game_scene.dart';
-import '../../worlds/game_world.dart';
 import '../player/player_controller.dart';
 
 class HudMobileControl extends PositionComponent with HasGameRef<GameScene>,UpdateMixin

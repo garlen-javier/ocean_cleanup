@@ -47,7 +47,7 @@ void showIntroOnePopup(BuildContext context) {
                       ),
                       const Spacer(),
                       Image.asset(
-                        'assets/images/tutorials/Instructions title.png',
+                        'assets/images/tutorials/Instructions_title.png',
                         width: SizeConfig.screenWidth / 2.5,
                       ),
                       const Spacer(),
@@ -130,9 +130,9 @@ void showIntroOnePopup(BuildContext context) {
                   onTap: () {
                     Navigator.of(context).pop();
                     SaveUtils.instance.saveTutorialStatus("tuto1", true);
-                  } ,
+                  },
                   child: Image.asset(
-                    'assets/images/tutorials/Ready button.png',
+                    'assets/images/tutorials/ready_button.png',
                     width: SizeConfig.screenWidth / 2.5,
                   ),
                 )

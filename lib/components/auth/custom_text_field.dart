@@ -20,11 +20,9 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth / 2.2,
-      height: 50,
       decoration: BoxDecoration(
         border: Border.all(
-          color: const Color(0xFF0097B2),
+          color: const Color(0xFF6874ca),
         ),
         borderRadius: const BorderRadius.all(
           Radius.circular(30),

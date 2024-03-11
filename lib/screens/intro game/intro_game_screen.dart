@@ -33,7 +33,7 @@ class _IntroGameScreenState extends State<IntroGameScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Image.asset(
-                  "assets/images/Game_Title4x 1.png",
+                  "assets/images/Game_Title.png",
                   width: MediaQuery.of(context).size.width / 3,
                 ),
                 GestureDetector(
@@ -51,7 +51,7 @@ class _IntroGameScreenState extends State<IntroGameScreen> {
                       });
                     }
                   },
-                  child: Image.asset('assets/images/Play_Button4x 1.png'),
+                  child: Image.asset('assets/images/start_button.png'),
                 ),
               ],
             ),

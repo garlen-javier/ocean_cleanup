@@ -1,9 +1,7 @@
-
 import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame_bloc/flame_bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:ocean_cleanup/components/hud/animal_timer/animal_sprite.dart';
 import 'package:ocean_cleanup/components/hud/animal_timer/radial_progress.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
@@ -13,11 +11,12 @@ import '../../../constants.dart';
 import '../../../mixins/update_mixin.dart';
 import '../../../core/game_scene.dart';
 
-class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
-{
+class HudAnimalTimer extends PositionComponent
+    with HasGameRef<GameScene>, UpdateMixin {
   final AnimalType animalType;
   final double maxDuration;
-  HudAnimalTimer({required this.animalType,required this.maxDuration,super.position});
+  HudAnimalTimer(
+      {required this.animalType, required this.maxDuration, super.position});
 
   late RadialProgress? _radialProgess;
   late AnimalSprite? _animalSprite;
@@ -33,16 +32,18 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
   Future<void> _initDisplay() async {
     var completeSp = Sprite(gameRef.images.fromCache(pathRescueComplete));
     await add(_radialProgess = RadialProgress(
-      maxDuration: maxDuration,
-      size: completeSp.srcSize,
-      position: Vector2(2.5,2.5),
-      strokeWidth: 8,
-      onFinish: () {
-        _showFailed();
-      }
-    ));
+        maxDuration: maxDuration,
+        size: completeSp.srcSize,
+        position: Vector2(2.5, 2.5),
+        strokeWidth: 8,
+        onFinish: () {
+          _showFailed();
+        }));
 
-    await add(_animalSprite = AnimalSprite(type: animalType, position: Vector2.zero(),));
+    await add(_animalSprite = AnimalSprite(
+      type: animalType,
+      position: Vector2.zero(),
+    ));
     //await add(complete);
   }
 
@@ -53,9 +54,8 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
           return previousState.freedAnimal != newState.freedAnimal;
         },
         onNewState: (state) async {
-          if(state.freedAnimal != null && !state.rescueFailed)
-          {
-            if(!_isAnimalFree && animalType == state.freedAnimal) {
+          if (state.freedAnimal != null && !state.rescueFailed) {
+            if (!_isAnimalFree && animalType == state.freedAnimal) {
               _isAnimalFree = true;
               await _showComplete();
             }
@@ -65,7 +65,7 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
     );
   }
 
-  Future<void>  _showComplete() async {
+  Future<void> _showComplete() async {
     _removeAnimalDisplay();
 
     var completeSp = Sprite(gameRef.images.fromCache(pathRescueComplete));
@@ -89,8 +89,7 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
     await add(failedComp);
   }
 
-  void _removeAnimalDisplay()
-  {
+  void _removeAnimalDisplay() {
     _radialProgess?.removeFromParent();
     _animalSprite?.removeFromParent();
     _radialProgess = null;
@@ -99,8 +98,9 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
 
   @override
   void runUpdate(double dt) {
-    if(_radialProgess != null)
+    if (_radialProgess != null) {
       _radialProgess!.runUpdate(dt);
+    }
   }
 
   @override
@@ -109,5 +109,4 @@ class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,Update
     _animalSprite = null;
     super.onRemove();
   }
-
 }

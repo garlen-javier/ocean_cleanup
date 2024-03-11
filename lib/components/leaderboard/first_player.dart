@@ -52,7 +52,7 @@ Expanded firstPlayer(UserModel user) {
         Text(
           user.username,
           style: const TextStyle(
-            color: Colors.black,
+            color: Color(0xFF6874ca),
             fontWeight: FontWeight.w700,
             fontSize: 20,
             fontFamily: "wendyOne",
@@ -61,8 +61,7 @@ Expanded firstPlayer(UserModel user) {
         Text(
           user.score.toString(),
           style: const TextStyle(
-            color:  Colors.black,
-            fontWeight: FontWeight.w700,
+            color: Colors.orange,
             fontSize: 20,
             fontFamily: "wendyOne",
           ),
