@@ -76,6 +76,16 @@ class SaveUtils {
     return list;
   }
 
+  void saveTutorialStatus(String key , bool status) async {
+    assertMessage();
+    _gameBox.put(key, status);
+  }
+
+  bool getTutorialStatus(String key)  {
+    assertMessage();
+    return _gameBox.get(key,defaultValue:false);
+  }
+
   void clearGameBox()
   {
     assertMessage();
@@ -85,16 +95,6 @@ class SaveUtils {
   void assertMessage()
   {
     assert(_isLoaded,"SaveUtils should be loaded first");
-  }
-
-  void saveTutorialStatus(String tuto , bool status) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool(tuto, status);
-  }
-
-  Future<bool> getTutorialStatus(String tuto) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(tuto) ?? false;
   }
 }
 

@@ -271,8 +271,7 @@ class _StartPopupState extends State<StartPopup> {
                             MaterialStateProperty.all(Colors.orange),
                       ),
                       onPressed: () async {
-                        bool tuto2 =
-                            await SaveUtils.instance.getTutorialStatus("tuto2");
+                        bool tuto2 = SaveUtils.instance.getTutorialStatus("tuto2");
                         if (!tuto2) {
                           if (mounted) {
                             showIntroTwoPopup(context, widget.levelIndex);

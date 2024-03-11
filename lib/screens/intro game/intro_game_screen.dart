@@ -44,8 +44,7 @@ class _IntroGameScreenState extends State<IntroGameScreen> {
                         builder: (context) => const LevelsScreen(),
                       ),
                     );
-                    bool tuto1 =
-                        await SaveUtils.instance.getTutorialStatus("tuto1");
+                    bool tuto1 = SaveUtils.instance.getTutorialStatus("tuto1");
                     if (!tuto1) {
                       Future.delayed(const Duration(seconds: 1), () {
                         showIntroOnePopup(context);
