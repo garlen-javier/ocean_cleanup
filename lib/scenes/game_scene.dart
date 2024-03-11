@@ -10,6 +10,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ocean_cleanup/core/audio_manager.dart';
 import 'package:ocean_cleanup/core/game_manager.dart';
 import 'package:ocean_cleanup/utils/save_utils.dart';
 import '../bloc/game/game_barrel.dart';
@@ -167,7 +168,8 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
 
   @override
   void onDispose() async {
-     FlameAudio.bgm.stop();
+    debugPrint("FlameGame: onDispose");
+    AudioManager.instance.stopBgm();
      //FlameAudio.audioCache.clearAll();
     // Flame.images.clearCache();
     // Flame.assets.clearCache();
@@ -205,6 +207,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
           if(!isPressO) {
            // blocParameters.gameBloc.add(GameStart(levelIndex: 4));
             _gameManager.blocParameters.gameBloc.add(const GameResume());
+           // FlameAudio.bgm.stop();
             isPressO = true;
           }
         }

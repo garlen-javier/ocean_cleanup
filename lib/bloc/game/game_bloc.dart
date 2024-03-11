@@ -67,8 +67,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     );
 
     on<GameQuit>(
-          (event, emit) => emit(const GameState.empty(),
-      ),
+          (event, emit) => emit(state.copyWith(phase:GamePhase.quit))
     );
 
     on<Default>(
