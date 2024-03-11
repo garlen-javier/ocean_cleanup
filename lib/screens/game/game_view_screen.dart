@@ -7,11 +7,11 @@ import 'package:ocean_cleanup/components/popups/gameover_popup.dart';
 import 'package:ocean_cleanup/components/popups/pause_popup.dart';
 import 'package:ocean_cleanup/components/popups/victory_popup.dart';
 import 'package:ocean_cleanup/core/game_result.dart';
+import 'package:ocean_cleanup/core/game_scene.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import '../../bloc/game_bloc_parameters.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
-import '../../scenes/game_scene.dart';
 import '../../utils/config_size.dart';
 
 class GameViewScreen extends StatefulWidget {
@@ -64,11 +64,12 @@ class _GameViewScreenState extends State<GameViewScreen> {
             break;
           case GamePhase.win:
             _game?.overlays.add("VictoryPopup");
-            if(state.result?.freedAnimal != null)
+            if (state.result?.freedAnimal != null) {
               _game?.overlays.add("AnimalPopup");
+            }
             break;
           case GamePhase.gameOver:
-           _game?.overlays.add("GameoverPopup");
+            _game?.overlays.add("GameoverPopup");
             break;
           default:
             break;
@@ -104,8 +105,8 @@ class _GameViewScreenState extends State<GameViewScreen> {
           overlayBuilderMap: {
             'PausePopup': _pauseOverlay(),
             'VictoryPopup': _victoryOverlay(),
-            'GameoverPopup' : _gameoverOverlay(),
-            'AnimalPopup' : _animalOverlay(),
+            'GameoverPopup': _gameoverOverlay(),
+            'AnimalPopup': _animalOverlay(),
           },
         ),
       ),
@@ -116,13 +117,13 @@ class _GameViewScreenState extends State<GameViewScreen> {
 
   Widget Function(BuildContext, GameScene) _pauseOverlay() {
     return (context, game) {
-      return showPausePopup(context,onPressContinue: (){
+      return showPausePopup(context, onPressContinue: () {
         _game?.overlays.remove("PausePopup");
         _gameBloc.add(const GameResume());
-      },onPressRestart: (){
+      }, onPressRestart: () {
         _game?.overlays.remove("PausePopup");
         _gameBloc.add(const GameRestart());
-      },onPressQuit: (){
+      }, onPressQuit: () {
         _game?.overlays.remove("PausePopup");
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const LevelsScreen()));
@@ -134,20 +135,20 @@ class _GameViewScreenState extends State<GameViewScreen> {
     return (context, game) {
       return BlocBuilder<GameBloc, GameState>(
           buildWhen: (previousState, state) {
-            return previousState != state;
-          }, builder: (context, state) {
-            debugPrint("showGameoverPopup: ${state!.result}");
-            GameResult? result = state.result;
-            return (result != null) ? showVictoryPopup(context, result!.levelIndex, result.score,
-                onPressNext: (){
-                  _game?.overlays.remove("VictoryPopup");
-                  _gameBloc.add(const GameStartNext());
-            },
-              onPressRetry: (){
+        return previousState != state;
+      }, builder: (context, state) {
+        debugPrint("showGameoverPopup: ${state.result}");
+        GameResult? result = state.result;
+        return (result != null)
+            ? showVictoryPopup(context, result.levelIndex, result.score,
+                onPressNext: () {
+                _game?.overlays.remove("VictoryPopup");
+                _gameBloc.add(const GameStartNext());
+              }, onPressRetry: () {
                 _game?.overlays.remove("VictoryPopup");
                 _gameBloc.add(const GameRestart());
-              }
-            ) : Container();
+              })
+            : Container();
       });
     };
   }
@@ -156,21 +157,30 @@ class _GameViewScreenState extends State<GameViewScreen> {
     return (context, game) {
       return BlocBuilder<GameBloc, GameState>(
           buildWhen: (previousState, state) {
-            return previousState != state;
-          }, builder: (context, state) {
-        debugPrint("showGameOverPopup: ${state!.result}");
+        return previousState != state;
+      }, builder: (context, state) {
+        debugPrint("showGameOverPopup: ${state.result}");
         GameResult? result = state.result;
-        return (result != null) ? showGameOverPopup(context, result!.levelIndex, result.score,
-          onPressRestart: (){
-            _game?.overlays.remove("GameoverPopup");
-            _gameBloc.add(const GameRestart());
-          },
-          onPressBack: (){
-            _game?.overlays.remove("GameoverPopup");
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const LevelsScreen()));
-          },
-        ) : Container();
+        return (result != null)
+            ? showGameOverPopup(
+                context,
+                result.levelIndex,
+                result.score,
+                onPressRestart: () {
+                  _game?.overlays.remove("GameoverPopup");
+                  _gameBloc.add(const GameRestart());
+                },
+                onPressBack: () {
+                  _game?.overlays.remove("GameoverPopup");
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LevelsScreen(),
+                    ),
+                  );
+                },
+              )
+            : Container();
       });
     };
   }
@@ -179,36 +189,68 @@ class _GameViewScreenState extends State<GameViewScreen> {
     return (context, game) {
       return BlocBuilder<GameBloc, GameState>(
           buildWhen: (previousState, state) {
-            return previousState != state;
-          }, builder: (context, state) {
-        debugPrint("showAnimalPopup: ${state!.result}");
+        return previousState != state;
+      }, builder: (context, state) {
+        debugPrint("showAnimalPopup: ${state.result}");
         GameResult? result = state.result;
-        return (result != null) ? _animalPopup(freedAnimals: result!.freedAnimal) : Container();
+        return (result != null)
+            ? _animalPopup(freedAnimals: result.freedAnimal)
+            : Container();
       });
     };
   }
 
-  Dialog _animalPopup({List<AnimalType>? freedAnimals = const[]}){
+  Dialog _animalPopup({List<AnimalType>? freedAnimals = const []}) {
     return Dialog(
-      child: Container(
-        width: SizeConfig.screenWidth / 2,
-        height: SizeConfig.screenHeight / 2,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              freedAnimals!.contains(AnimalType.crab)
-                  ? 'assets/images/freed_animals/Crab.png'
-                  : freedAnimals!.contains(AnimalType.seaTurtle)
-                  ? 'assets/images/freed_animals/Turtle.png'
-                  : 'assets/images/freed_animals/Whale.png',
-            ),
-            fit: BoxFit.cover,
+      backgroundColor: Colors.transparent,
+      child: Stack(
+        children: [
+          Image.asset(
+            freedAnimals!.contains(AnimalType.crab)
+                ? 'assets/images/freed_animals/Crab.png'
+                : freedAnimals.contains(AnimalType.seaTurtle)
+                    ? 'assets/images/freed_animals/Turtle.png'
+                    : 'assets/images/freed_animals/Whale.png',
           ),
-        ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Center(
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.green),
+                  shape: MaterialStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      side: const BorderSide(
+                        color: Colors.white,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  child: Text(
+                    "Continue Playing",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "wendyOne",
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   //#endregion
-
 }
