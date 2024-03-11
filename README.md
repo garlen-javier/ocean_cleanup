@@ -28,4 +28,4 @@ We have how to work in a mulitdisplinary team and create a space where each of u
 
 ## Built With
 
-`adobe-illustrator`, `figma`, `firebase`, `flame engine`,`flutter`,
+`adobe-illustrator` `figma` `firebase` `flame engine` `flutter`
