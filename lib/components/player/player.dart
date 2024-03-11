@@ -13,7 +13,7 @@ import 'package:ocean_cleanup/core/audio_manager.dart';
 import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import 'package:ocean_cleanup/utils/math_utils.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
-import '../../scenes/game_scene.dart';
+import '../../core/game_scene.dart';
 import '../../worlds/game_world.dart';
 import '../shark/shark.dart';
 import '../trash/trash.dart';

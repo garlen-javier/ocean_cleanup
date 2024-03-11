@@ -7,7 +7,7 @@ import 'package:flutter/material.dart' as material;
 import '../../bloc/game_stats/game_stats_barrel.dart';
 import '../../constants.dart';
 import '../../levels/level_parameters.dart';
-import '../../scenes/game_scene.dart';
+import '../../core/game_scene.dart';
 
 class HudTrashCount extends PositionComponent with HasGameRef<GameScene>
 {

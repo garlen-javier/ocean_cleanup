@@ -4,7 +4,7 @@ import 'package:flame/extensions.dart';
 import 'package:flame/sprite.dart';
 import '../../../constants.dart';
 import '../../../levels/level_parameters.dart';
-import '../../../scenes/game_scene.dart';
+import '../../../core/game_scene.dart';
 
 enum AnimalAnimationState {
   idle,

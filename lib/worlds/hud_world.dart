@@ -17,7 +17,7 @@ import '../constants.dart';
 import '../core/game_manager.dart';
 import '../levels/level_parameters.dart';
 import '../mixins/update_mixin.dart';
-import '../scenes/game_scene.dart';
+import '../core/game_scene.dart';
 import 'package:flutter/material.dart' as material;
 
 import '../utils/utils.dart';

@@ -8,7 +8,7 @@ import 'dart:async' as dartAsync;
 import '../../constants.dart';
 import '../../framework/object_pool.dart';
 import '../../mixins/update_mixin.dart';
-import '../../scenes/game_scene.dart';
+import '../../core/game_scene.dart';
 import '../../worlds/game_world.dart';
 
 

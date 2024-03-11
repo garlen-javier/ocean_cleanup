@@ -9,7 +9,7 @@ import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import 'package:ocean_cleanup/worlds/game_world.dart';
 import 'dart:async' as dartAsync;
 import '../../constants.dart';
-import '../../scenes/game_scene.dart';
+import '../../core/game_scene.dart';
 import '../../utils/math_utils.dart';
 import '../brick/catcher_body.dart';
 

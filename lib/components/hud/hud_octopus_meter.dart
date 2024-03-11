@@ -8,7 +8,7 @@ import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/utils/math_utils.dart';
 
 import '../../mixins/update_mixin.dart';
-import '../../scenes/game_scene.dart';
+import '../../core/game_scene.dart';
 
 class HudOctopusMeter extends PositionComponent with UpdateMixin, HasGameRef<GameScene>
 {

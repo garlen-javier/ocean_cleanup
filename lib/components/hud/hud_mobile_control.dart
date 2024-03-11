@@ -8,7 +8,7 @@ import 'package:flame/input.dart';
 import '../../bloc/game_bloc_parameters.dart';
 import '../../constants.dart';
 import '../../mixins/update_mixin.dart';
-import '../../scenes/game_scene.dart';
+import '../../core/game_scene.dart';
 import '../../worlds/game_world.dart';
 import '../player/player_controller.dart';
 

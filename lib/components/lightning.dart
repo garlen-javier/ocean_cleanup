@@ -8,7 +8,7 @@ import 'package:ocean_cleanup/components/octopus/octopus.dart';
 import 'package:ocean_cleanup/extensions/random_range.dart';
 import '../../constants.dart';
 import '../../mixins/update_mixin.dart';
-import '../../scenes/game_scene.dart';
+import '../core/game_scene.dart';
 import '../../worlds/game_world.dart';
 
 enum LightningDirection

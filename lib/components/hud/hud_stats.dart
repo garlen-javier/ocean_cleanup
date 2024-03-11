@@ -8,7 +8,7 @@ import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/mixins/update_mixin.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
 import '../../levels/level_parameters.dart';
-import '../../scenes/game_scene.dart';
+import '../../core/game_scene.dart';
 import 'animal_timer/hud_animal_timer.dart';
 
 class HudStats extends PositionComponent with HasGameRef<GameScene>,UpdateMixin

@@ -11,7 +11,7 @@ import '../../../bloc/game_stats/game_stats_bloc.dart';
 import '../../../bloc/game_stats/game_stats_state.dart';
 import '../../../constants.dart';
 import '../../../mixins/update_mixin.dart';
-import '../../../scenes/game_scene.dart';
+import '../../../core/game_scene.dart';
 
 class HudAnimalTimer extends PositionComponent with HasGameRef<GameScene>,UpdateMixin
 {

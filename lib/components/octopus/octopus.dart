@@ -15,7 +15,7 @@ import 'package:ocean_cleanup/worlds/game_world.dart';
 import 'dart:async' as dartAsync;
 import '../../constants.dart';
 import '../../mixins/update_mixin.dart';
-import '../../scenes/game_scene.dart';
+import '../../core/game_scene.dart';
 import '../../utils/math_utils.dart';
 import 'octopus_state_controller.dart';
 import 'states/octopus_normal_state.dart';

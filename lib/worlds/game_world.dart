@@ -26,7 +26,7 @@ import '../components/trash/trash.dart';
 import '../core/audio_manager.dart';
 import '../core/game_manager.dart';
 import '../mixins/update_mixin.dart';
-import '../scenes/game_scene.dart';
+import '../core/game_scene.dart';
 
 
 class GameWorld extends World with HasCollisionDetection,HasUpdateMixin,HasGameRef<GameScene>

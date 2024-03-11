@@ -16,7 +16,7 @@ import '../bloc/game_stats/game_stats_barrel.dart';
 import '../components/player/player.dart';
 import '../constants.dart';
 import '../levels/levels.dart';
-import '../scenes/game_scene.dart';
+import 'game_scene.dart';
 import '../utils/save_utils.dart';
 import '../worlds/game_world.dart';
 import 'game_result.dart';
