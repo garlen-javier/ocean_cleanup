@@ -10,13 +10,11 @@ import 'player.dart';
 class PlayerController extends Component with KeyboardHandler
 {
   final Player player;
-  final GameBlocParameters blocParameters;
-  PlayerController({required this.player,required this.blocParameters});
+  PlayerController({required this.player});
 
   Vector2 _keyboardVelo = Vector2.zero();
   double _keyboardAngle = 0;
   bool _isCatchPress = false;
-  bool _isEscapePress = false;
   bool enable = false;
 
   @override
@@ -54,16 +52,6 @@ class PlayerController extends Component with KeyboardHandler
       }
       else if(isKeyUp){
         _isCatchPress = false;
-      }
-    }
-
-    if (event.logicalKey == LogicalKeyboardKey.escape) {
-      if(isKeyDown && !_isEscapePress) {
-        blocParameters.gameBloc.add(const GamePause());
-        _isEscapePress = true;
-      }
-      else if(isKeyUp){
-        _isEscapePress = false;
       }
     }
 

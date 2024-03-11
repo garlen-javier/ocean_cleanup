@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:ocean_cleanup/components/loading_game.dart';
 import 'package:ocean_cleanup/core/audio_manager.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
@@ -20,7 +21,7 @@ import '../utils/save_utils.dart';
 import '../worlds/game_world.dart';
 import 'game_result.dart';
 
-class GameManager extends Component
+class GameManager extends Component with KeyboardHandler
 {
   final GameScene gameScene;
   final GameBlocParameters blocParameters;
@@ -36,6 +37,7 @@ class GameManager extends Component
   Random rand = Random();
   GameWorld? _currentLevel;
   HudWorld? _hud;
+  bool _isEscapePress = false;
 
   int _lastStageHealth = 0;
   double _totalStageRemainingTime = 0;
@@ -400,6 +402,24 @@ class GameManager extends Component
   {
     blocParameters.gameStatsBloc.defaultState();
     SaveUtils.instance.clearGameBox();
+  }
+
+  @override
+  bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    final isKeyDown = event is RawKeyDownEvent;
+    final isKeyUp = event is RawKeyUpEvent;
+
+    if (event.logicalKey == LogicalKeyboardKey.escape) {
+      if(isKeyDown && !_isEscapePress) {
+        blocParameters.gameBloc.add(const GamePause());
+        _isEscapePress = true;
+      }
+      else if(isKeyUp){
+        _isEscapePress = false;
+      }
+    }
+
+    return super.onKeyEvent(event, keysPressed);
   }
 
 }

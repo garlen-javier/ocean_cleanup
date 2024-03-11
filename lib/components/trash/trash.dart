@@ -21,9 +21,10 @@ class Trash extends SpriteComponent with UpdateMixin,CollisionCallbacks,HasGameR
   RectangleHitbox? _hitBox;
   TrashType? type;
   ObjectPool<Trash>? _pool;
-  Vector2 _pos = Vector2.zero();
   int _directionX = 1;
   double _speed = 0.5;
+  Vector2 _pos = Vector2.zero();
+  Random _rand = Random();
 
   @override
   void onMount() {
@@ -33,6 +34,7 @@ class Trash extends SpriteComponent with UpdateMixin,CollisionCallbacks,HasGameR
     sprite = Sprite(gameRef.images.fromCache(trashPathMap[type]!));
     anchor = Anchor.center;
     position = Vector2(_pos.x + width * 0.5,_pos.y - height * 0.5);
+    angle = _rand.nextDouble();
 
     if(_hitBox == null)
       add(_hitBox = RectangleHitbox(size:size));
