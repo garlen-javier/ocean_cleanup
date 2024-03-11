@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
@@ -60,6 +59,7 @@ class AuthPopup extends StatelessWidget {
                   style: TextStyle(
                     color: Color(0xFF6874ca),
                     fontFamily: "wendyOne",
+                    
                   ),
                 ),
                 content: SizedBox(
@@ -87,102 +87,96 @@ class AuthPopup extends StatelessWidget {
             showErrorDialog(context, state.error ?? 'Unknown error');
           }
         },
-        child: Center(
-          child: Form(
-            key: formKey,
-            child: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  CustomTextField(
-                    controller: usernameController,
-                    labelText: 'Username',
-                    prefixIcon: Icons.person,
-                    obscureText: false,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your username';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  CustomTextField(
-                    controller: passwordController,
-                    labelText: 'Password',
-                    prefixIcon: Icons.key_rounded,
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.orange),
-                        ),
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            if (passwordController.text.length < 6) {
-                              showErrorDialog(context,
-                                  'Password must be at least 6 characters');
-                              return;
-                            }
-                            authBloc.signUp(
-                              username: usernameController.text,
-                              password: passwordController.text,
-                            );
-                          }
-                        },
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "wendyOne",
-                            fontSize: SizeConfig.smallText1,
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.green),
-                        ),
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            authBloc.login(
-                              username: usernameController.text,
-                              password: passwordController.text,
-                            );
-                          }
-                        },
-                        child: Text(
-                          'Login',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "wendyOne",
-                            fontSize: SizeConfig.smallText1,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+        child: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                CustomTextField(
+                  controller: usernameController,
+                  labelText: 'Username',
+                  prefixIcon: Icons.person,
+                  obscureText: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your username';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                CustomTextField(
+                  controller: passwordController,
+                  labelText: 'Password',
+                  prefixIcon: Icons.key_rounded,
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    return null;
+                  },
+                ),
+              ],
             ),
           ),
         ),
       ),
+      actionsAlignment: MainAxisAlignment.spaceBetween,
+      actions: [
+
+        ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.orange),
+          ),
+          onPressed: () {
+            if (formKey.currentState!.validate()) {
+              if (passwordController.text.length < 6) {
+                showErrorDialog(
+                    context, 'Password must be at least 6 characters');
+                return;
+              }
+              authBloc.signUp(
+                username: usernameController.text,
+                password: passwordController.text,
+              );
+            }
+          },
+          child: Text(
+            'Sign Up',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: "wendyOne",
+              fontSize: SizeConfig.smallText1,
+            ),
+          ),
+        ),
+        ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.green),
+          ),
+          onPressed: () {
+            if (formKey.currentState!.validate()) {
+              authBloc.login(
+                username: usernameController.text,
+                password: passwordController.text,
+              );
+            }
+          },
+          child: Text(
+            'Login',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: "wendyOne",
+              fontSize: SizeConfig.smallText1,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

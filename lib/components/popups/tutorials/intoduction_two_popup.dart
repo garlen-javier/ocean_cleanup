@@ -47,7 +47,7 @@ void showIntroTwoPopup(BuildContext context, int levelIndex) {
                       ),
                       const Spacer(),
                       Image.asset(
-                        'assets/images/tutorials/Instructions title.png',
+                        'assets/images/tutorials/Instructions_title.png',
                         width: SizeConfig.screenWidth / 2.5,
                       ),
                       const Spacer(),
@@ -149,7 +149,7 @@ void showIntroTwoPopup(BuildContext context, int levelIndex) {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Image.asset(
-                            'assets/images/tutorials/Keyboard buttons.png',
+                            'assets/images/tutorials/keyboard_button.png',
                           ),
                           RichText(
                             textAlign: TextAlign.center,
@@ -188,18 +188,17 @@ void showIntroTwoPopup(BuildContext context, int levelIndex) {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (BuildContext context) =>  const GameViewScreen(
-                        ),
+                        builder: (BuildContext context) =>
+                            const GameViewScreen(),
                         settings: RouteSettings(
                           arguments: levelIndex - 1,
                         ),
                       ),
                       ModalRoute.withName('/home'),
                     );
-
                   },
                   child: Image.asset(
-                    'assets/images/tutorials/Ready button.png',
+                    'assets/images/tutorials/ready_button.png',
                     width: SizeConfig.screenWidth / 2.5,
                   ),
                 )
