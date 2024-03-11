@@ -1,3 +1,10 @@
+<p align="center">
+  <a href="">
+    <img alt="OceanCleanUp" src="https://github.com/garlen-javier/ocean_cleanup/assets/71249192/e128acf0-f616-4be2-b610-ee778f8f0a41"  />
+  </a>
+</p>
+
+
 # Ocean Cleanup
 
 Embark on a thrilling journey with Ocean Cleanup! An underwater sustainability game that challenges you to combat a formidable queen octopus, rescue marine life, and tackle ocean pollution head-on.
