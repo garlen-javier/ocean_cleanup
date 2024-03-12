@@ -28,7 +28,7 @@ void main() async {
   Flame.device.fullScreen();
   Flame.device.setLandscape();
   FlameAudio.bgm.initialize();
-  if (!isTesterMode)
+  if (!isTesterMode || isRelease)
     runApp(const MyApp());
   else
     runApp(const LevelTester());

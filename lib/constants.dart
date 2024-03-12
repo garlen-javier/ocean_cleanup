@@ -4,7 +4,7 @@ import 'package:flame/extensions.dart';
 import 'levels/level_parameters.dart';
 
 const bool isTesterMode = false;
-const bool isRelease = false;
+const bool isRelease = true;
 const Size screenRatio = Size(1280,720); //16:9
 
 const int defaultHealth = 3;

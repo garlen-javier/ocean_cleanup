@@ -42,13 +42,7 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     debugPrint("FlameGame: onLoad");
     await _loadGameManager();
     await _loadGame();
-    //TODO: testing
-    if(!isTesterMode) {
-      blocParameters.gameBloc.add(GameStart(levelIndex:levelIndex));
-      //blocParameters.gameBloc.add(GameStart(levelIndex: 5));
-    }
-    else
-      blocParameters.gameBloc.add(GameStart(levelIndex:levelIndex));
+    blocParameters.gameBloc.add(GameStart(levelIndex:levelIndex));
     return super.onLoad();
   }
 
@@ -118,7 +112,6 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
       width: screenRatio.width,
       height: screenRatio.height,
     );
-
     hudCamera.viewfinder.scale = Vector2.all(1.5);
 
     await addAll([gameCamera, hudCamera]);
@@ -172,15 +165,14 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
     AudioManager.instance.stopBgm();
     blocParameters.gameBloc.close();
     blocParameters.gameStatsBloc.close();
-     //FlameAudio.audioCache.clearAll();
-    // Flame.images.clearCache();
-    // Flame.assets.clearCache();
-   //  await FlameAudio.audioCache.clearAll();
+    //FlameAudio.audioCache.clearAll();
+    //Flame.images.clearCache();
+    //Flame.assets.clearCache();
     //TiledAtlas.clearCache();
     super.onDispose();
   }
 
-  ///TODO: To Remove
+  ///TODO: To Remove, For testing only
   bool isPress = false;
   bool isPressO = false;
   @override
@@ -207,7 +199,6 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
         if(isKeyDown) {
           debugPrint("pressed O: testing");
           if(!isPressO) {
-           // blocParameters.gameBloc.add(GameStart(levelIndex: 4));
             _gameManager.blocParameters.gameBloc.add(const GameResume());
            // FlameAudio.bgm.stop();
             isPressO = true;
