@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:ocean_cleanup/components/popups/tutorials/introduction_two_popup.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
-import 'package:ocean_cleanup/utils/save_utils.dart';
 
-void showIntroOnePopup(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-          side: const BorderSide(color: Color(0xFF6874ca), width: 5),
+class IntroOnePopup extends StatelessWidget {
+  const IntroOnePopup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: DecoratedBox(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/background.png'),
+          fit: BoxFit.fill,
         ),
-        backgroundColor: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+      ),
+      child: Center(
+        child: Container(
+          width: SizeConfig.screenWidth / 1.5,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(50),
+            border: Border.all(
+              color: const Color(0xFF6874ca),
+              width: 5,
+            ),
+          ),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  height: 100,
-                  width: SizeConfig.screenWidth / 1.5,
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, bottom: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -128,11 +139,14 @@ void showIntroOnePopup(BuildContext context) {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pop();
-                    SaveUtils.instance.saveTutorialStatus("tuto1", true);
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const IntroTwoPopup(),
+                      ),
+                    );
                   },
                   child: Image.asset(
-                    'assets/images/tutorials/ready_button.png',
+                    'assets/images/Button_Continue.png',
                     width: SizeConfig.screenWidth / 2.5,
                   ),
                 )
@@ -140,7 +154,7 @@ void showIntroOnePopup(BuildContext context) {
             ),
           ),
         ),
-      );
-    },
-  );
+      ),
+    ));
+  }
 }
