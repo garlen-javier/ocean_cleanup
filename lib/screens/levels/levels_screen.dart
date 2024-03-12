@@ -27,7 +27,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/images/background.png"),
+          image: AssetImage("assets/images/screen_background.png"),
           fit: BoxFit.cover,
         ),
       ),
