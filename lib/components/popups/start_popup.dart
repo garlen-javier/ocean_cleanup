@@ -5,7 +5,7 @@ import 'package:ocean_cleanup/components/popups/tutorials/tutorial_octopus.dart'
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/levels/levels.dart';
-import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
+import 'package:ocean_cleanup/screens/game_view_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 import 'package:ocean_cleanup/utils/save_utils.dart';
 

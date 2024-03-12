@@ -11,9 +11,9 @@ import 'package:ocean_cleanup/components/popups/victory_popup.dart';
 import 'package:ocean_cleanup/core/game_result.dart';
 import 'package:ocean_cleanup/core/game_scene.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
-import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
-import '../../bloc/game_bloc_parameters.dart';
-import '../../bloc/game_stats/game_stats_barrel.dart';
+import 'package:ocean_cleanup/screens/levels_screen.dart';
+import '../bloc/game_bloc_parameters.dart';
+import '../bloc/game_stats/game_stats_barrel.dart';
 
 Widget gameViewScreen() {
   return MultiBlocProvider(

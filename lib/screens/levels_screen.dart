@@ -7,7 +7,7 @@ import 'package:ocean_cleanup/bloc/game_stats/connection_stats.dart';
 import 'package:ocean_cleanup/components/popups/internet_popup.dart';
 import 'package:ocean_cleanup/components/popups/settings_popup.dart';
 import 'package:ocean_cleanup/components/popups/start_popup.dart';
-import 'package:ocean_cleanup/screens/leaderboard/leaderboard_screen.dart';
+import 'package:ocean_cleanup/screens/leaderboard_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 import 'package:ocean_cleanup/utils/save_utils.dart';
 

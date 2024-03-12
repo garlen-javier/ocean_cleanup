@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/game/game_barrel.dart';
 import 'package:ocean_cleanup/bloc/game_stats/game_stats_barrel.dart';
-import '../../../screens/game/game_view_screen.dart';
+import '../../../screens/game_view_screen.dart';
 import '../../../utils/config_size.dart';
 
 class TutorialOctopus extends StatelessWidget {

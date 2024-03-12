@@ -4,7 +4,7 @@ import 'package:ocean_cleanup/bloc/game/connection_bloc.dart';
 import 'package:ocean_cleanup/bloc/game_stats/connection_stats.dart';
 import 'package:ocean_cleanup/components/popups/internet_popup.dart';
 import 'package:ocean_cleanup/components/popups/tutorials/introduction_one_popup.dart';
-import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
+import 'package:ocean_cleanup/screens/levels_screen.dart';
 import 'package:ocean_cleanup/utils/save_utils.dart';
 
 class IntroGameScreen extends StatefulWidget {

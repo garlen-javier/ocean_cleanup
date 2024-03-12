@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../../screens/game/game_view_screen.dart';
+import '../../../screens/game_view_screen.dart';
 
 class IntroTwoPopup extends StatelessWidget {
   const IntroTwoPopup({super.key});

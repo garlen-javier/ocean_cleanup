@@ -9,7 +9,7 @@ import 'package:ocean_cleanup/utils/utils.dart';
 import '../levels/level_parameters.dart';
 import '../levels/levels.dart';
 import '../utils/config_size.dart';
-import 'game/game_view_screen.dart';
+import 'game_view_screen.dart';
 
 class LevelTester extends StatelessWidget {
   const LevelTester({super.key});

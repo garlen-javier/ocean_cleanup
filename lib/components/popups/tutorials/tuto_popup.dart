@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
+import 'package:ocean_cleanup/screens/game_view_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 

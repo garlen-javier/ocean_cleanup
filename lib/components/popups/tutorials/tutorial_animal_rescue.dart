@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../screens/game/game_view_screen.dart';
+import '../../../screens/game_view_screen.dart';
 import '../../../utils/config_size.dart';
 
 class TutorialAnimalRescue extends StatelessWidget {

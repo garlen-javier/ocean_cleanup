@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
 import 'package:ocean_cleanup/components/auth/custom_text_field.dart';
 import 'package:ocean_cleanup/components/auth/error_dialog.dart';
-import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
+import 'package:ocean_cleanup/screens/levels_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
 class AuthPopup extends StatelessWidget {
