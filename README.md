@@ -14,6 +14,11 @@ Embark on a thrilling journey with Ocean Cleanup! An underwater sustainability g
 - Multiplatform(web,windows and android)
 - Leaderboards
 
+## Keyboard Controls:
+
+WASD/Arrow keys to move<br />
+Space to catch
+
 <br />Team Members:<br />
 
 Garlen Javier - https://devpost.com/garlen-javier
