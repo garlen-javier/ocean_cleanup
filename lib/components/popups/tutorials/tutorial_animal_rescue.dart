@@ -3,8 +3,7 @@ import '../../../screens/game/game_view_screen.dart';
 import '../../../utils/config_size.dart';
 
 class TutorialAnimalRescue extends StatelessWidget {
-   int levelIndex;
-   TutorialAnimalRescue({required this.levelIndex,super.key});
+   const TutorialAnimalRescue({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -194,8 +193,8 @@ Widget _popUpBox(BuildContext context, BoxConstraints constraints) {
                                 MaterialPageRoute(
                                   builder: (BuildContext context) =>
                                   const GameViewScreen(),
-                                  settings: RouteSettings(
-                                    arguments: levelIndex,
+                                  settings: const RouteSettings(
+                                    arguments: 1,
                                   ),
                                 ),
                                 ModalRoute.withName('/home'),

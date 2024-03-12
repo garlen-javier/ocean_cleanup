@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ocean_cleanup/utils/config_size.dart';
-import 'package:ocean_cleanup/utils/save_utils.dart';
+
+import '../../../screens/game/game_view_screen.dart';
 
 class IntroTwoPopup extends StatelessWidget {
   const IntroTwoPopup({super.key});
@@ -28,8 +28,16 @@ class IntroTwoPopup extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 20),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pop();
-                  SaveUtils.instance.saveTutorialStatus("tuto1", true);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => const GameViewScreen(),
+                      settings: const RouteSettings(
+                        arguments: 0,
+                      ),
+                    ),
+                    ModalRoute.withName('/home'),
+                  );
                 },
                 child: Image.asset(
                   'assets/images/tutorials/ready_button.png',

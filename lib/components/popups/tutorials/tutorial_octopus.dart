@@ -5,8 +5,7 @@ import '../../../screens/game/game_view_screen.dart';
 import '../../../utils/config_size.dart';
 
 class TutorialOctopus extends StatelessWidget {
-  int levelIndex;
-  TutorialOctopus({required this.levelIndex,super.key});
+  const TutorialOctopus({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -168,8 +167,8 @@ class TutorialOctopus extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (BuildContext context) =>
                               const GameViewScreen(),
-                              settings: RouteSettings(
-                                arguments: levelIndex,
+                              settings: const RouteSettings(
+                                arguments: 4,
                               ),
                             ),
                             ModalRoute.withName('/home'),

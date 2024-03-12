@@ -53,18 +53,6 @@ class _IntroGameScreenState extends State<IntroGameScreen> {
                               builder: (context) => const LevelsScreen(),
                             ),
                           );
-                          bool tuto1 =
-                              SaveUtils.instance.getTutorialStatus("tuto1");
-                          if (!tuto1) {
-                            Future.delayed(const Duration(seconds: 1), () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const IntroOnePopup(),
-                                ),
-                              );
-                            });
-                          }
                         },
                         child: Image.asset('assets/images/start_button.png'),
                       ),
