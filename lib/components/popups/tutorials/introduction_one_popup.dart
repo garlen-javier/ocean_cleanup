@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ocean_cleanup/components/popups/tutorials/introduction_two_popup.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
+import '../../../utils/utils.dart';
+
 class IntroOnePopup extends StatelessWidget {
   const IntroOnePopup({super.key});
 
@@ -139,11 +141,7 @@ class IntroOnePopup extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const IntroTwoPopup(),
-                      ),
-                    );
+                    Navigator.push(context,Utils.nextPage(const IntroTwoPopup()));
                   },
                   child: Image.asset(
                     'assets/images/Button_Continue.png',

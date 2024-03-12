@@ -3,9 +3,31 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ocean_cleanup/constants.dart';
 
 class Utils{
+
+  static Route nextPage(Widget screenWidget) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => screenWidget,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = const Offset(1, 0);
+        var end = Offset.zero;
+        var tween = Tween(begin: begin, end: end);
+
+        var curvedAnimation = CurvedAnimation(
+          parent: animation,
+          curve: Curves.ease,
+        );
+
+        return SlideTransition(
+          position: tween.animate(curvedAnimation),
+          child: child,
+        );
+      },
+    );
+  }
 
   static double minuteToSeconds(double min) => min * 60;
 

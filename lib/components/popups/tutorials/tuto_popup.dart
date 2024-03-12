@@ -3,6 +3,7 @@ import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+import '../../../utils/utils.dart';
 import 'introduction_one_popup.dart';
 
 void showTutoPopup(BuildContext context, int levelIndex) {
@@ -187,12 +188,7 @@ void showTutoPopup(BuildContext context, int levelIndex) {
                       ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const IntroOnePopup(),
-                      ),
-                    );
+                    Navigator.push(context,Utils.nextPage(const IntroOnePopup()));
                   },
                   child: Image.asset(
                     'assets/images/tutorials/ready_button.png',
@@ -207,3 +203,5 @@ void showTutoPopup(BuildContext context, int levelIndex) {
     },
   );
 }
+
+
