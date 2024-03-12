@@ -348,7 +348,7 @@ class GameManager extends Component with KeyboardHandler
 
   int _getScore(double remainingTime)
   {
-    int timeScore =  _hud!.remainingTime.floor() * 5;
+    int timeScore =  remainingTime.floor() * 5;
     int animalScore = _freedAnimals.length * 100;
     return timeScore + animalScore;
   }

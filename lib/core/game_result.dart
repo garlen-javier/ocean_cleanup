@@ -31,7 +31,7 @@ class GameResult
     _sb.writeln("Level Index : $levelIndex");
     _sb.writeln("health : $health");
     _sb.writeln("total trash count : $totalTrashCount");
-    _sb.writeln("Score: $score");
+    _sb.writeln("score: $score");
     _sb.writeln("remainingTime : $remainingTime");
     _sb.writeln("formattedTime : ${Utils.formatTime(remainingTime.floorToDouble())}");
     if(freedAnimal != null)
