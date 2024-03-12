@@ -191,7 +191,7 @@ void showTutoPopup(BuildContext context, int levelIndex) {
                     Navigator.push(context,Utils.nextPage(const IntroOnePopup()));
                   },
                   child: Image.asset(
-                    'assets/images/tutorials/ready_button.png',
+                    'assets/images/Button_Continue.png',
                     width: SizeConfig.screenWidth / 2.5,
                   ),
                 )
