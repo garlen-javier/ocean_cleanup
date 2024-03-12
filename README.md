@@ -14,7 +14,7 @@ Embark on a thrilling journey with Ocean Cleanup! An underwater sustainability g
 - Multiplatform(web,windows and android)
 - Leaderboards
 
-Team Members:
+<br />Team Members:<br />
 
 Garlen Javier - https://devpost.com/garlen-javier
 
@@ -24,14 +24,14 @@ Usra A - https://devpost.com/abidusra
 
 Carere Tei - https://devpost.com/careretei88
 
-Project Links:
+<br />Project Links:<br />
 
 itch.io(web build): https://garlen.itch.io/ocean-cleanup?secret=GdsjUhWkCnRilqV67e5zMCWkZfo
 
 windows and apk build: https://drive.google.com/drive/u/1/folders/1Ad3ewjyXYGJPrbByE0FNlHyEsMhwhXxO
 
 github: https://github.com/garlen-javier/ocean_cleanup
-
+<br />
 ## Inspiration
 
 We did research on other games before coming up with the idea of an underwater game. We had the idea of making the character go around the ocean simliar to how the character Mario in "Super Mario" moves in an underwater level. The leaderboard designs were inspired by the scoreboard from "Just Dance" . Furthermore, "Cuphead" final bosses inspired the octopus queen which is the main villian in the game that the player has to defeat in the final level. All in all we took a look at many different games in order to come up with a fun sustainable sea adventure.
