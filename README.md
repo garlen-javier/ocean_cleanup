@@ -67,3 +67,4 @@ We have how to work in a mulitdisplinary team and create a space where each of u
 
 `adobe-illustrator` `figma` `firebase` `flame engine` `flutter`
 
+Flutter Version: 3.19.2 
