@@ -12,14 +12,24 @@ import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
 import '../../bloc/game_bloc_parameters.dart';
 import '../../bloc/game_stats/game_stats_barrel.dart';
 
-class GameViewScreen extends StatefulWidget {
-  const GameViewScreen({super.key});
-
-  @override
-  State<GameViewScreen> createState() => _GameViewScreenState();
+Widget gameViewScreen() {
+  return MultiBlocProvider(
+    providers: [
+      BlocProvider<GameBloc>(create: (_) => GameBloc()),
+      BlocProvider<GameStatsBloc>(create: (_) => GameStatsBloc()),
+    ],
+    child: const GameViewScreenPage(),
+  );
 }
 
-class _GameViewScreenState extends State<GameViewScreen> {
+class GameViewScreenPage extends StatefulWidget {
+  const GameViewScreenPage({super.key});
+
+  @override
+  State<GameViewScreenPage> createState() => _GameViewScreenPageState();
+}
+
+class _GameViewScreenPageState extends State<GameViewScreenPage> {
   late GameBloc _gameBloc;
   GameScene? _game;
   bool _isQuit = false;
@@ -112,7 +122,7 @@ class _GameViewScreenState extends State<GameViewScreen> {
           game: _game = GameScene(
               levelIndex: levelIndex,
               blocParameters: GameBlocParameters(
-                gameBloc: context.read<GameBloc>(),
+                gameBloc: _gameBloc,
                 gameStatsBloc: context.read<GameStatsBloc>(),
               )),
           overlayBuilderMap: {
@@ -149,11 +159,11 @@ class _GameViewScreenState extends State<GameViewScreen> {
           buildWhen: (previousState, state) {
         return previousState != state;
       }, builder: (context, state) {
-        debugPrint("showGameoverPopup: ${state.result}");
+        debugPrint("showVictoryPopup: ${state.result}");
         GameResult? result = state.result;
         return (result != null)
             ? VictoryPopup(
-                level: result.levelIndex,
+                levelIndex: result.levelIndex,
                 score: result.score,
                 onPressNext: () {
                   _game?.overlays.remove("VictoryPopup");
@@ -162,7 +172,12 @@ class _GameViewScreenState extends State<GameViewScreen> {
                 onPressRetry: () {
                   _game?.overlays.remove("VictoryPopup");
                   _gameBloc.add(const GameRestart());
-                })
+                },
+                onPressBack: () {
+                  _game?.overlays.remove("VictoryPopup");
+                  _gameBloc.add(const GameQuit());
+                },
+              )
             : Container();
       });
     };

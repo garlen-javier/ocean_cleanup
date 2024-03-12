@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
+import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
 class VictoryPopup extends StatelessWidget {
-  final int level;
+  final int levelIndex;
   final int score;
   final void Function()? onPressRetry;
   final void Function()? onPressNext;
+  final void Function()? onPressBack;
   const VictoryPopup(
       {super.key,
-      required this.level,
+      required this.levelIndex,
       required this.score,
       this.onPressRetry,
-      this.onPressNext});
+      this.onPressNext,
+      this.onPressBack,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -145,28 +149,55 @@ class VictoryPopup extends StatelessWidget {
             ),
           ),
         ),
-        ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.green),
-          ),
-          onPressed: () {
-            if (authBloc.isLoggedIn) {
-              authBloc.updateScore(score).then((value) => onPressNext?.call());
-            } else {
-              onPressNext?.call();
-            }
-          },
-          child: Text(
-            'Next',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontFamily: "wendyOne",
-              fontSize: SizeConfig.smallText1,
-            ),
-          ),
-        ),
+        (levelIndex < maxStageLevel - 1) ? _nextButton(authBloc) : _backButton(),
       ],
     );
   }
+
+  Widget _nextButton(AuthBloc authBloc)
+  {
+    return  ElevatedButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Colors.green),
+      ),
+      onPressed: () {
+        if (authBloc.isLoggedIn) {
+          authBloc.updateScore(score).then((value) => onPressNext?.call());
+        } else {
+          onPressNext?.call();
+        }
+      },
+      child: Text(
+        'Next',
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontFamily: "wendyOne",
+          fontSize: SizeConfig.smallText1,
+        ),
+      ),
+    );
+  }
+
+  Widget _backButton()
+  {
+    return ElevatedButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Colors.red),
+      ),
+      onPressed: () {
+        onPressBack?.call();
+      },
+      child: Text(
+        'Back',
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontFamily: "wendyOne",
+          fontSize: SizeConfig.smallText1,
+        ),
+      ),
+    );
+  }
+
 }

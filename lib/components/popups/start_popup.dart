@@ -396,7 +396,7 @@ class _StartPopupState extends State<StartPopup> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (BuildContext context) => const GameViewScreen(),
+                    builder: (BuildContext context) => gameViewScreen(),
                     settings: RouteSettings(
                       arguments: widget.levelIndex - 1,
                     ),

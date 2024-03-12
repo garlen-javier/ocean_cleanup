@@ -33,6 +33,8 @@ class GameManager extends Component with KeyboardHandler
   final List<AnimalType> _freedAnimals = [];
   final Map<AnimalType,TrashObjective> _trappedAnimalsMap = {};
 
+  late FlameBlocListener<GameBloc, GameState> _gameListener;
+  late FlameBlocListener<GameStatsBloc, GameStatsState> _gameStatListener;
   late LoadingGame? _loadingGame;
   Random rand = Random();
   GameWorld? _currentLevel;
@@ -72,10 +74,11 @@ class GameManager extends Component with KeyboardHandler
     }
   }
 
+
   Future<void> _initBlocListener() async {
     //GameState
     await add(
-      FlameBlocListener<GameBloc, GameState>(
+      _gameListener = FlameBlocListener<GameBloc, GameState>(
         listenWhen: (previousState, newState) {
           return previousState != newState;
         },
@@ -128,7 +131,7 @@ class GameManager extends Component with KeyboardHandler
 
     //Game Stats
     await add(
-      FlameBlocListener<GameStatsBloc, GameStatsState>(
+      _gameStatListener = FlameBlocListener<GameStatsBloc, GameStatsState>(
         listenWhen: (previousState, newState) {
           return true;
         },
@@ -139,6 +142,12 @@ class GameManager extends Component with KeyboardHandler
         },
       ),
     );
+  }
+
+  void removeListeners()
+  {
+    _gameListener.removeFromParent();
+    _gameStatListener.removeFromParent();
   }
 
   Future<void> loadLevel({required int levelIndex,int stageIndex = 0}) async
@@ -174,7 +183,8 @@ class GameManager extends Component with KeyboardHandler
 
   Future<void> _changeWorldByLevel(int levelIndex) async {
     if(_currentLevel != null) {
-      gameScene.remove(_currentLevel!);
+      _currentLevel!.removeFromParent();
+      _currentLevel = null;
     }
 
     _currentLevel = GameWorld(gameManager: this, blocParameters: blocParameters);
@@ -184,7 +194,8 @@ class GameManager extends Component with KeyboardHandler
 
   Future<void> _loadHud() async {
     if(_hud != null) {
-      gameScene.remove(_hud!);
+      _hud!.removeFromParent();
+      _hud = null;
     }
 
     _hud = HudWorld(gameManager: this, blocParameters: blocParameters,playerController: _currentLevel?.playerController);
@@ -299,14 +310,14 @@ class GameManager extends Component with KeyboardHandler
       int goal = objective.goal;
       int trashCount = blocParameters.gameStatsBloc.trashCountByType(objective.trashType);
       bool isGoal = goal == trashCount && !state.timerFinish;
-      if(isGoal && _currentStageIndex == params.trashObjectives.length - 1)
+      if(isGoal && _currentStageIndex == params.trashObjectives.length - 1 && gamePhase != GamePhase.win)
       {
         _hud?.updateOctopusMeterValue(0);
         _totalStageRemainingTime+=_hud!.remainingTime;
         GameResult result = _encodeGameResult(state.health,_totalStageRemainingTime,params.levelType);
         blocParameters.gameBloc.add(GameWin(result));
       }
-      else if(state.health == 0)
+      else if(state.health == 0 && gamePhase != GamePhase.gameOver)
       {
         GameResult result = _encodeGameResult(state.health,_hud!.remainingTime,params.levelType);
         blocParameters.gameBloc.add(GameOver(result));
@@ -418,6 +429,12 @@ class GameManager extends Component with KeyboardHandler
     }
 
     return super.onKeyEvent(event, keysPressed);
+  }
+
+  @override
+  void onRemove() {
+    removeListeners();
+    super.onRemove();
   }
 
 }

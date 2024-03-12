@@ -31,7 +31,7 @@ class IntroTwoPopup extends StatelessWidget {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => const GameViewScreen(),
+                      builder: (BuildContext context) => gameViewScreen(),
                       settings: const RouteSettings(
                         arguments: 0,
                       ),

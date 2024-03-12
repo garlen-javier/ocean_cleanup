@@ -170,6 +170,8 @@ class GameScene extends FlameGame with HasKeyboardHandlerComponents{
   void onDispose() async {
     debugPrint("FlameGame: onDispose");
     AudioManager.instance.stopBgm();
+    blocParameters.gameBloc.close();
+    blocParameters.gameStatsBloc.close();
      //FlameAudio.audioCache.clearAll();
     // Flame.images.clearCache();
     // Flame.assets.clearCache();

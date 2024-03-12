@@ -95,7 +95,7 @@ class TesterPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const GameViewScreen(),
+                                  builder: (context) => gameViewScreen(),
                                   settings: RouteSettings(
                                     arguments: 0,
                                   ),
@@ -121,7 +121,7 @@ class TesterPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const GameViewScreen(),
+                                  builder: (context) => gameViewScreen(),
                                   settings: RouteSettings(
                                     arguments: levelIndex,
                                   ),
@@ -168,7 +168,7 @@ class TesterPage extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const GameViewScreen(),
+        builder: (context) => gameViewScreen(),
         settings: const RouteSettings(
           arguments: 0,
         ),

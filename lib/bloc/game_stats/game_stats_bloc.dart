@@ -59,6 +59,7 @@ class GameStatsBloc extends Cubit<GameStatsState> {
   void nextStageValue({required int hp,required int nextStageIndex})
    {
      health = hp;
+     health = health > maxHealth ? maxHealth : health;
      emit(state.copyWith(stageIndex: nextStageIndex, health: health, timerFinish:false,trashType: null,trashCount: 0));
    }
 
@@ -89,6 +90,7 @@ class GameStatsBloc extends Cubit<GameStatsState> {
 
   void setHealth(int hp){
     health = hp;
+    health = health > maxHealth ? maxHealth : health;
     emit(state.copyWith(health: health));
   }
 

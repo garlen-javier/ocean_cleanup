@@ -42,8 +42,6 @@ class MyApp extends StatelessWidget {
     SizeConfig().init(context);
     return MultiBlocProvider(
       providers: [
-        BlocProvider<GameBloc>(create: (_) => GameBloc()),
-        BlocProvider<GameStatsBloc>(create: (_) => GameStatsBloc()),
         BlocProvider<AuthBloc>(
           create: (_) => AuthBloc(),
         ),

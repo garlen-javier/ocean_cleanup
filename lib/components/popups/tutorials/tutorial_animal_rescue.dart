@@ -192,7 +192,7 @@ Widget _popUpBox(BuildContext context, BoxConstraints constraints) {
                                 context,
                                 MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                  const GameViewScreen(),
+                                      gameViewScreen(),
                                   settings: const RouteSettings(
                                     arguments: 1,
                                   ),
