@@ -26,7 +26,7 @@ class SettingsPopup extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.pop(context, 'refresh');
             },
             child: Icon(
               Icons.arrow_back_rounded,

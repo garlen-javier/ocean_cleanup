@@ -76,7 +76,11 @@ class _LevelsScreenState extends State<LevelsScreen> {
                           return SettingsPopup(
                             isLoggedIn: authBloc.isLoggedIn,
                           );
-                        }),
+                        }).then((result) {
+                      if (result != null && result == 'refresh') {
+                        setState(() {});
+                      }
+                    }),
                     icon: const Icon(
                       Icons.settings,
                       color: Color(0xFF6874ca),
