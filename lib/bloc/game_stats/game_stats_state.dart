@@ -9,6 +9,7 @@ class GameStatsState extends Equatable {
   final TrashType? trashType;
   final int trashCount;
   final int health;
+  final int stageIndex;
   final bool timerFinish;
   final bool rescueFailed;
 
@@ -16,18 +17,20 @@ class GameStatsState extends Equatable {
      this.freedAnimal,
      this.trashType,
      this.trashCount = 0,
+     this.stageIndex = 0,
      this.health = defaultHealth,
      this.timerFinish = false,
      this.rescueFailed = false,
   });
 
-  const GameStatsState.empty() : this(freedAnimal: null, trashType:null,trashCount:0, health: defaultHealth,timerFinish:false, rescueFailed: false);
+  const GameStatsState.empty() : this(freedAnimal: null, trashType:null,trashCount:0, stageIndex: 0, health: defaultHealth,timerFinish:false, rescueFailed: false);
 
   GameStatsState copyWith({
     AnimalType? freedAnimal,
     TrashType? trashType,
     int? trashCount,
     int? health,
+    int? stageIndex,
     bool? timerFinish,
     bool? rescueFailed
   }) {
@@ -36,6 +39,7 @@ class GameStatsState extends Equatable {
         trashType: trashType,
         trashCount: trashCount ?? this.trashCount,
         health: health ?? this.health,
+        stageIndex: stageIndex ?? this.stageIndex,
         timerFinish: timerFinish ?? this.timerFinish,
         rescueFailed: rescueFailed ?? this.rescueFailed);
   }

@@ -315,6 +315,11 @@ class GameManager extends Component with KeyboardHandler
       {
         nextStage(lastHealth: state.health);
       }
+      else if(state.stageIndex != _currentStageIndex)
+      {
+        debugPrint("Stage Change: " + _currentStageIndex.toString());
+        blocParameters.gameStatsBloc.clearTrashCount();
+      }
     }
   }
 
@@ -385,7 +390,7 @@ class GameManager extends Component with KeyboardHandler
       _hud?.startNewTrashGoal(currentTrashObjective.trashType, currentTrashObjective.goal);
       _hud?.updateOctopusMeterWithStage(_currentStageIndex, currentTrashObjective.timeLimit);
       _lastStageHealth = lastHealth + 2;
-       blocParameters.gameStatsBloc.nextStageValue(hp: _lastStageHealth);
+       blocParameters.gameStatsBloc.nextStageValue(hp: _lastStageHealth,nextStageIndex: _currentStageIndex);
     }
   }
 
@@ -395,13 +400,6 @@ class GameManager extends Component with KeyboardHandler
     _hud?.startNewTrashGoal(currentTrashObjective.trashType, currentTrashObjective.goal);
     _hud?.updateOctopusMeterWithStage(_currentStageIndex, currentTrashObjective.timeLimit);
     blocParameters.gameStatsBloc.resetStageValue();
-  }
-
-  //Currently clear the save game data such as freed animals
-  void _resetAllLevels()
-  {
-    blocParameters.gameStatsBloc.defaultState();
-    SaveUtils.instance.clearGameBox();
   }
 
   @override
