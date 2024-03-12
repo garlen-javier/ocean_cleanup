@@ -326,11 +326,6 @@ class GameManager extends Component with KeyboardHandler
       {
         nextStage(lastHealth: state.health);
       }
-      else if(state.stageIndex != _currentStageIndex)
-      {
-        debugPrint("Stage Change: " + _currentStageIndex.toString());
-        blocParameters.gameStatsBloc.clearTrashCount();
-      }
     }
   }
 

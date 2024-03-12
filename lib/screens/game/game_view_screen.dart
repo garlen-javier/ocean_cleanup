@@ -1,9 +1,12 @@
 import 'package:flame/game.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ocean_cleanup/bloc/game/game_barrel.dart';
 import 'package:ocean_cleanup/components/popups/gameover_popup.dart';
 import 'package:ocean_cleanup/components/popups/pause_popup.dart';
+import 'package:ocean_cleanup/components/popups/tutorials/tutorial_animal_rescue.dart';
+import 'package:ocean_cleanup/components/popups/tutorials/tutorial_octopus.dart';
 import 'package:ocean_cleanup/components/popups/victory_popup.dart';
 import 'package:ocean_cleanup/core/game_result.dart';
 import 'package:ocean_cleanup/core/game_scene.dart';
@@ -167,6 +170,27 @@ class _GameViewScreenPageState extends State<GameViewScreenPage> {
                 score: result.score,
                 onPressNext: () {
                   _game?.overlays.remove("VictoryPopup");
+                  if(result.levelIndex == 0)
+                  {
+                    _isQuit = true;
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TutorialAnimalRescue(key: UniqueKey(),),
+                        ),
+                      );
+                  }
+                  else if(result.levelIndex == 3)
+                  {
+                    _isQuit = true;
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TutorialOctopus(key: UniqueKey(),),
+                      ),
+                    );
+                  }
+                  else
                   _gameBloc.add(const GameStartNext());
                 },
                 onPressRetry: () {

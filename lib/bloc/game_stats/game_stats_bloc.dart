@@ -60,13 +60,9 @@ class GameStatsBloc extends Cubit<GameStatsState> {
    {
      health = hp;
      health = health > maxHealth ? maxHealth : health;
-     emit(state.copyWith(stageIndex: nextStageIndex, health: health, timerFinish:false,trashType: null,trashCount: 0));
-   }
-
-   void clearTrashCount()
-   {
      _trashCountMap.clear();
      _trashCountMap.putIfAbsent(TrashType.any, () => 0);
+     emit(state.copyWith(stageIndex: nextStageIndex, health: health, timerFinish:false,trashType: null,trashCount: 0));
    }
 
    int totalTrashCount()
