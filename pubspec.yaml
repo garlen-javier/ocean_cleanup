@@ -45,9 +45,9 @@ dependencies:
   hive_flutter: ^1.1.0
   path_provider: ^2.1.2
   lottie: ^3.1.0
-  firebase_core: ^2.25.4
-  firebase_auth: ^4.17.5
-  cloud_firestore: ^4.15.5
+  # firebase_core: ^2.25.4
+  # firebase_auth: ^4.17.5
+  # cloud_firestore: ^4.15.5
   shared_preferences: ^2.2.2
   connectivity_plus: ^5.0.2
   

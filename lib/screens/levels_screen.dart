@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
 import 'package:ocean_cleanup/bloc/game/connection_bloc.dart';
 import 'package:ocean_cleanup/bloc/game_stats/connection_stats.dart';
 import 'package:ocean_cleanup/components/popups/internet_popup.dart';
 import 'package:ocean_cleanup/components/popups/settings_popup.dart';
 import 'package:ocean_cleanup/components/popups/start_popup.dart';
-import 'package:ocean_cleanup/screens/leaderboard_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 import 'package:ocean_cleanup/utils/save_utils.dart';
 
@@ -23,7 +21,6 @@ final formKey = GlobalKey<FormState>();
 class _LevelsScreenState extends State<LevelsScreen> {
   @override
   Widget build(BuildContext context) {
-    final authBloc = BlocProvider.of<AuthBloc>(context);
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
@@ -38,22 +35,22 @@ class _LevelsScreenState extends State<LevelsScreen> {
           return Scaffold(
               backgroundColor: Colors.transparent,
               resizeToAvoidBottomInset: false,
-              floatingActionButton: FloatingActionButton.large(
-                elevation: 0,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LeaderboardScreen(),
-                    ),
-                  );
-                },
-                backgroundColor: Colors.transparent,
-                child: Lottie.asset(
-                  "assets/animations/leaderboard.json",
-                  repeat: false,
-                ),
-              ),
+              // floatingActionButton: FloatingActionButton.large(
+              //   elevation: 0,
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => const LeaderboardScreen(),
+              //       ),
+              //     );
+              //   },
+              //   backgroundColor: Colors.transparent,
+              //   child: Lottie.asset(
+              //     "assets/animations/leaderboard.json",
+              //     repeat: false,
+              //   ),
+              // ),
               appBar: AppBar(
                 centerTitle: true,
                 backgroundColor: Colors.transparent,
@@ -74,7 +71,6 @@ class _LevelsScreenState extends State<LevelsScreen> {
                         context: context,
                         builder: (BuildContext context) {
                           return SettingsPopup(
-                            isLoggedIn: authBloc.isLoggedIn,
                           );
                         }).then((result) {
                       if (result != null && result == 'refresh') {

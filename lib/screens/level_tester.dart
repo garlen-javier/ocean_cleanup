@@ -1,14 +1,9 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
-import 'package:ocean_cleanup/bloc/game/game_barrel.dart';
-import 'package:ocean_cleanup/bloc/game_stats/game_stats_barrel.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import '../levels/level_parameters.dart';
 import '../levels/levels.dart';
-import '../utils/config_size.dart';
 import 'game_view_screen.dart';
 
 class LevelTester extends StatelessWidget {

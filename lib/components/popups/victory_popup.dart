@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ocean_cleanup/bloc/auth/auth_bloc.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 
@@ -10,18 +8,17 @@ class VictoryPopup extends StatelessWidget {
   final void Function()? onPressRetry;
   final void Function()? onPressNext;
   final void Function()? onPressBack;
-  const VictoryPopup(
-      {super.key,
-      required this.levelIndex,
-      required this.score,
-      this.onPressRetry,
-      this.onPressNext,
-      this.onPressBack,
-      });
+  const VictoryPopup({
+    super.key,
+    required this.levelIndex,
+    required this.score,
+    this.onPressRetry,
+    this.onPressNext,
+    this.onPressBack,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final authBloc = BlocProvider.of<AuthBloc>(context);
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(50),
@@ -149,23 +146,20 @@ class VictoryPopup extends StatelessWidget {
             ),
           ),
         ),
-        (levelIndex < maxStageLevel - 1) ? _nextButton(authBloc) : _backButton(),
+        (levelIndex < maxStageLevel - 1)
+            ? _nextButton()
+            : _backButton(),
       ],
     );
   }
 
-  Widget _nextButton(AuthBloc authBloc)
-  {
-    return  ElevatedButton(
+  Widget _nextButton() {
+    return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(Colors.green),
       ),
       onPressed: () {
-        if (authBloc.isLoggedIn) {
-          authBloc.updateScore(score).then((value) => onPressNext?.call());
-        } else {
-          onPressNext?.call();
-        }
+        onPressNext?.call();
       },
       child: Text(
         'Next',
@@ -179,8 +173,7 @@ class VictoryPopup extends StatelessWidget {
     );
   }
 
-  Widget _backButton()
-  {
+  Widget _backButton() {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(Colors.red),
@@ -199,5 +192,4 @@ class VictoryPopup extends StatelessWidget {
       ),
     );
   }
-
 }
