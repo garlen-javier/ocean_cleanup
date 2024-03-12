@@ -3,10 +3,14 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:ocean_cleanup/bloc/game/connection_bloc.dart';
+import 'package:ocean_cleanup/bloc/game/connection_event.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/utils/utils.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+
+
 
 const String hiveGameBoxKey = "hiveGameBoxKey";
 
@@ -44,8 +48,7 @@ class SaveUtils {
   }
 
   ///Should save the level the would get unlock
-  void saveUnlockLevel(int levelIndex)
-  {
+  void saveUnlockLevel(int levelIndex) {
     assertMessage();
     String key = hiveUnlockLevelKey;
     int lastIndex = _gameBox.get(key, defaultValue: 0);
@@ -54,11 +57,10 @@ class SaveUtils {
 
   int get getUnlockedLevel {
     assertMessage();
-    return _gameBox.get(hiveUnlockLevelKey,defaultValue:0);
+    return _gameBox.get(hiveUnlockLevelKey, defaultValue: 0);
   }
 
-  void addFreeAnimal(AnimalType animal)
-  {
+  void addFreeAnimal(AnimalType animal) {
     assertMessage();
     String key = hiveFreedAnimalsKey;
     List<dynamic> animals = _gameBox.get(key, defaultValue: <dynamic>[]);
@@ -68,36 +70,40 @@ class SaveUtils {
     }
   }
 
-  List<dynamic> getFreedAnimalIndex()
-  {
+  List<dynamic> getFreedAnimalIndex() {
     assertMessage();
     String key = hiveFreedAnimalsKey;
     List<dynamic> list = _gameBox.get(key, defaultValue: <dynamic>[]);
     return list;
   }
 
-  void saveTutorialStatus(String key , bool status) async {
+  void saveTutorialStatus(String key, bool status) async {
     assertMessage();
     _gameBox.put(key, status);
   }
 
-  bool getTutorialStatus(String key)  {
+  bool getTutorialStatus(String key) {
     assertMessage();
-    return _gameBox.get(key,defaultValue:false);
+    return _gameBox.get(key, defaultValue: false);
   }
 
-  void clearGameBox()
-  {
+  void clearGameBox() {
     assertMessage();
     _gameBox.clear();
   }
 
-  void assertMessage()
-  {
-    assert(_isLoaded,"SaveUtils should be loaded first");
+  void assertMessage() {
+    assert(_isLoaded, "SaveUtils should be loaded first");
+  }
+
+  static void observeNetwork() {
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      print('>>>>${result}');
+      if (result == ConnectivityResult.none) {
+        NetworkBloc().add(NetworkNotify());
+      } else {
+        NetworkBloc().add(NetworkNotify(isConnected: true));
+      }
+    });
   }
 }
-
-
-
-

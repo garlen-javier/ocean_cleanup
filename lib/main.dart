@@ -3,6 +3,8 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flame/flame.dart';
+import 'package:ocean_cleanup/bloc/game/connection_bloc.dart';
+import 'package:ocean_cleanup/bloc/game/connection_event.dart';
 import 'package:ocean_cleanup/screens/game/game_view_screen.dart';
 import 'package:ocean_cleanup/screens/leaderboard/leaderboard_screen.dart';
 import 'package:ocean_cleanup/screens/levels/levels_screen.dart';
@@ -15,7 +17,6 @@ import 'package:ocean_cleanup/firebase_options.dart';
 import 'package:ocean_cleanup/screens/intro%20game/intro_game_screen.dart';
 import 'package:ocean_cleanup/utils/config_size.dart';
 import 'screens/level_tester.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,6 +47,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthBloc>(
           create: (_) => AuthBloc(),
         ),
+        BlocProvider(
+          create: (context) => NetworkBloc()..add(NetworkObserve()),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
