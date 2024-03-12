@@ -31,6 +31,8 @@ itch.io(web build): https://garlen.itch.io/ocean-cleanup?secret=GdsjUhWkCnRilqV6
 windows and apk build: https://drive.google.com/drive/u/1/folders/1Ad3ewjyXYGJPrbByE0FNlHyEsMhwhXxO
 
 github: https://github.com/garlen-javier/ocean_cleanup
+
+devpost: https://devpost.com/software/ocean-cleanup-nuza0r
 <br />
 ## Inspiration
 
