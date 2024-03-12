@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ocean_cleanup/components/popups/tutorials/intoduction_two_popup.dart';
+import 'package:ocean_cleanup/components/popups/tutorials/tuto_popup.dart';
 import 'package:ocean_cleanup/constants.dart';
 import 'package:ocean_cleanup/levels/level_parameters.dart';
 import 'package:ocean_cleanup/levels/levels.dart';
@@ -367,7 +367,7 @@ class _StartPopupState extends State<StartPopup> {
             bool tuto2 = SaveUtils.instance.getTutorialStatus("tuto2");
             if (!tuto2) {
               if (mounted) {
-                showIntroTwoPopup(context, widget.levelIndex);
+                showTutoPopup(context, widget.levelIndex);
               }
 
               SaveUtils.instance.saveTutorialStatus("tuto2", true);

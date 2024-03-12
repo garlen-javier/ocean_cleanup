@@ -57,7 +57,12 @@ class _IntroGameScreenState extends State<IntroGameScreen> {
                               SaveUtils.instance.getTutorialStatus("tuto1");
                           if (!tuto1) {
                             Future.delayed(const Duration(seconds: 1), () {
-                              showIntroOnePopup(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const IntroOnePopup(),
+                                ),
+                              );
                             });
                           }
                         },
